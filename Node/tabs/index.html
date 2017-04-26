@@ -101,40 +101,29 @@
 
 		<script type="text/javascript">
 
-			function getURLParam(name){
-				var url = window.location.search.substring(1);
-				var variables = url.split('&');
-				for (var i = 0; i < variables.length; i++){
-					var variable = variables[i].split('=');
-					if (variable[0] === name){
-						return decodeURIComponent(variable[1]);
-					}
-				}
-			}
+			// Initialize the Microsoft Teams Library
+			microsoftTeams.initialize();
 
+			// Get the parameters from the url
 			var teamId = getURLParam('teamId');
 			var numdays = getURLParam('numdays') || 5;
 			var channelId = getURLParam('channelId');
 			var color = getURLParam('color');
 
-			microsoftTeams.initialize();
-
+			// Generate the content to show in the tab
 			var host = 'https://teamsnodesample.azurewebsites.net';
 			$.get(`${host}/api/tasks/my?numdays=${numdays}`, function( data ) {
 			  console.log(data);			  
 
 			  var html = ``;
-
 			  for (var i = 0; i < data.length; i++){
-			  	var day = data[i];
-			  	var dayHTML = `
-			  		<ul id="friday" class="day">
-						<li class="title">
-							${day.title}
-						</li>
-					`;
+			  		var day = data[i];
+			  		var dayHTML = `<ul id="friday" class="day">
+							<li class="title">
+								${day.title}
+							</li>`;
 
-					for(var j = 0; j < data[i].tasks.length; j++){
+					for (var j = 0; j < data[i].tasks.length; j++) {
 						var task = day.tasks[j];
 						var subentity = `${i}${j}`;
 						var image = `${host}/static/img/image${Math.floor(Math.random() * (9 - 1 + 1)) + 1}.png`;
@@ -150,12 +139,23 @@
 						dayHTML += taskHTML;
 					}
 
-				dayHTML += `</ul>`;
-				html += dayHTML;
+					dayHTML += `</ul>`;
+					html += dayHTML;
 			  }
 
 			  $('#todos_container').html(html);
 			});
+
+			function getURLParam(name) {
+				var url = window.location.search.substring(1);
+				var variables = url.split('&');
+				for (var i = 0; i < variables.length; i++) {
+					var variable = variables[i].split('=');
+					if (variable[0] === name) {
+						return decodeURIComponent(variable[1]);
+					}
+				}
+			}
 		</script>
 	</body>
 </html>
