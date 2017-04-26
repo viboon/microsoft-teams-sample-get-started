@@ -7,7 +7,7 @@
 			body{
 					margin:0;
 					background: transparent;
-					color: #222;
+					color: #ff0222;
 					font-family: "Segoe UI Semilight","Segoe WPC","Segoe UI", Helvetica, Arial, "Arial Unicode MS", Sans-Serif;
 					font-size:80%;
 				}
@@ -45,7 +45,7 @@
 
 		<script type="text/javascript">
 			
-			var host = 'https://teamsnodesample.azurewebsites.net';
+			var host = 'https://0a901af1.ngrok.io';
 			var color = '';
 			var name = '';
 			var entity = '';
@@ -59,9 +59,11 @@
 				color = $('#color').val();
 				name = $('#name').val();
 				numdays = $('#numdays').val();	
-				url = `${host}/tabs/index?teamId=${encodeURIComponent(context.teamId)}&channelId=${encodeURIComponent(context.channelId)}&color=${encodeURIComponent(color)}&numdays=${numdays}`;
+				url = `${host}/tabs/teamtasks?teamId=${encodeURIComponent(context.teamId)}&channelId=${encodeURIComponent(context.channelId)}&color=${encodeURIComponent(color)}&numdays=${numdays}`;
 					
-				entity = `todotab-${name}-${context.teamId}-${context.channelId}`
+				entity = `todotab-${name}-${context.teamId}-${context.channelId}`;
+				console.log(url);
+				console.log(entity);
 
 				microsoftTeams.settings.setSettings({
 					entityId: entity,
