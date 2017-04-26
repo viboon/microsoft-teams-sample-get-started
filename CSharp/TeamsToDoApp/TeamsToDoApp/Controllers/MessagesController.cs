@@ -22,14 +22,17 @@ namespace TeamsToDoApp
         /// </summary>
         public async Task<HttpResponseMessage> Post([FromBody]Activity activity)
         {
-
-            if (activity.Type == ActivityTypes.Message)
+            
+            if (activity.Type == ActivityTypes.Message) // If we just received a message, then let Dialogs process it.
             {
                 await Conversation.SendAsync(activity, () => new Dialogs.RootDialog());
             }
-            else if (activity.Type == ActivityTypes.Invoke)
+            else if (activity.Type == ActivityTypes.Invoke) // Received an invoke
             {
+                // Determine the response object to reply with
                 var invokeResponse = GetInvokeResponse(activity);
+
+                // Return the response
                 return Request.CreateResponse<InvokeResponse>(HttpStatusCode.OK, invokeResponse);
             }
             else
@@ -45,6 +48,7 @@ namespace TeamsToDoApp
             InvokeResponse response = null;
 
             var invoke = activity as IInvokeActivity;
+
             if (invoke.Name == ComposeExtensionQuery.InvokeActivityName)
             {
                 var query = JsonConvert.DeserializeObject<ComposeExtensionQuery>(invoke.Value.ToString());
@@ -52,7 +56,7 @@ namespace TeamsToDoApp
                 {
                     return null;
                 }
-                if (query.CommandId == "searchCmd")
+                if (query.CommandId == "searchCmd") // This is specified in bot manifest
                 {
                     // query.Parameters has the parameters sent by client
 
