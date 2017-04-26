@@ -20,14 +20,16 @@
     			height: 90%;
     			min-width: 800px;
 			}
-			.day{
+			.mytasks{
 				height: 100%;
 				width: 20%;
 				padding: 0 30px;
 				list-style: none;
+			    margin-left: auto;
+			    margin-right: auto;
 			}
 
-			.day li{
+			.mytasks li{
 				margin-bottom: 30px;
 			}
 
@@ -73,12 +75,6 @@
 				cursor: pointer;
 			}
 
-			.task p.assigned{
-				text-align: right;
-				font-family: 'Segoe UI Regular', sans-serif;
-				cursor: pointer;
-			}
-
 			.task p.id{
 			    color: #CC0000;
 			    font-family: 'Segoe UI Black';
@@ -118,12 +114,6 @@
 				}
 			}
 
-			function getLink(subEntityId, subEntityLabel) {
-				console.log(subEntityLabel);
-				console.log(subEntityId);
-				microsoftTeams.shareDeepLink({subEntityId: subEntityId, subEntityLabel: subEntityLabel});
-			}
-
 			var selectedTaskId;
 
 			function selectTask(taskId) {
@@ -135,56 +125,39 @@
 				selectedTaskId = taskId;
 			}
 
-			var teamId = getURLParam('teamId');
-			var numdays = getURLParam('numdays') || 5;
-			var channelId = getURLParam('channelId');
-			var color = getURLParam('color');
-
 			microsoftTeams.initialize();
 
 			var host = 'https://0a901af1.ngrok.io';
-			$.get(`${host}/api/tasks/my?numdays=${numdays}`, function( data ) {
+			$.get(`${host}/api/tasks/my`, function( data ) {
 			  console.log(data);			  
 
-			  var html = ``;
-
-			  for (var i = 0; i < data.length; i++){
-			  	var day = data[i];
-			  	var dayHTML = `
-			  		<ul id="friday" class="day">
+			  var html = `
+			  		<ul class="mytasks">
 						<li class="title">
-							${day.title}
+							My Tasks
 						</li>
 					`;
 
-					for(var j = 0; j < data[i].tasks.length; j++){
-						var task = day.tasks[j];
-						var subentity = `${i}${j}`;
+					for(var j = 0; j < data.length; j++){
+
+						var task = data[j];
+						var subentity = `${j}`;
 						var image = `${host}/static/img/image${Math.floor(Math.random() * (9 - 1 + 1)) + 1}.png`;
 						var taskHTML = `
-							<li class="task" id="task-${subentity}" style='background-color:${color}' onclick="selectTask('task-${subentity}')">								
+							<li class="task" id="task-${subentity}" onclick="selectTask('task-${subentity}')">								
 								<p class="id" onclick="getLink(${subentity}, '${task.title}')">${subentity}</p>
 								<h3>${task.title}</h3>
 								<p>${task.description}</p>
 								<div class="image" style="background-image: url(${image});"></div>
-								<p class="assigned">${task.assigned}</p>
 							</li>
 						`;
-						dayHTML += taskHTML;
+
+						html += taskHTML;
 					}
 
-				dayHTML += `</ul>`;
-				html += dayHTML;
-			  }
-
+				html += `</ul>`;
 			  $('#todos_container').html(html);
 
-			  microsoftTeams.getContext((context) => {		
-				  console.log(context.upn);
-				  console.log(context.subEntityId);
-				  selectTask("task-10");		
-				});
-				
 			});
 		</script>
 	</body>

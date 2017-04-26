@@ -143,7 +143,7 @@
 			microsoftTeams.initialize();
 
 			var host = 'https://0a901af1.ngrok.io';
-			$.get(`${host}/api/tasks/my?numdays=${numdays}`, function( data ) {
+			$.get(`${host}/api/tasks/team?numdays=${numdays}`, function( data ) {
 			  console.log(data);			  
 
 			  var html = ``;
@@ -180,9 +180,10 @@
 			  $('#todos_container').html(html);
 
 			  microsoftTeams.getContext((context) => {		
-				  console.log(context.upn);
-				  console.log(context.subEntityId);
-				  selectTask("task-10");		
+				  if(context.subEntityId != null) {
+					  selectTask(context.subEntityId);
+				  }
+				  selectTask("task-10");		// Temporary change because subEntityId not being returned correctly.
 				});
 				
 			});
