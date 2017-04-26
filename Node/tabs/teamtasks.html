@@ -163,11 +163,12 @@
 						var image = `${host}/static/img/image${Math.floor(Math.random() * (9 - 1 + 1)) + 1}.png`;
 						var taskHTML = `
 							<li class="task" id="task-${subentity}" style='background-color:${color}' onclick="selectTask('task-${subentity}')">								
-								<p class="id" onclick="getLink(${subentity}, '${task.title}')">${subentity}</p>
+								<p class="id">${subentity}</p>
 								<h3>${task.title}</h3>
 								<p>${task.description}</p>
 								<div class="image" style="background-image: url(${image});"></div>
 								<p class="assigned">${task.assigned}</p>
+								<p class="getlink" onclick="getLink(${subentity}, '${task.title}')">Get Link</p>
 							</li>
 						`;
 						dayHTML += taskHTML;
