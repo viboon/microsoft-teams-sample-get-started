@@ -3,7 +3,7 @@ const faker = require('faker');
 /*
 	Convenience method to create a Hero card. Takes in an instance of BotBuilder and returns an attachment of type HeroCard
 */
-module.exports.createHeroCard = function(builder) {
+module.exports.createHeroCard = function (builder) {
 	return new builder.HeroCard()
 		.title('This is a Hero Card')
 		.subtitle('Card subtitle')
@@ -19,7 +19,7 @@ module.exports.createHeroCard = function(builder) {
 /*
 	Convenience method to create a Thumbnail card. Takes in an instance of BotBuilder and returns an attachment of type ThumbnailCard
 */
-module.exports.createThumbnailCard = function(builder) {
+module.exports.createThumbnailCard = function (builder) {
 	return new builder.ThumbnailCard()
 		.title('This is a Thumbnail Card')
 		.subtitle('Card subtitle')
@@ -35,7 +35,7 @@ module.exports.createThumbnailCard = function(builder) {
 }
 
 // Creates a random task
-module.exports.createTask = function() {
+module.exports.createTask = function () {
 	return {
 		'title': faker.fake("{{commerce.productName}}"),
 		'description': faker.fake("{{lorem.sentence}}"),
@@ -44,7 +44,7 @@ module.exports.createTask = function() {
 }
 
 // Convenience method to strip out @ mentions from bot text
-module.exports.getTextWithoutMentions = function(message) {
+module.exports.getTextWithoutMentions = function (message) {
 	var text = message.text;
 	if (message.entities) {
 		message.entities
@@ -59,38 +59,66 @@ module.exports.getTextWithoutMentions = function(message) {
 
 // Generates rich connector card.
 //TODO: test updating a card and rich actionable cards
-module.exports.generateConnectorCard = function(actions) {
-	var ret =  {
+module.exports.generateConnectorCard = function (actions) {
+	var ret = {
 		'summary': faker.fake("{{lorem.sentence}}"),
 		'title': faker.fake("{{commerce.productName}}"),
 		'sections': [{
 			'activityTitle': faker.fake("{{name.firstName}} {{name.lastName}}"),
 			'activitySubtitle': "On Project Tango",
 			'activityText': faker.fake("{{lorem.paragraphs}}"),
-			'activityImage': `https://teamsnodesample.azurewebsites.net/static/img/image${Math.floor(Math.random() * (9 - 1 + 1)) + 1}.png`
+			'activityImage': `https://teamsnodesample.azurewebsites.net/static/img/image${Math.floor(Math.random() * 9) + 1}.png`
 		}, {
 			'title': 'Images',
 			'images': [{
 				'image': `https://teamsnodesample.azurewebsites.net/static/img/image1.png`
-			},{
+			}, {
 				'image': `https://teamsnodesample.azurewebsites.net/static/img/image2.png`
-			},{
+			}, {
 				'image': `https://teamsnodesample.azurewebsites.net/static/img/image3.png`
-			},{
+			}, {
 				'image': `https://teamsnodesample.azurewebsites.net/static/img/image4.png`
-			},{
-				'image': `https://teamsnodesample.azurewebsites.net/static/img/image5.png`
-			},{
-				'image': `https://teamsnodesample.azurewebsites.net/static/img/image6.png`
-			},{
-				'image': `https://teamsnodesample.azurewebsites.net/static/img/image7.png`
-			},{
-				'image': `https://teamsnodesample.azurewebsites.net/static/img/image8.png`
-			},{
-				'image': `https://teamsnodesample.azurewebsites.net/static/img/image9.png`
 			}]
 		}],
-		'potentialAction': []
+		'potentialAction': [
+			{
+				"@type": "ActionCard",
+				"name": "Leave a comment",
+				"inputs": [
+					{
+						"@type": "TextInput",
+						"id": "comment",
+						"isMultiline": true,
+						"title": "Enter your comment here"
+					}
+				],
+				"actions": [
+					{
+						"@type": "ViewAction",
+						"name": "Save",
+						"target": "https://www.microsoft.com"
+					}
+				]
+			},
+			{
+				"@type": "ActionCard",
+				"name": "Add a Due Date",
+				"inputs": [
+					{
+						"@type": "DateInput",
+						"id": "dueDate",
+						"title": "Enter your due date"
+					}
+				],
+				"actions": [
+					{
+						"@type": "ViewAction",
+						"name": "Save",
+						"target": "https://www.microsoft.com"
+					}
+				]
+			}
+		]
 	}
 
 	for (var i = 0; i < actions.length; i++) {
