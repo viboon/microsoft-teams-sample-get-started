@@ -3,15 +3,16 @@ const fs = require('fs-extra');
 const moment = require('moment');
 const utils = require('../utils/utils.js');
 
-var index = fs.readFileSync('./tabs/index.html', 'utf-8');
-var about = fs.readFileSync('./tabs/about.html', 'utf-8');
-
 var server;
 
 function start_listening() {
 
-	this.server.get('tabs/index', (req, res, next) => {
-		sendFile('./tabs/index.html', res);
+	this.server.get('tabs/teamtasks', (req, res, next) => {
+		sendFile('./tabs/teamtasks.html', res);
+	});
+
+	this.server.get('tabs/mytasks', (req, res, next) => {
+		sendFile('./tabs/mytasks.html', res);
 	});
 
 	this.server.get('tabs/about', (req, res, next) => {
@@ -22,7 +23,7 @@ function start_listening() {
 		sendFile('./tabs/configure.html', res);
 	});
 
-	this.server.get('api/tasks/my', (req, res, next) => {
+	this.server.get('api/tasks/team', (req, res, next) => {
 
 		var numdays = (typeof req.params.numdays === 'string') ? parseInt(req.params.numdays) : 5;
 
@@ -49,6 +50,19 @@ function start_listening() {
 
 	});
 
+	this.server.get('api/tasks/my', (req, res, next) => {
+
+		var ret = [];
+
+		var num_tasks = Math.floor(Math.random() * (10 - 2 + 1)) + 2;
+		for (var j = 0; j < num_tasks; j++){
+			ret.push(utils.createTask());
+		}
+
+		res.send(ret);
+		res.end();
+
+	});
 }
 
 function sendFile(path, res){

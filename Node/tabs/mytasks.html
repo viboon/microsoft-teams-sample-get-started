@@ -45,6 +45,7 @@
 			    cursor: -webkit-grab;
 			    box-shadow: 0 0 45px #DDD;
 			    border-radius: 5px;
+				border: 3px solid white
 			}
 
 			.task:hover{
@@ -57,6 +58,7 @@
 				cursor: pointer;
 				font-size: 12px;
 				border-bottom: 1px solid #ccc;
+				cursor: pointer;
 			}	
 
 			.task h3{
@@ -68,11 +70,13 @@
 				padding: 0;
 				margin: 7px 0;
 				font-family: 'Segoe UI Light', sans-serif;
+				cursor: pointer;
 			}
 
 			.task p.assigned{
 				text-align: right;
 				font-family: 'Segoe UI Regular', sans-serif;
+				cursor: pointer;
 			}
 
 			.task p.id{
@@ -81,6 +85,7 @@
 			    text-align: right;
 			    margin: 0;
 			    font-size: 9px;
+				cursor: pointer;
 			}
 
 			.task .image {
@@ -90,6 +95,7 @@
 			    border-radius: 10px;
 			    background-position: center;
 			    background-repeat: no-repeat;
+				cursor: pointer;
 			}
 
 		</style>
@@ -104,14 +110,31 @@
 			// Initialize the Microsoft Teams Library
 			microsoftTeams.initialize();
 
-			// Get the parameters from the url
+			function getLink(subEntityId, subEntityLabel) {
+				console.log(subEntityLabel);
+				console.log(subEntityId);
+				microsoftTeams.shareDeepLink({subEntityId: subEntityId, subEntityLabel: subEntityLabel});
+			}
+
+			var selectedTaskId;
+
+			function selectTask(taskId) {
+				console.log(taskId);
+				if (selectedTaskId != null) {
+					document.getElementById(selectedTaskId).style.border="";
+				}
+				document.getElementById(taskId).style.border="3px solid yellow";
+				selectedTaskId = taskId;
+			}
+
 			var teamId = getURLParam('teamId');
 			var numdays = getURLParam('numdays') || 5;
 			var channelId = getURLParam('channelId');
 			var color = getURLParam('color');
 
-			// Generate the content to show in the tab
-			var host = 'https://teamsnodesample.azurewebsites.net';
+			microsoftTeams.initialize();
+
+			var host = 'https://0a901af1.ngrok.io';
 			$.get(`${host}/api/tasks/my?numdays=${numdays}`, function( data ) {
 			  console.log(data);			  
 
@@ -128,8 +151,8 @@
 						var subentity = `${i}${j}`;
 						var image = `${host}/static/img/image${Math.floor(Math.random() * (9 - 1 + 1)) + 1}.png`;
 						var taskHTML = `
-							<li class="task" style='background-color:${color}'>								
-								<p class="id">${subentity}</p>
+							<li class="task" id="task-${subentity}" style='background-color:${color}' onclick="selectTask('task-${subentity}')">								
+								<p class="id" onclick="getLink(${subentity}, '${task.title}')">${subentity}</p>
 								<h3>${task.title}</h3>
 								<p>${task.description}</p>
 								<div class="image" style="background-image: url(${image});"></div>
@@ -144,6 +167,13 @@
 			  }
 
 			  $('#todos_container').html(html);
+
+			  microsoftTeams.getContext((context) => {		
+				  console.log(context.upn);
+				  console.log(context.subEntityId);
+				  selectTask("task-10");		
+				});
+				
 			});
 
 			function getURLParam(name) {

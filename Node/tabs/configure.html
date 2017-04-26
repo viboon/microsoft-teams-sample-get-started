@@ -4,6 +4,7 @@
 		<script src="https://statics.teams.microsoft.com/sdk/v0.4/js/MicrosoftTeams.min.js"></script>
 		<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
 		<style type="text/css">
+<<<<<<< 30133644075eaf09dbf26e88bb98c02fb39dab3d
 			body {
 				margin: 0;
 				padding: 10px 15px;
@@ -14,6 +15,15 @@
 				font-family: "Segoe UI Semilight","Segoe WPC","Segoe UI", Helvetica, Arial, "Arial Unicode MS", Sans-Serif;
 				font-size: 80%;
 			}
+=======
+			body{
+					margin:0;
+					background: transparent;
+					color: #ff0222;
+					font-family: "Segoe UI Semilight","Segoe WPC","Segoe UI", Helvetica, Arial, "Arial Unicode MS", Sans-Serif;
+					font-size:80%;
+				}
+>>>>>>> Split into team tasks and my tasks, add deep links
 			.row{
 				padding: 10px 0px;
 			}
@@ -48,7 +58,7 @@
 
 		<script type="text/javascript">
 			
-			var host = 'https://teamsnodesample.azurewebsites.net';
+			var host = 'https://0a901af1.ngrok.io';
 			var color = '';
 			var name = '';
 			var entity = '';
@@ -59,6 +69,7 @@
 			// Initialize the Microsoft Teams Library
 			microsoftTeams.initialize();
 
+<<<<<<< 30133644075eaf09dbf26e88bb98c02fb39dab3d
 			// Set the 'Save' Button state based on name field content
 			$('#name').on('input', function () {
 				if ($('#name').val().length != 0) {
@@ -68,6 +79,16 @@
 					microsoftTeams.settings.setValidityState(false);
 				}
 			});
+=======
+				color = $('#color').val();
+				name = $('#name').val();
+				numdays = $('#numdays').val();	
+				url = `${host}/tabs/teamtasks?teamId=${encodeURIComponent(context.teamId)}&channelId=${encodeURIComponent(context.channelId)}&color=${encodeURIComponent(color)}&numdays=${numdays}`;
+					
+				entity = `todotab-${name}-${context.teamId}-${context.channelId}`;
+				console.log(url);
+				console.log(entity);
+>>>>>>> Split into team tasks and my tasks, add deep links
 
 			// Save handler when user clicked on Save button
 			microsoftTeams.settings.registerOnSaveHandler(function(saveEvent){

@@ -1,7 +1,7 @@
 const restify = require('restify');
 const builder = require('botbuilder');
 
-process.env.ENVIROMENT = 'cloud';
+process.env.ENVIRONMENT = 'cloud';
 
 var server = restify.createServer();
 server.use(restify.queryParser());
@@ -15,8 +15,8 @@ server.get(/\/static\/?.*/, restify.serveStatic({
 }));
 
 var c = new builder.ChatConnector({ 
-	appId: (process.env.ENVIROMENT === 'local') ? '[local app id]' : 'd812b620-006e-406a-99e4-93d670f91748', 
-	appPassword: (process.env.ENVIROMENT === 'local') ? '[local app id]' : '664Zv3Q2GJe6DawSmeAHVfq'});
+	appId: (process.env.ENVIRONMENT === 'local') ? '[local app id]' : 'd812b620-006e-406a-99e4-93d670f91748', 
+	appPassword: (process.env.ENVIRONMENT === 'local') ? '[local app id]' : '664Zv3Q2GJe6DawSmeAHVfq'});
 var b = new builder.UniversalBot(c);
 
 var bot = require('./bot/bot.js');
