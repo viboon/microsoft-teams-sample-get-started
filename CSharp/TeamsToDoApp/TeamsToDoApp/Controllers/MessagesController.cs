@@ -54,11 +54,13 @@ namespace TeamsToDoApp
                 }
                 if (query.CommandId == "searchCmd")
                 {
+                    // query.Parameters has the parameters sent by client
+
                     var results = new ComposeExtensionResult()
                     {
                         AttachmentLayout = "list",
                         Type = "result",
-                        Attachments = new List<Attachment>(),
+                        Attachments = new List<InvokeResponseAttachment>(),
                     };
                     for (var i = 0; i < 5; i++)
                     {

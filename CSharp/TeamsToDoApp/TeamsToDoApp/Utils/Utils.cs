@@ -76,7 +76,7 @@ namespace TeamsToDoApp.Utils
     {
         public string AttachmentLayout { get; set; }
         public string Type { get; set; }
-        public List<Attachment> Attachments { get; set; }
+        public List<InvokeResponseAttachment> Attachments { get; set; }
     }
 
     public class InvokeResponseAttachment : Attachment
