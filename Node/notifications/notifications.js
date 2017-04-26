@@ -166,6 +166,9 @@ function start_listening() {
 	// This endpoint allows for sending connector messages. It checks if a webhook URL has been passed in first (set up as an incoming webhook)
 	// if not it checks if a connector has been registered with us
 	this.server.get('api/messages/connector/send', (req, res) => {
+
+		console.log('About to send');
+
 		var group_name = (typeof req.params.group_name === 'string') ? req.params.group_name : '';
 		var type = (typeof req.params.type === 'string') ? req.params.type : 'static';
 		var webhook_url = (typeof req.params.webhook_url === 'string') ? req.params.webhook_url : null;
@@ -178,15 +181,16 @@ function start_listening() {
 
 		// TODO: Generate actionable cards
 		var actions = [
-			{name:'Send Static Card', target:`${host}api/messages/connector/send?webhook_url=${webhook_url}&type=static`},
-			{name:'Send Actionable Card', target:`${host}api/messages/connector/send?webhook_url=${webhook_url}&type=actionable`},
+			{name:'Send Another Card', target:`${host}api/messages/connector/send?webhook_url=${webhook_url}&type=static`},
 			{name:'Microsoft.com', target:`https://www.microsoft.com`}
 		];
 
 		var message = utils.generateConnectorCard(actions);
-		res.send(webhook_url);		
+		res.send(`${webhook_url}`);
 
 		rest.postJson(webhook_url, message).on('complete', function(data, response) {
+			console.log(JSON.stringify(data, null, 1));
+			console.log(JSON.stringify(response, null, 1));
 			console.log('completed connector request');
 			res.end();
 		});
