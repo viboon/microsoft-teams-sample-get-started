@@ -19,7 +19,7 @@ function start_listening() {
 
 		var split = text.split(' ');
 
-		if (split.length < 2) {
+		if (split.length < 2 && !split[0].includes('help')) {
 			sendHelpMessage(session.message, this.bot, `I'm sorry, I did not understand you :( `);
 			return;
 		}
@@ -29,7 +29,7 @@ function start_listening() {
 		// Parse the command and go do the right thing
 		if (split[0].includes('create') || split[0].includes('find')) sendTaskMessage(session.message, this.bot, q.join(' '));
 		else if (split[0].includes('link')) createDeepLink(session.message, this.bot, q.join(' '));
-		else if (split[0].includes('help')) sendHelpMessage(session.message, this.bot, `Hi, here's how I can help you`);
+		else if (split[0].includes('help')) sendHelpMessage(session.message, this.bot, `Hi, I'm teamstodobot`);
 		else {
 			sendHelpMessage(session.message, this.bot, `I'm sorry, I did not understand you :( `);
 			return;
