@@ -67,7 +67,7 @@ module.exports.generateConnectorCard = function (actions) {
 			'activityTitle': faker.fake("{{name.firstName}} {{name.lastName}}"),
 			'activitySubtitle': "On Project Tango",
 			'activityText': faker.fake("{{lorem.paragraphs}}"),
-			'activityImage': `https://teamsnodesample.azurewebsites.net/static/img/image${Math.floor(Math.random() * 9) + 1}.png`
+			'activityImage': `https://teamsnodesample.azurewebsites.net/static/img/image${Math.floor(Math.random() * (9 - 1 + 1)) + 1}.png`
 		}, {
 			'title': 'Images',
 			'images': [{
@@ -82,39 +82,41 @@ module.exports.generateConnectorCard = function (actions) {
 		}],
 		'potentialAction': [
 			{
-				"@type": "ActionCard",
-				"name": "Leave a comment",
-				"inputs": [
+				'@context': 'http://schema.org',
+				'@type': 'ActionCard',
+				'name': 'Add a comment',
+				'inputs':[
 					{
-						"@type": "TextInput",
-						"id": "comment",
-						"isMultiline": true,
-						"title": "Enter your comment here"
+						'@type': 'TextInput',
+						'id': 'comment',
+						'title': 'enter your comment',
+						'isMultiline': true
 					}
 				],
-				"actions": [
+				'actions':[
 					{
-						"@type": "ViewAction",
-						"name": "Save",
-						"target": "https://www.microsoft.com"
+						'@type': 'ViewAction',
+						'name': 'Save comment',
+						'target': ['https://www.microsoft.com']
 					}
 				]
 			},
 			{
-				"@type": "ActionCard",
-				"name": "Add a Due Date",
-				"inputs": [
+				'@context': 'http://schema.org',
+				'@type': 'ActionCard',
+				'name': 'Due date',
+				'inputs':[
 					{
-						"@type": "DateInput",
-						"id": "dueDate",
-						"title": "Enter your due date"
+						'@type': 'DateInput',
+						'id': 'duedate',
+						'title': 'enter your due date'
 					}
 				],
-				"actions": [
+				'actions':[
 					{
-						"@type": "ViewAction",
-						"name": "Save",
-						"target": "https://www.microsoft.com"
+						'@type': 'ViewAction',
+						'name': 'Save comment',
+						'target': ['https://www.microsoft.com']
 					}
 				]
 			}
