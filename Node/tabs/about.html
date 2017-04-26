@@ -5,27 +5,39 @@
 		<style type="text/css">
 			body{
 				margin: 7% 20% 0 20%;
-			    color: #222;
-			    font-family: "Segoe UI Semilight","Segoe WPC","Segoe UI", Helvetica, Arial, "Arial Unicode MS", Sans-Serif;
-			    background: center bottom no-repeat transparent url(https://teamsnodesample.azurewebsites.net/static/img/welcome.fw.png);
-			    background-size: 58%;
-			    padding: 0;
-			    font-size: 80%;
-			    text-align: center;
+				color: #222;
+				font-family: "Segoe UI Light","Segoe WPC","Segoe UI", Helvetica, Arial, "Arial Unicode MS", Sans-Serif;
+				background: center bottom no-repeat transparent url(https://teamsnodesample.azurewebsites.net/static/img/welcome.fw.png);
+				background-size: 100%;
+				padding: 0;
+				font-size: 80%;
+				text-align: center;
+			}
+			#message{
+				margin-top: 15%;
+			    padding: 20px 20px 10px 20px;
+			    background: #FFFFFF;
+			    box-shadow: 0 0 45px #DDD;
+			    border-radius: 5px;
+			    border: 1px solid #EEE;
 			}
 			h2{
 				font-family: 'Segoe UI Black', sans-serif;
-				font-size: 200%;
-				color: #3F487F;
-			}
+				color: #1d3470;
+				border-bottom: 1px solid #ccc;
+				padding-bottom: 10px;
+			}	
 		</style>
 	</head>
 	<body>
-		<h2>Welcome to Teams To Do App</h2>
-		<p>This is a sample app we made for you. This app will showcase all the awesome capabilities in Microsoft Teams</p>
-		<p>You can talk to a bot, get notifications, use compose extensions, add tabs and more</p>
-		<p>The source code for this app is located at: </p>
-		<p>Video recordings of how this app was built are at: </p>
-		<p>Documentation on how to build apps for Microsoft Teams can be found at: </p>
+		<div id="message">
+			<h2>Thanks for using this To Do App!</h2>
+			<p>This is a sample app we made for you. This app will showcase all the awesome capabilities in Microsoft Teams</p>
+			<p>You can talk to a bot, get notifications, use compose extensions, add tabs and more</p>
+			<p>The source code for this app is located at: </p>
+			<p>Video recordings of how this app was built are at: </p>
+			<p>Documentation on how to build apps for Microsoft Teams can be found at: </p>
+			<p>If you'd like to reach out to us, you can do so via twitter, reddit, or email :)</p>
+		</div>
 	</body>
 </html>
