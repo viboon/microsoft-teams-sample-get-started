@@ -4,11 +4,13 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
+using Microsoft.Bot.Connector.Teams;
 using Newtonsoft.Json;
 using TeamsToDoApp.Utils;
 using Bogus;
 using System.Collections.Generic;
 using System;
+using Microsoft.Bot.Connector.Teams.Models;
 
 namespace TeamsToDoApp
 {
@@ -33,7 +35,7 @@ namespace TeamsToDoApp
                 var invokeResponse = GetInvokeResponse(activity);
 
                 // Return the response
-                return Request.CreateResponse<InvokeResponse>(HttpStatusCode.OK, invokeResponse);
+                return Request.CreateResponse<ComposeExtensionResponse>(HttpStatusCode.OK, invokeResponse);
             }
             else
             {
@@ -43,15 +45,15 @@ namespace TeamsToDoApp
             return response;
         }
 
-        private InvokeResponse GetInvokeResponse(Activity activity)
+        private ComposeExtensionResponse GetInvokeResponse(Activity activity)
         {
-            InvokeResponse response = null;
+            ComposeExtensionResponse response = null;
 
             var invoke = activity as IInvokeActivity;
 
-            if (invoke.Name == ComposeExtensionQuery.InvokeActivityName)
+            if (activity.IsComposeExtensionQuery())
             {
-                var query = JsonConvert.DeserializeObject<ComposeExtensionQuery>(invoke.Value.ToString());
+                var query = activity.GetComposeExtensionQueryData();
                 if (query.CommandId == null || query.Parameters == null)
                 {
                     return null;
@@ -64,17 +66,17 @@ namespace TeamsToDoApp
                     {
                         AttachmentLayout = "list",
                         Type = "result",
-                        Attachments = new List<InvokeResponseAttachment>(),
+                        Attachments = new List<ComposeExtensionAttachment>(),
                     };
                     for (var i = 0; i < 5; i++)
                     {
-                        var invokeResponseAttachment = new InvokeResponseAttachment(this.GenerateThumbnailCard().ToAttachment());
+                        var composeExtensionAttachment = this.GenerateThumbnailCard().ToAttachment().ToComposeExtensionAttachment();
                         
-                        results.Attachments.Add(invokeResponseAttachment);
+                        results.Attachments.Add(composeExtensionAttachment);
                     }
 
-                    response = new InvokeResponse()
-                    {
+                    response = new ComposeExtensionResponse()
+                    {                        
                         InputExtension = results
                     };
                 }

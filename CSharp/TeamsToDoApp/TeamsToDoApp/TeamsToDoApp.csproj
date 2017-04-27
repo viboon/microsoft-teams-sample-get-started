@@ -64,7 +64,7 @@
       <HintPath>..\packages\Microsoft.Bot.Connector.Common.3.6.0.0-alpha\lib\net461\Microsoft.Bot.Connector.Common.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Bot.Connector.Teams, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Bot.Connector.Teams.0.5.0-alpha\lib\net461\Microsoft.Bot.Connector.Teams.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Bot.Connector.Teams.0.5.2-alpha\lib\net461\Microsoft.Bot.Connector.Teams.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Extensions.Configuration, Version=1.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
