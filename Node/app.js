@@ -27,10 +27,13 @@ var input = require('./input/input.js');
 input.init(server, c, b);
 input.start_listening();
 
-
 var notifications = require('./notifications/notifications.js');
 notifications.init(server);
 notifications.start_listening();
+
+var connector = require('./connector/connector.js');
+connector.init(server);
+connector.start_listening();
 
 var tabs = require('./tabs/tabs.js');
 tabs.init(server);
