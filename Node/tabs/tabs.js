@@ -7,12 +7,8 @@ var server;
 
 function start_listening() {
 
-	this.server.get('tabs/teamtasks', (req, res, next) => {
-		sendFile('./tabs/teamtasks.html', res);
-	});
-
-	this.server.get('tabs/mytasks', (req, res, next) => {
-		sendFile('./tabs/mytasks.html', res);
+	this.server.get('tabs/index', (req, res, next) => {
+		sendFile('./tabs/index.html', res);
 	});
 
 	this.server.get('tabs/about', (req, res, next) => {
