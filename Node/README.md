@@ -5,13 +5,10 @@ Included in this project is sample code for available features in Microsoft Team
 ## The Node App
 
 ### Setting up:
-Clone the repo, then type: “npm install --save” then “node app.js”
-If you want to run locally there’s a couple things to do:
-1. In app.js change process.env.ENVIROMENT from ‘cloud’ to ‘local’
-2. In both ‘tabs/index.html’ and ‘tabs/configure.html’ update the ‘host’ variable to point to your local ngrok forwarding URL
+Clone the repo, then type: “npm install --save” then “node app.js”.
 
 If you want to run locally there’s a couple things to do:
-1. In app.js change process.env.ENVIROMENT from ‘cloud’ to ‘local’
+1. In app.js change process.env.ENVIRONMENT from ‘cloud’ to ‘local’
 2. In both ‘tabs/index.html’ and ‘tabs/configure.html’ update the ‘host’ variable to point to your local ngrok forwarding URL
 
 If you want to point to your own bots (which you’ll need to do for local development)

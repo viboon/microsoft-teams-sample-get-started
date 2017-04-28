@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>My Tasks</title>
+		<title>Team Tasks</title>
 		<script src="https://statics.teams.microsoft.com/sdk/v0.4/js/MicrosoftTeams.min.js"></script>
 		<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
 		<style type="text/css">
@@ -20,16 +20,14 @@
     			height: 90%;
     			min-width: 800px;
 			}
-			.mytasks{
+			.day{
 				height: 100%;
 				width: 20%;
 				padding: 0 30px;
 				list-style: none;
-			    margin-left: auto;
-			    margin-right: auto;
 			}
 
-			.mytasks li{
+			.day li{
 				margin-bottom: 30px;
 			}
 
@@ -57,10 +55,8 @@
 			.task h3{
 				font-family: 'Segoe UI Black', sans-serif;
 				color: #1d3470;
-				cursor: pointer;
 				font-size: 12px;
 				border-bottom: 1px solid #ccc;
-				cursor: pointer;
 			}	
 
 			.task h3{
@@ -72,11 +68,23 @@
 				padding: 0;
 				margin: 7px 0;
 				font-family: 'Segoe UI Light', sans-serif;
-				cursor: pointer;
+			}
+
+			.task p.assigned{
+				text-align: right;
+				font-family: 'Segoe UI Regular', sans-serif;
 			}
 
 			.task p.id{
 			    color: #CC0000;
+			    font-family: 'Segoe UI Black';
+			    text-align: right;
+			    margin: 0;
+			    font-size: 9px;
+			}
+
+			.task p.getlink{
+			    color: #1d3470;
 			    font-family: 'Segoe UI Black';
 			    text-align: right;
 			    margin: 0;
@@ -91,7 +99,6 @@
 			    border-radius: 10px;
 			    background-position: center;
 			    background-repeat: no-repeat;
-				cursor: pointer;
 			}
 
 		</style>
@@ -103,8 +110,22 @@
 
 		<script type="text/javascript">
 
-			// Initialize the Microsoft Teams Library
-			microsoftTeams.initialize();
+			function getURLParam(name){
+				var url = window.location.search.substring(1);
+				var variables = url.split('&');
+				for (var i = 0; i < variables.length; i++){
+					var variable = variables[i].split('=');
+					if (variable[0] === name){
+						return decodeURIComponent(variable[1]);
+					}
+				}
+			}
+
+			function getLink(subEntityId, subEntityLabel) {
+				console.log(subEntityLabel);
+				console.log(subEntityId);
+				microsoftTeams.shareDeepLink({subEntityId: subEntityId, subEntityLabel: subEntityLabel});
+			}
 
 			var selectedTaskId;
 
@@ -117,51 +138,59 @@
 				selectedTaskId = taskId;
 			}
 
+			var teamId = getURLParam('teamId');
+			var numdays = getURLParam('numdays') || 5;
+			var channelId = getURLParam('channelId');
+			var color = getURLParam('color');
+
 			microsoftTeams.initialize();
 
 			var host = 'https://teamsnodesample.azurewebsites.net';
-			$.get(`${host}/api/tasks/my`, function( data ) {
+			$.get(`${host}/api/tasks/team?numdays=${numdays}`, function( data ) {
 			  console.log(data);			  
 
-			  var html = `
-			  		<ul class="mytasks">
+			  var html = ``;
+
+			  for (var i = 0; i < data.length; i++){
+			  	var day = data[i];
+			  	var dayHTML = `
+			  		<ul id="friday" class="day">
 						<li class="title">
-							My Tasks
+							${day.title}
 						</li>
 					`;
 
-					for(var j = 0; j < data.length; j++){
-
-						var task = data[j];
-						var subentity = `${j}`;
+					for(var j = 0; j < data[i].tasks.length; j++){
+						var task = day.tasks[j];
+						var subentity = `${i}${j}`;
 						var image = `${host}/static/img/image${Math.floor(Math.random() * (9 - 1 + 1)) + 1}.png`;
 						var taskHTML = `
-							<li class="task" id="task-${subentity}" onclick="selectTask('task-${subentity}')">								
-								<p class="id" onclick="getLink(${subentity}, '${task.title}')">${subentity}</p>
+							<li class="task" id="task-${subentity}" style='background-color:${color}' onclick="selectTask('task-${subentity}')">								
+								<p class="id">${subentity}</p>
 								<h3>${task.title}</h3>
 								<p>${task.description}</p>
 								<div class="image" style="background-image: url(${image});"></div>
+								<p class="assigned">${task.assigned}</p>
+								<p class="getlink" onclick="getLink(${subentity}, '${task.title}')">Get Link</p>
 							</li>
 						`;
-
-						html += taskHTML;
+						dayHTML += taskHTML;
 					}
 
-				html += `</ul>`;
+				dayHTML += `</ul>`;
+				html += dayHTML;
+			  }
+
 			  $('#todos_container').html(html);
 
+			  microsoftTeams.getContext((context) => {		
+				  if(context.subEntityId != null) {
+					  selectTask(context.subEntityId);
+				  }
+				  selectTask("task-10");		// Temporary change because subEntityId not being returned correctly.
+				});
+				
 			});
-
-			function getURLParam(name) {
-				var url = window.location.search.substring(1);
-				var variables = url.split('&');
-				for (var i = 0; i < variables.length; i++) {
-					var variable = variables[i].split('=');
-					if (variable[0] === name) {
-						return decodeURIComponent(variable[1]);
-					}
-				}
-			}
 		</script>
 	</body>
 </html>
