@@ -197,8 +197,7 @@
 			microsoftTeams.getContext((context) => {
 				if (context.subEntityId != null) {
 					$(`#task-${context.subEntityId}`).addClass('selected');
-				}
-				if (channelId) (`#task-00`).addClass('selected');			// Temporary change because subEntityId not being returned correctly.
+				}				
 			});
 
 		});
