@@ -28,6 +28,8 @@
 			padding: 0 30px;
 			list-style: none;
 		}
+
+		.day.center {margin: 0 auto;}
 		
 		.day li {
 			margin-bottom: 30px;
@@ -139,12 +141,16 @@
 		$.get(`${host}/api/tasks/team?numdays=${numdays}`, function (data) {
 			var html = ``;
 
-			for (var i = 0; i < data.length; i++) {
+			var cols = (channelId) ? data.length : 1;
+			var title = (channelId) ? day.title : 'My Tasks';
+			var center = (channelId) ? '' : 'center';
+
+			for (var i = 0; i < cols; i++) {
 				var day = data[i];
 				var dayHTML = `
-			  		<ul id="friday" class="day">
+			  		<ul id="friday" class="day ${center}">
 						<li class="title">
-							${day.title}
+							${title}
 						</li>
 					`;
 
@@ -153,6 +159,7 @@
 					var subentity = `${i}${j}`;
 
 					var getLink = (channelId) ? '<p class="getlink">Get Link</p>' : '';
+					var assigned = (channelId) ? '<p class="assigned">${task.assigned}</p>' : '';
 
 					var image = `${host}/static/img/image${Math.floor(Math.random() * (9 - 1 + 1)) + 1}.png`;
 					var taskHTML = `
@@ -161,7 +168,7 @@
 								<h3 class="title">${task.title}</h3>
 								<p>${task.description}</p>
 								<div class="image" style="background-image: url(${image});"></div>
-								<p class="assigned">${task.assigned}</p>
+								${assigned}
 								${getLink}
 							</li>
 						`;
