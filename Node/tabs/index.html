@@ -137,7 +137,7 @@
 
 		microsoftTeams.initialize();
 
-		var host = 'https://6f3fd42e.ngrok.io';//https://teamsnodesample.azurewebsites.net';
+		var host = 'https://teamsnodesample.azurewebsites.net';
 		$.get(`${host}/api/tasks/team?numdays=${numdays}`, function (data) {
 			var html = ``;
 
@@ -147,7 +147,7 @@
 			for (var i = 0; i < cols; i++) {
 				var day = data[i];
 				var title = (channelId) ? day.title : 'My Tasks';
-				
+
 				var dayHTML = `
 			  		<ul id="friday" class="day ${center}">
 						<li class="title">
