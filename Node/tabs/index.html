@@ -137,16 +137,17 @@
 
 		microsoftTeams.initialize();
 
-		var host = 'https://teamsnodesample.azurewebsites.net';
+		var host = 'https://6f3fd42e.ngrok.io';//https://teamsnodesample.azurewebsites.net';
 		$.get(`${host}/api/tasks/team?numdays=${numdays}`, function (data) {
 			var html = ``;
 
-			var cols = (channelId) ? data.length : 1;
-			var title = (channelId) ? day.title : 'My Tasks';
+			var cols = (channelId) ? data.length : 1;			
 			var center = (channelId) ? '' : 'center';
 
 			for (var i = 0; i < cols; i++) {
 				var day = data[i];
+				var title = (channelId) ? day.title : 'My Tasks';
+				
 				var dayHTML = `
 			  		<ul id="friday" class="day ${center}">
 						<li class="title">
