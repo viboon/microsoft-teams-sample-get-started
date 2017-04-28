@@ -160,7 +160,7 @@
 					var subentity = `${i}${j}`;
 
 					var getLink = (channelId) ? '<p class="getlink">Get Link</p>' : '';
-					var assigned = (channelId) ? '<p class="assigned">${task.assigned}</p>' : '';
+					var assigned = (channelId) ? `<p class="assigned">${task.assigned}</p>` : '';
 
 					var image = `${host}/static/img/image${Math.floor(Math.random() * (9 - 1 + 1)) + 1}.png`;
 					var taskHTML = `
