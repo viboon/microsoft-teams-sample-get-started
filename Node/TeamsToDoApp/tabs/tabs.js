@@ -1,4 +1,3 @@
-const restify = require("restify");
 const fs = require('fs-extra');
 const moment = require('moment');
 const utils = require('../utils/utils.js');
@@ -8,7 +7,11 @@ var server;
 function start_listening() {
 
 	this.server.get('tabs/index', (req, res, next) => {
-		sendFile('./tabs/index.html', res);
+		if (req.cookies.REFRESH_TOKEN_CACHE_KEY === undefined) {
+			res.redirect('/login', next);
+		} else {
+			sendFile('./tabs/index.html', res);
+		}
 	});
 
 	this.server.get('tabs/about', (req, res, next) => {
