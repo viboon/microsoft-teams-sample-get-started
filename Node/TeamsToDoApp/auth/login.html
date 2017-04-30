@@ -1,18 +1,14 @@
-<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
-<script type="text/javascript">
+<html>
+<html>
+<head>
+	<title>Login</title>
+	<script src="https://statics.teams.microsoft.com/sdk/v0.4/js/MicrosoftTeams.min.js"></script>
+	<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
+	<style type="text/css">
+	</style>
+</head>
 
-var url;
-
-function login() {
-	window.location = url.replace(/&amp;/g, '&');
-}
-
-var host = 'https://fd5436aa.ngrok.io';
-$.get(`${host}/auth/url`, function (data) {
-		url = data.url;
-});
-
-</script>
+<body>
 <div class="ms-Grid">
 	<div class="ms-Grid-row">
 		<!-- App navigation bar markup. -->
@@ -33,3 +29,31 @@ $.get(`${host}/auth/url`, function (data) {
 		</div>
 	</div>
 </div>
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
+<script type="text/javascript">
+
+var url;
+
+function login() {
+	 
+	microsoftTeams.initialize();
+
+    microsoftTeams.authentication.authenticate({
+		url: url.replace(/&amp;/g, '&'),
+		width: 600,
+		height: 800,
+		successCallback: () => {window.location = '/tabs/index?auth=1';},
+		failureCallback: () => {}
+	});
+	//window.location = url.replace(/&amp;/g, '&');
+}
+
+var host = 'https://fd5436aa.ngrok.io';
+$.get(`${host}/auth/url`, function (data) {
+		url = data.url;
+});
+
+</script>
+</body>
+
+</html>
