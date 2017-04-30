@@ -6,7 +6,7 @@ var server;
 
 function start_listening() {
  
-    this.server.get('loginresult', (req, res, next) => {
+    this.server.get('login', (req, res, next) => {
 		if (req.query.code !== undefined) {
 			console.log(JSON.stringify(req.query));
 			authHelper.getTokenFromCode(req.query.code, function (e, accessToken, refreshToken) {
@@ -24,11 +24,14 @@ function start_listening() {
 				}
 			});
 		}
-  		sendFile('./auth/loginresult.html', res);
+		else
+		{
+    		sendFile('./auth/login.html', res);
+		}
 	});
 
-    this.server.get('login', (req, res, next) => {
-   		sendFile('./auth/login.html', res);
+    this.server.get('loginresult', (req, res, next) => {
+   		sendFile('./auth/loginresult.html', res);
 	});
 
 	this.server.get('/disconnect', function (req, res, next) {
