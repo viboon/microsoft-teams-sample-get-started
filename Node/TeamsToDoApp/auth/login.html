@@ -1,0 +1,35 @@
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
+<script type="text/javascript">
+
+var url;
+
+function login() {
+	window.location = url.replace(/&amp;/g, '&');
+}
+
+var host = 'https://fd5436aa.ngrok.io';
+$.get(`${host}/auth/url`, function (data) {
+		url = data.url;
+});
+
+</script>
+<div class="ms-Grid">
+	<div class="ms-Grid-row">
+		<!-- App navigation bar markup. -->
+		<div class="ms-NavBar">
+			<ul class="ms-NavBar-items">
+				<li class="navbar-header">Office 365 Connect sample</li>
+			</ul>
+		</div>
+		
+		<!-- App main content markup. -->
+		<div class="ms-Grid-col ms-u-mdPush1 ms-u-md9 ms-u-lgPush1 ms-u-lg6">
+			<div>
+				<p class="ms-font-xl">Use the button below to connect to Office 365.</p>
+				<button id="connect_button" class="ms-Button" onclick="login()">
+					<span class="ms-Button-label">Connect to Office 365</span>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
