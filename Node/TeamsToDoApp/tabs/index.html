@@ -1,7 +1,7 @@
 <html>
 
 <head>
-	<title>Team Tasks</title>
+	<title>Tasks</title>
 	<script src="https://statics.teams.microsoft.com/sdk/v0.4/js/MicrosoftTeams.min.js"></script>
 	<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
 	<style type="text/css">
@@ -13,9 +13,19 @@
 			font-size: 80%;
 		}
 		
+		#todos_header {
+			padding: 1% 1% 0.5%;
+			display: flex;
+			min-width: 800px;
+			font-family: 'Segoe UI Bold', sans-serif;
+			font-size: 120%;
+			color: #3F487F;
+			line-height: 0%
+		}
+
 		#todos_container {
 			margin: 0;
-			padding: 1% 2%;
+			padding: 1% 1% 0.5%;
 			display: flex;
 			width: 96%;
 			height: 90%;
@@ -113,9 +123,8 @@
 </head>
 
 <body>
-	<div id="todos_container">
-
-	</div>
+    <div id="todos_header"></div>
+    <div id="todos_container"></div>
 
 	<script type="text/javascript">
 		// Gets URL parameters
@@ -134,22 +143,26 @@
 		var numdays = getURLParam('numdays') || 5;
 		var channelId = getURLParam('channelId');
 		var color = getURLParam('color');
+		var web = getURLParam('web');
 
-		microsoftTeams.initialize();
+		if (web) {
+			$('#todos_header').html(`<h1>Task Tracker</h1>`);
+		}
 
-		var host = 'https://teamsnodesample.azurewebsites.net';
+		var host = 'https://fd5436aa.ngrok.io';
 		$.get(`${host}/api/tasks/team?numdays=${numdays}`, function (data) {
-			var html = ``;
 
-			var cols = (channelId) ? data.length : 1;			
-			var center = (channelId) ? '' : 'center';
+			var cols = (teamId) ? data.length : 1;  // Show single-column centered view of "my tasks"" if not inside a team
+			var center = (teamId) ? '' : 'center';
+
+         	var html = ``;
 
 			for (var i = 0; i < cols; i++) {
 				var day = data[i];
-				var title = (channelId) ? day.title : 'My Tasks';
+				var title = (teamId) ? day.title : 'My Tasks';
 
 				var dayHTML = `
-			  		<ul id="friday" class="day ${center}">
+			  		<ul id="day-${i}" class="day ${center}">
 						<li class="title">
 							${title}
 						</li>
@@ -159,8 +172,8 @@
 					var task = day.tasks[j];
 					var subentity = `${i}${j}`;
 
-					var getLink = (channelId) ? '<p class="getlink">Get Link</p>' : '';
-					var assigned = (channelId) ? `<p class="assigned">${task.assigned}</p>` : '';
+					var getLink = (teamId) ? '<p class="getlink">Get Link</p>' : '';
+					var assigned = (teamId) ? `<p class="assigned">${task.assigned}</p>` : '';
 
 					var image = `${host}/static/img/image${Math.floor(Math.random() * (9 - 1 + 1)) + 1}.png`;
 					var taskHTML = `
@@ -187,6 +200,8 @@
 				$('.task').removeClass('selected');
 				$(this).addClass('selected');
 			});
+
+     		microsoftTeams.initialize();
 
 			// Generates and popups up a dialog with a deep link to a sub entity
 			$('.getlink').on('click', function () {
