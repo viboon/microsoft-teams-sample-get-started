@@ -154,6 +154,7 @@
 
 			var cols = (teamId) ? data.length : 1;  // Show single-column centered view of "my tasks"" if not inside a team
 			var center = (teamId) ? '' : 'center';
+			var getLink = (teamId) ? '<p class="getlink">Get Link</p>' : '';
 
          	var html = ``;
 
@@ -171,18 +172,16 @@
 				for (var j = 0; j < data[i].tasks.length; j++) {					
 					var task = day.tasks[j];
 					var subentity = `${i}${j}`;
-
-					var getLink = (teamId) ? '<p class="getlink">Get Link</p>' : '';
-					var assigned = (teamId) ? `<p class="assigned">${task.assigned}</p>` : '';
-
+					var assigned = (teamId) ? task.assigned : '';
 					var image = `${host}/static/img/image${Math.floor(Math.random() * (9 - 1 + 1)) + 1}.png`;
+
 					var taskHTML = `
 							<li class="task" id="task-${subentity}" style='background-color:${color}'">								
 								<p class="id">${subentity}</p>
 								<h3 class="title">${task.title}</h3>
 								<p>${task.description}</p>
 								<div class="image" style="background-image: url(${image});"></div>
-								${assigned}
+								<p class="assigned">${assigned}</p>
 								${getLink}
 							</li>
 						`;
@@ -217,6 +216,12 @@
 			});
 
 		});
+
+		if (!teamId) {
+			$.get(`${host}/graph/me`, function (data) {
+				$('.assigned').html(data.displayName);
+			});
+		}
 	</script>
 </body>
 

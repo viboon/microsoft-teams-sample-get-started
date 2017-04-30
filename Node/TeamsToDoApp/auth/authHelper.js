@@ -69,7 +69,6 @@ function getTokenFromCode(code, callback) {
   );
 }
 
-
 /**
  * Gets a new access token via a previously issued refresh token.
  * @param {string} refreshToken A refresh token returned in a token response
