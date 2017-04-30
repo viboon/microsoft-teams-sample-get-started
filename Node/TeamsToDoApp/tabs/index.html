@@ -144,6 +144,7 @@
 		var channelId = getURLParam('channelId');
 		var color = getURLParam('color');
 		var web = getURLParam('web');
+		var auth = getURLParam('auth');
 
 		if (web) {
 			$('#todos_header').html(`<h1>Task Tracker</h1>`);
@@ -217,7 +218,7 @@
 
 		});
 
-		if (!teamId) {
+		if (auth && !teamId) {
 			$.get(`${host}/graph/me`, function (data) {
 				$('.assigned').html(data.displayName);
 			});

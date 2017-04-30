@@ -7,7 +7,7 @@ var server;
 function start_listening() {
 
 	this.server.get('tabs/index', (req, res, next) => {
-		if (req.cookies.REFRESH_TOKEN_CACHE_KEY === undefined) {
+		if (req.params.auth && (req.cookies.REFRESH_TOKEN_CACHE_KEY === undefined)) {
 			res.redirect('/login', next);
 		} else {
 			sendFile('./tabs/index.html', res);
