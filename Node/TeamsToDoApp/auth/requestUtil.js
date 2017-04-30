@@ -26,7 +26,7 @@ function executeRequestWithErrorHandling(req, res, requestType, requestPath, req
         authHelper.getTokenFromRefreshToken(
           req.cookies.REFRESH_TOKEN_CACHE_KEY,
           function (refreshError, accessToken) {
-            res.cookie(authHelper.ACCESS_TOKEN_CACHE_KEY, accessToken);
+            res.setCookie(authHelper.ACCESS_TOKEN_CACHE_KEY, accessToken);
             if (accessToken !== null) {
               executeRequest(
                 requestType,
@@ -132,10 +132,11 @@ function clearCookies(res) {
 }
 
 function renderError(res, e) {
-  res.render('error', {
+  res.send({
     message: e.message,
     error: e
   });
+  res.end();
 }
 
 exports.executeRequestWithErrorHandling = executeRequestWithErrorHandling;
