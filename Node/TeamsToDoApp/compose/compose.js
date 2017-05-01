@@ -9,7 +9,7 @@ function start_listening() {
 
 	this.server.post('api/bot', this.c.listen());
 
-	// Make sure to listen to the on invoke call. This is what triggers the input extension
+	// Make sure to listen to the on invoke call. This is what triggers the compose extension
 	this.c.onInvoke((msg, callback) => {
 
 		var v = msg.value;
@@ -29,7 +29,7 @@ function start_listening() {
 
 function generateResults(){
 	var results = {
-		inputExtension:{
+		composeExtension:{
 			attachmentLayout: 'list',
 			type: 'result',			
 		}
@@ -40,7 +40,7 @@ function generateResults(){
 		attachments.push(generateResultAttachment());
 	}
 
-	results.inputExtension.attachments = attachments;
+	results.composeExtension.attachments = attachments;
 	return results;
 }
 
