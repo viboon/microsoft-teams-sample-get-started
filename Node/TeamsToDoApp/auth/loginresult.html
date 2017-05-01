@@ -2,23 +2,12 @@
 <head>
 	<title>Login success</title>
 	<script src="https://statics.teams.microsoft.com/sdk/v0.4/js/MicrosoftTeams.min.js"></script>
-	<style type="text/css">
-	</style>
 </head>
-
 <body>
 <p onclick="success()">Success!</p>
-<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
 <script type="text/javascript">
-
-microsoftTeams.initialize();
-
-function success() {
-	
-   microsoftTeams.authentication.notifySuccess();
-
-}
+	microsoftTeams.initialize();
+	microsoftTeams.authentication.notifySuccess();
 </script>
 </body>
-
 </html>

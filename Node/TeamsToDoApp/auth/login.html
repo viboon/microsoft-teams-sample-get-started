@@ -5,31 +5,59 @@
 	<script src="https://statics.teams.microsoft.com/sdk/v0.4/js/MicrosoftTeams.min.js"></script>
 	<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
 	<style type="text/css">
+		body {
+			margin: 0;
+			background: transparent;
+			color: #222;
+			font-family: "Segoe UI Semilight", "Segoe WPC", "Segoe UI", Helvetica, Arial, "Arial Unicode MS", Sans-Serif;
+			font-size: 80%;
+		}
+		
+		#todos_header {
+			padding: 1% 1% 0.5%;
+			display: flex;
+			min-width: 800px;
+			font-family: 'Segoe UI Bold', sans-serif;
+			font-size: 120%;
+			color: #3F487F;
+			line-height: 0%
+		}
+
+		#todos_container {
+			margin: 0;
+			padding: 1% 1% 0.5%;
+			display: flex;
+			width: 96%;
+			height: 90%;
+			min-width: 800px;
+		}
+
+		button {
+			background-color: #3F487F;
+			border: none;
+			color: white;
+			padding: 15px 32px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			font-size: 16px;
+			width: 250px;
+			height: 50px;
+			cursor: pointer;
+		}
+
 	</style>
 </head>
 
 <body>
-<div class="ms-Grid">
-	<div class="ms-Grid-row">
-		<!-- App navigation bar markup. -->
-		<div class="ms-NavBar">
-			<ul class="ms-NavBar-items">
-				<li class="navbar-header">Office 365 Connect sample</li>
-			</ul>
-		</div>
-		
-		<!-- App main content markup. -->
-		<div class="ms-Grid-col ms-u-mdPush1 ms-u-md9 ms-u-lgPush1 ms-u-lg6">
-			<div>
-				<p class="ms-font-xl">Use the button below to connect to Office 365.</p>
-				<button id="connect_button" class="ms-Button" onclick="login()">
-					<span class="ms-Button-label">Connect to Office 365</span>
-				</button>
-			</div>
-		</div>
-	</div>
+<div id="todos_header">
+	<h1>Task Tracker</h1>
 </div>
-<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
+<div id="todos_container">
+	<button id="signIn" onclick="login()">
+		Sign In
+	</button>
+</div>
 <script type="text/javascript">
 
 	function getURLParam(name) {
