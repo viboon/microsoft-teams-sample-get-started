@@ -73,6 +73,7 @@
 			var entity = '';
 			var numdays = '';
 			var url = '';
+			var websiteUrl = '';
 			var context;
 			var auth = getURLParam('auth');
 
@@ -98,6 +99,7 @@
 					name = $('#name').val();
 					numdays = $('#numdays').val();
 					url = `${host}/tabs/index?teamId=${encodeURIComponent(context.teamId)}&channelId=${encodeURIComponent(context.channelId)}&color=${encodeURIComponent(color)}&numdays=${numdays}&auth=${auth}`;
+					websiteUrl = url + `&web=1`;
 
 					entity = `todotab-${name}-${context.teamId}-${context.channelId}`
 
@@ -105,7 +107,7 @@
 						entityId: entity,
 						contentUrl: url,
 						suggestedDisplayName: name,
-						websiteUrl: url
+						websiteUrl: websiteUrl
 					});
 
 					saveEvent.notifySuccess();
