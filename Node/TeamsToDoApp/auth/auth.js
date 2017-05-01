@@ -9,14 +9,16 @@ function start_listening() {
     this.server.get('login', (req, res, next) => {
 		if (req.query.code !== undefined) {
 			authHelper.getTokenFromCode(req.query.code, function (e, accessToken, refreshToken) {
-				console.log('got it');
 				if (e === null) {
-					console.log('set cookies');
 					// cache the refresh token in a cookie and go back to index
 					res.setCookie(authHelper.ACCESS_TOKEN_CACHE_KEY, accessToken);
 					res.setCookie(authHelper.REFRESH_TOKEN_CACHE_KEY, refreshToken);
-					console.log('Redirect to: ' + '/loginresult?redirectUrl='+req.params.state);
-					res.redirect('/loginresult?redirectUrl='+req.params.state, next);
+					if (req.params.state)
+					{
+						res.redirect(req.params.state, next);
+					} else {
+						res.redirect('/loginresult', next);
+					}
 				} else {
 					console.log(JSON.parse(e.data).error_description);
 					res.status(500);
@@ -43,9 +45,7 @@ function start_listening() {
 	});
 
 	this.server.get('auth/url', (req, res, next) => {
-		console.log('here');
-		console.log('redirectUrl param: ' + req.params.redirectUrl);
-		var ret = { url: authHelper.getAuthUrl(req.params.redirectUrl) };
+		var ret = { authUrl: authHelper.getAuthUrl() };
 		res.send(ret);
 		res.end();
 	});
