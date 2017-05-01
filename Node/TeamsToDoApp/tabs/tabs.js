@@ -7,11 +7,7 @@ var server;
 function start_listening() {
 
 	this.server.get('tabs/index', (req, res, next) => {
-		if (req.params.auth && (req.cookies.REFRESH_TOKEN_CACHE_KEY === undefined)) {
-			res.redirect('/login', next);
-		} else {
-			sendFile('./tabs/index.html', res);
-		}
+		sendFileOrLogin('./tabs/index.html', req, res, next);
 	});
 
 	this.server.get('tabs/about', (req, res, next) => {
@@ -19,7 +15,7 @@ function start_listening() {
 	});
 
 	this.server.get('tabs/configure', (req, res, next) => {
-		sendFile('./tabs/configure.html', res);
+		sendFileOrLogin('./tabs/configure.html', req, res, next);
 	});
 
 	this.server.get('api/tasks/team', (req, res, next) => {
@@ -74,6 +70,17 @@ function sendFile(path, res){
 
 	res.write(data);
 	res.end();
+}
+
+function sendFileOrLogin(path, req, res, next){
+	if (req.params.auth && (req.cookies.REFRESH_TOKEN_CACHE_KEY === undefined)) {
+		console.log(req.url);
+		console.log('Redirect to: ' + '/login?redirectUrl='+encodeURIComponent(req.url));
+
+		res.redirect('/login?redirectUrl='+encodeURIComponent(req.url), next);
+	} else {
+		sendFile(path, res);
+	}
 }
 
 module.exports.init = function(server) {
