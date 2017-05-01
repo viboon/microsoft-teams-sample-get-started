@@ -74,10 +74,13 @@ function sendFile(path, res){
 
 function sendFileOrLogin(path, req, res, next){
 	if (req.params.auth && (req.cookies.REFRESH_TOKEN_CACHE_KEY === undefined)) {
-		console.log(req.url);
-		console.log('Redirect to: ' + '/login?redirectUrl='+encodeURIComponent(req.url));
-
-		res.redirect('/login?redirectUrl='+encodeURIComponent(req.url), next);
+		var redirectUrl = '/login?';
+		if (req.params.web) {
+			redirectUrl += 'web=' + req.params.web +'&';
+		}
+		redirectUrl += 'redirectUrl=' + encodeURIComponent(req.url);
+		console.log(redirectUrl);
+		res.redirect(redirectUrl, next);
 	} else {
 		sendFile(path, res);
 	}
