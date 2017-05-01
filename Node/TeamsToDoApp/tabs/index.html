@@ -160,7 +160,7 @@
 			$('#todos_header').html(`<h1>Task Tracker</h1>`);
 		}
 
-		var host = 'https://fd5436aa.ngrok.io';
+		var host = 'https://teamsnodesample.azurewebsites.net';
 		$.get(`${host}/api/tasks/team?numdays=${numdays}`, function (data) {
 
 			var cols = (teamId) ? data.length : 1;  // Show single-column centered view of "my tasks if not inside a team
