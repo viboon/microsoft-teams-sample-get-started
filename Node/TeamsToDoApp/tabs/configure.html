@@ -15,7 +15,7 @@
 				font-size: 80%;
 			}
 			.row{
-				padding: 10px 0px;
+				padding: 15px 0px;
 			}
 			.row input{
 				border:none;
@@ -28,10 +28,18 @@
 			.row input:hover{background-color: rgba(0,0,0,0.05);}
 			.row input:active{background-color: rgba(0,0,0,0.1);}
 
+			#todos_signin {
+				font-family: 'Segoe UI Bold', sans-serif;
+				font-size: 100%;
+				color: #3F487F;
+				text-align: right;
+				min-height: 16px;
+				margin: 0 16px;
+			}
 		</style>
 	</head>
 	<body>
-
+	    <div id="todos_signin"></div>
 		<div class="row">
 			<label for="name">What would you like to name this tab: </label>
 			<input type="text" name="name" id="name" value="" autofocus />
@@ -47,6 +55,17 @@
 
 
 		<script type="text/javascript">
+
+			function getURLParam(name) {
+				var url = window.location.search.substring(1);
+				var variables = url.split('&');
+				for (var i = 0; i < variables.length; i++) {
+					var variable = variables[i].split('=');
+					if (variable[0] === name) {
+						return decodeURIComponent(variable[1]);
+					}
+				}
+			}
 			
 			var host = ' https://fd5436aa.ngrok.io';
 			var color = '';
@@ -55,6 +74,7 @@
 			var numdays = '';
 			var url = '';
 			var context;
+			var auth = getURLParam('auth');
 
 			// Initialize the Microsoft Teams Library
 			microsoftTeams.initialize();
@@ -77,7 +97,7 @@
 					color = $('#color').val();
 					name = $('#name').val();
 					numdays = $('#numdays').val();
-					url = `${host}/tabs/index?teamId=${encodeURIComponent(context.teamId)}&channelId=${encodeURIComponent(context.channelId)}&color=${encodeURIComponent(color)}&numdays=${numdays}`;
+					url = `${host}/tabs/index?teamId=${encodeURIComponent(context.teamId)}&channelId=${encodeURIComponent(context.channelId)}&color=${encodeURIComponent(color)}&numdays=${numdays}&auth=${auth}`;
 
 					entity = `todotab-${name}-${context.teamId}-${context.channelId}`
 
@@ -92,6 +112,11 @@
 				});
 			});
 
+			if (auth) {
+				$.get(`${host}/graph/me`, function (data) {
+					$('#todos_signin').html(`<div class="signin">Signed in as: ${data.displayName} </div>`);
+				});
+			}
 
 		</script>
 	</body>
