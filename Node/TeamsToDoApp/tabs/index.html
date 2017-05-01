@@ -119,10 +119,20 @@
 			background-position: center;
 			background-repeat: no-repeat;
 		}
+
+		#todos_signin {
+			font-family: 'Segoe UI Bold', sans-serif;
+			font-size: 100%;
+			color: #3F487F;
+			text-align: right;
+			min-height: 16px;
+			margin: 0 16px;
+		}
 	</style>
 </head>
 
 <body>
+    <div id="todos_signin"></div>
     <div id="todos_header"></div>
     <div id="todos_container"></div>
 
@@ -153,7 +163,7 @@
 		var host = 'https://fd5436aa.ngrok.io';
 		$.get(`${host}/api/tasks/team?numdays=${numdays}`, function (data) {
 
-			var cols = (teamId) ? data.length : 1;  // Show single-column centered view of "my tasks"" if not inside a team
+			var cols = (teamId) ? data.length : 1;  // Show single-column centered view of "my tasks if not inside a team
 			var center = (teamId) ? '' : 'center';
 			var getLink = (teamId) ? '<p class="getlink">Get Link</p>' : '';
 
@@ -218,9 +228,9 @@
 
 		});
 
-		if (auth && !teamId) {
+		if (auth) {
 			$.get(`${host}/graph/me`, function (data) {
-				$('.assigned').html(data.displayName);
+				$('#todos_signin').html(`<div class="signin">Signed in as: ${data.displayName} </div>`);
 			});
 		}
 	</script>
