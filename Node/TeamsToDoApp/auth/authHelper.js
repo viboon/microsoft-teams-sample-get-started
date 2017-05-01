@@ -28,15 +28,18 @@ var credentials = {
  * Generate a fully formed uri to use for authentication based on the supplied resource argument
  * @return {string} a fully formed uri with which authentication can be completed
  */
-function getAuthUrl() {
-  return credentials.authority + credentials.authorize_endpoint +
+function getAuthUrl(redirectUrl) {
+  var authUrl = credentials.authority + credentials.authorize_endpoint +
     '?client_id=' + credentials.client_id +
     '&response_type=code' +
-    '&redirect_uri=' + credentials.redirect_uri +
+    '&redirect_uri=' + credentials.redirect_uri  +
     '&scope=' + credentials.scope +
     '&response_mode=query' +
     '&nonce=' + uuid.v4() +
-    '&state=abcd';
+    '&state=' + redirectUrl;
+
+  console.log('Auth URL:' + authUrl);
+  return authUrl;
 }
 
 /**
