@@ -49,7 +49,6 @@
 			font-family: 'Segoe UI Bold', sans-serif;
 			font-size: 200%;
 			color: #3F487F;
-			text-align: center;
 		}
 		
 		.task {
@@ -64,7 +63,7 @@
 		
 		.task.selected {
 			box-shadow: 0 0 25px #999;
-			border: 3px solid #cdc6ff;
+			border: 3px solid #cc0000;
 		}
 		
 		.task:hover {
@@ -152,9 +151,9 @@
 		var teamId = getURLParam('teamId');
 		var numdays = getURLParam('numdays') || 5;
 		var channelId = getURLParam('channelId');
-		var color = getURLParam('color');
 		var web = getURLParam('web');
 		var auth = getURLParam('auth');
+		var color = getURLParam('color') || '#fffad1';
 
 		var host = 'https://fd5436aa.ngrok.io';
 
@@ -166,31 +165,33 @@
 
 		$.get(`${host}/api/tasks/team?numdays=${numdays}`, function (data) {
 
-			var cols = (teamId) ? data.length : 1;  // Show single-column centered view of "my tasks if not inside a team
-			var center = (teamId) ? '' : 'center';
-			var getLink = (teamId) ? '<p class="getlink">Get Link</p>' : '';
-
-         	var html = ``;
+        	var html = ``;
+			var cols = data.length;			
+			var owner = (channelId) ? 'team' : 'mine';
 
 			for (var i = 0; i < cols; i++) {
-				var day = data[i];
-				var title = (teamId) ? day.title : 'My Tasks';
+				var day = data[i];				
 
 				var dayHTML = `
-			  		<ul id="day-${i}" class="day ${center}">
+			  		<ul id="day-{i}" class="day">
 						<li class="title">
-							${title}
+							${day.title}
 						</li>
 					`;
 
-				for (var j = 0; j < data[i].tasks.length; j++) {					
+				var rows = (channelId) ? data[i].tasks.length : data[i].tasks.length * 0.3;
+				for (var j = 0; j < rows; j++) {					
 					var task = day.tasks[j];
 					var subentity = `${i}${j}`;
-					var assigned = (teamId) ? task.assigned : '';
-					var image = `${host}/static/img/image${Math.floor(Math.random() * (9 - 1 + 1)) + 1}.png`;
 
+					var getLink = (channelId) ? '<p class="getlink">Get Link</p>' : '';					
+					var style = (task.assigned == 'Richard Taylor' || typeof channelId === 'undefined') ? `background-color:${color}; border-color:${color}` : '';
+					
+					var assigned = (channelId) ? `<p class="assigned">${task.assigned}</p>` : '';
+
+					var image = `https://teamsnodesample.azurewebsites.net/static/img/image${Math.floor(Math.random() * 9) + 1}.png`;
 					var taskHTML = `
-							<li class="task" id="task-${subentity}" style='background-color:${color}'">								
+							<li class="task" id="task-${subentity}" style='${style}'">								
 								<p class="id">${subentity}</p>
 								<h3 class="title">${task.title}</h3>
 								<p>${task.description}</p>

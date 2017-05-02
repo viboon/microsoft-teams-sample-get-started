@@ -1,10 +1,16 @@
 const rest = require('restler');
+const fs = require('fs-extra');
 const utils = require('../utils/utils.js');
 
 var server;
 var host = (process.env.ENVIROMENT === 'local') ? 'http://localhost:3998/' : 'http://teamsnodesample.azurewebsites.net/';
+var connectors = {};
 
 function start_listening() {
+
+    this.server.get('connector/setup', (req, res, next) => {
+		sendFile('./connector/setup.html', res);
+	});
 
     // TODO: Figure out how to register this to teams and not to emails
     this.server.get('api/messages/connector/register', (req, res) => {
@@ -21,13 +27,15 @@ function start_listening() {
 
         res.send(webhook_url);
 
-        // TODO, when this works hook it up to send a card.
-        rest.postJson(webhook_url, {
+        // Generate connector message
+        var message = utils.generateConnectorCard();
+        res.send(`${webhook_url}`);
 
-            text: `A connector for the group ${group_name} has been setup! Please let Luis know so he can set up a proper card`
-
-        }).on('complete', function (data, response) {
-            console.log('completed connector setup');
+        // Post to connectors endpoint so they can route the message properly
+        rest.postJson(webhook_url, message).on('complete', function (data, response) {
+            console.log(JSON.stringify(data, null, 1));
+            console.log(JSON.stringify(response, null, 1));
+            console.log('completed connector request');
             res.end();
         });
     });
@@ -50,13 +58,8 @@ function start_listening() {
             res.end();
         }
 
-        var actions = [
-            { name: 'Send Another Card', target: `${host}api/messages/connector/send?webhook_url=${webhook_url}&type=static` },
-            { name: 'Microsoft.com', target: `https://www.microsoft.com` }
-        ];
-
         // Generate connector message
-        var message = utils.generateConnectorCard(actions);
+        var message = utils.generateConnectorCard();
         res.send(`${webhook_url}`);
 
         // Post to connectors endpoint so they can route the message properly
@@ -69,6 +72,18 @@ function start_listening() {
 
     });
 
+}
+
+function sendFile(path, res){
+	
+	var data = fs.readFileSync(path, 'utf-8');
+	res.writeHead(200, {
+		'Content-Length': Buffer.byteLength(data),
+  		'Content-Type': 'text/html'
+	});
+
+	res.write(data);
+	res.end();
 }
 
 module.exports.init = function (server) {

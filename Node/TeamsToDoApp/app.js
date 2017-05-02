@@ -25,9 +25,9 @@ var bot = require('./bot/bot.js');
 bot.init(server, c, b);
 bot.start_listening();
 
-var input = require('./input/input.js');
-input.init(server, c, b);
-input.start_listening();
+var compose = require('./compose/compose.js');
+compose.init(server, c, b);
+compose.start_listening();
 
 var notifications = require('./notifications/notifications.js');
 notifications.init(server);

@@ -16,7 +16,7 @@ function start_listening() {
 	this.bot.dialog('/', (session) => {
 
 		var text = utils.getTextWithoutMentions(session.message); // Make sure you strip mentions out before you parse the message
-
+		console.log('dialog started ' + text);
 		var split = text.split(' ');
 
 		if (split.length < 2 && !split[0].includes('help')) {
@@ -68,14 +68,14 @@ function createDeepLink(message, bot, tabName) {
 	var teamId = message.sourceEvent.teamsTeamId;
 	var channelId = message.sourceEvent.teamsChannelId;
 
-	var appId = '5bebb729-cf47-4937-b4b2-8f9b818d9655'; // This is the app ID you set up in your manifest.json file.
+	var appId = '9a1d84aa-225b-4856-83f8-ebaeca22b964'; // This is the app ID you set up in your manifest.json file.
 	var entity = `todotab-${name}-${teamId}-${channelId}`; // Match the entity ID we setup when configuring the tab
 	var context = {
 		channelId: channelId,
-		canvasUrl: 'https://teams.microsoft.com'
+		canvasUrl: 'https://devspaces.skype.com'
 	};
 
-	var url = `https://teams.microsoft.com/l/entity/${encodeURIComponent(appId)}/${encodeURIComponent(entity)}?label=${encodeURIComponent(name)}&context=${encodeURIComponent(JSON.stringify(context))}`;
+	var url = `https://devspaces.skype.com/l/entity/${encodeURIComponent(appId)}/${encodeURIComponent(entity)}?label=${encodeURIComponent(name)}&context=${encodeURIComponent(JSON.stringify(context))}`;
 
 	var text = `Here's your [deeplink](${url}): \n`;
 	text += `\`${decodeURIComponent(url)}\``;
@@ -90,7 +90,7 @@ function sendTaskMessage(message, bot, taskTitle) {
 
 	var text = `Here's your task: \n\n`;
 	text += `---\n\n`;
-	text += `**Task Title:** ${task.title}\n\n`;
+	text += `![**Task Title:** ${task.title}](${`https://teamsnodesample.azurewebsites.net/static/img/image${Math.floor(Math.random() * 9) + 1}.png`})\n\n`;
 	text += `**Task ID:** ${10}\n\n`;
 	text += `**Task Description:** ${task.description}\n\n`;
 	text += `**Assigned To:** ${task.assigned}\n\n`;
