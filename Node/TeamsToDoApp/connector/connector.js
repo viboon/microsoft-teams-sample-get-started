@@ -6,6 +6,10 @@ var host = (process.env.ENVIROMENT === 'local') ? 'http://localhost:3998/' : 'ht
 
 function start_listening() {
 
+    this.server.get('connector/setup', (req, res, next) => {
+		sendFile('./connector/setup.html', res);
+	});
+
     // TODO: Figure out how to register this to teams and not to emails
     this.server.get('api/messages/connector/register', (req, res) => {
         
