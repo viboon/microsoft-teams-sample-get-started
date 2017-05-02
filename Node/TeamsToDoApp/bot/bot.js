@@ -16,7 +16,7 @@ function start_listening() {
 	this.bot.dialog('/', (session) => {
 
 		var text = utils.getTextWithoutMentions(session.message); // Make sure you strip mentions out before you parse the message
-
+		console.log('dialog started ' + text);
 		var split = text.split(' ');
 
 		if (split.length < 2 && !split[0].includes('help')) {
@@ -90,7 +90,7 @@ function sendTaskMessage(message, bot, taskTitle) {
 
 	var text = `Here's your task: \n\n`;
 	text += `---\n\n`;
-	text += `**Task Title:** ${task.title}\n\n`;
+	text += `![**Task Title:** ${task.title}](${`https://teamsnodesample.azurewebsites.net/static/img/image${Math.floor(Math.random() * 9) + 1}.png`})\n\n`;
 	text += `**Task ID:** ${10}\n\n`;
 	text += `**Task Description:** ${task.description}\n\n`;
 	text += `**Assigned To:** ${task.assigned}\n\n`;
