@@ -126,7 +126,7 @@
 			color: #3F487F;
 			text-align: right;
 			min-height: 16px;
-			margin: 0 16px;
+			margin: 16px 16px;
 		}
 	</style>
 </head>
@@ -156,11 +156,14 @@
 		var web = getURLParam('web');
 		var auth = getURLParam('auth');
 
-		if (web) {
-			$('#todos_header').html(`<h1>Task Tracker</h1>`);
+		var host = 'https://fd5436aa.ngrok.io';
+
+		if (auth) {
+			$.get(`${host}/graph/me`, function (data) {
+				$('#todos_signin').html(`<div class="signin">Signed in as: ${data.displayName} </div>`);
+			});
 		}
 
-		var host = 'https://fd5436aa.ngrok.io';
 		$.get(`${host}/api/tasks/team?numdays=${numdays}`, function (data) {
 
 			var cols = (teamId) ? data.length : 1;  // Show single-column centered view of "my tasks if not inside a team
@@ -211,28 +214,26 @@
 				$(this).addClass('selected');
 			});
 
-     		microsoftTeams.initialize();
+			if (web) {
+				$('#todos_header').html(`<h1>Task Tracker</h1>`);
+			} else {
+				// Page is inside Microsoft Teams tab.  Don't show the page header/navigation.
+				microsoftTeams.initialize();
 
-			// Generates and popups up a dialog with a deep link to a sub entity
-			$('.getlink').on('click', function () {
-				var subEntityId = $(this).siblings('.id').text();
-				var subEntityLabel = $(this).siblings('.title').text();
-				microsoftTeams.shareDeepLink({ subEntityId: subEntityId, subEntityLabel: subEntityLabel });
-			});
+				// Generates and popups up a dialog with a deep link to a sub entity
+				$('.getlink').on('click', function () {
+					var subEntityId = $(this).siblings('.id').text();
+					var subEntityLabel = $(this).siblings('.title').text();
+					microsoftTeams.shareDeepLink({subEntityId: subEntityId, subEntityLabel: subEntityLabel});
+				});
 
-			microsoftTeams.getContext((context) => {
-				if (context.subEntityId != null) {
-					$(`#task-${context.subEntityId}`).addClass('selected');
-				}				
-			});
-
+				microsoftTeams.getContext((context) => {
+					if (context.subEntityId != null) {
+						$(`#task-${context.subEntityId}`).addClass('selected');
+					}				
+				});
+			}
 		});
-
-		if (auth) {
-			$.get(`${host}/graph/me`, function (data) {
-				$('#todos_signin').html(`<div class="signin">Signed in as: ${data.displayName} </div>`);
-			});
-		}
 	</script>
 </body>
 

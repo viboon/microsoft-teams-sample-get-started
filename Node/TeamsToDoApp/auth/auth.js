@@ -10,15 +10,10 @@ function start_listening() {
 		if (req.query.code !== undefined) {
 			authHelper.getTokenFromCode(req.query.code, function (e, accessToken, refreshToken) {
 				if (e === null) {
-					// cache the refresh token in a cookie and go back to index
+					// cache the refresh token in a cookie and go to page configured in 'state' param
 					res.setCookie(authHelper.ACCESS_TOKEN_CACHE_KEY, accessToken);
 					res.setCookie(authHelper.REFRESH_TOKEN_CACHE_KEY, refreshToken);
-					if (req.params.state)
-					{
-						res.redirect(req.params.state, next);
-					} else {
-						res.redirect('/loginresult', next);
-					}
+					res.redirect(req.params.state, next);
 				} else {
 					console.log(JSON.parse(e.data).error_description);
 					res.status(500);

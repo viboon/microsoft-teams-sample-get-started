@@ -68,25 +68,29 @@
 		}
 	}
 
-	function login() {
-		var host = 'https://fd5436aa.ngrok.io';
-		$.get(`${host}/auth/url`, function (data) {
-			var authUrl = data.authUrl.replace(/&amp;/g, '&');
-			if (getURLParam('web')) {
-				authUrl += '&state=' + encodeURIComponent(getURLParam('redirectUrl'));
-				window.location = authUrl.replace(/&amp;/g, '&');
-			} else {
-				microsoftTeams.initialize();
+	microsoftTeams.initialize();
 
-				microsoftTeams.authentication.authenticate({
-					url: authUrl,
-					width: 600,
-					height: 800,
-					successCallback: () => {window.location = getURLParam('redirectUrl');},
-					failureCallback: () => {}
-				});
-			}
-		});
+	var host = 'https://fd5436aa.ngrok.io';
+	var authUrl;
+	$.get(`${host}/auth/url`, function (data) {
+		authUrl = data.authUrl;
+	});
+	
+	function login() {
+		if (getURLParam('web')) {
+			window.location = authUrl + '&state=' + encodeURIComponent(getURLParam('redirectUrl'));
+		} else {
+			//Inside Microsoft Teams.  Login via Teams pop-up.
+			//After success, redirect popup to new 'loginresult' page.
+			//It will trigger callback below that can redirect this page.
+			microsoftTeams.authentication.authenticate({
+				url: authUrl + '&state=loginresult',
+				width: 800,
+				height: 600,
+				successCallback: () => {window.location = getURLParam('redirectUrl');},
+				failureCallback: () => {}
+			});
+		}
 	}
 
 </script>

@@ -67,7 +67,7 @@
 				}
 			}
 			
-			var host = ' https://fd5436aa.ngrok.io';
+			var host = 'https://fd5436aa.ngrok.io';
 			var color = '';
 			var name = '';
 			var entity = '';
@@ -92,16 +92,21 @@
 
 			// Save handler when user clicked on Save button
 			microsoftTeams.settings.registerOnSaveHandler(function(saveEvent){
-				microsoftTeams.getContext(function(c) {
-					context = c;
-
+				microsoftTeams.getContext(function(context) {
 					color = $('#color').val();
 					name = $('#name').val();
 					numdays = $('#numdays').val();
-					url = `${host}/tabs/index?teamId=${encodeURIComponent(context.teamId)}&channelId=${encodeURIComponent(context.channelId)}&color=${encodeURIComponent(color)}&numdays=${numdays}&auth=${auth}`;
-					websiteUrl = url + `&web=1`;
 
-					entity = `todotab-${name}-${context.teamId}-${context.channelId}`
+					url = `${host}/tabs/index?teamId=` +
+						`${encodeURIComponent(context.teamId)}` + 
+						`&channelId=${encodeURIComponent(context.channelId)}` +
+						`&color=${encodeURIComponent(color)}` + 
+						`&numdays=${numdays}` + 
+						`&auth=${auth}`;
+					websiteUrl = url + `&web=1`;
+					console.log(websiteUrl);
+
+					entity = `todotab-${name}-${context.teamId}-${context.channelId}`;
 
 					microsoftTeams.settings.setSettings({
 						entityId: entity,

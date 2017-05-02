@@ -36,9 +36,7 @@ function getAuthUrl(redirectUrl) {
     '&scope=' + credentials.scope +
     '&response_mode=query' +
     '&nonce=' + uuid.v4();
-    
-  console.log('Auth URL:' + authUrl);
-  return authUrl;
+    return authUrl;
 }
 
 /**
