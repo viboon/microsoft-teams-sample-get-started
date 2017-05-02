@@ -27,13 +27,15 @@ function start_listening() {
 
         res.send(webhook_url);
 
-        // TODO, when this works hook it up to send a card.
-        rest.postJson(webhook_url, {
+        // Generate connector message
+        var message = utils.generateConnectorCard();
+        res.send(`${webhook_url}`);
 
-            text: `A connector for the group ${group_name} has been setup! Please let Luis know so he can set up a proper card`
-
-        }).on('complete', function (data, response) {
-            console.log('completed connector setup');
+        // Post to connectors endpoint so they can route the message properly
+        rest.postJson(webhook_url, message).on('complete', function (data, response) {
+            console.log(JSON.stringify(data, null, 1));
+            console.log(JSON.stringify(response, null, 1));
+            console.log('completed connector request');
             res.end();
         });
     });
