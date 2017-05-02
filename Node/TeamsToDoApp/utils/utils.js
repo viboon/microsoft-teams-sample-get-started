@@ -59,7 +59,7 @@ module.exports.getTextWithoutMentions = function (message) {
 }
 
 // Generates rich connector card.
-generateConnectorCard = function () {
+module.exports.generateConnectorCard = function () {
 	var summary = faker.fake('{{name.firstName}} {{name.lastName}}') + ' created a new task';
 	var ret = {
 		'@type': 'MessageCard',
