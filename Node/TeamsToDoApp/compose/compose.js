@@ -1,5 +1,8 @@
 const builder = require("botbuilder");
 const faker = require('faker');
+const utils = require('../utils/utils.js');
+
+faker.seed(3998);
 
 var c;
 var bot;
@@ -9,7 +12,7 @@ function start_listening() {
 
 	this.server.post('api/bot', this.c.listen());
 
-	// Make sure to listen to the on invoke call. This is what triggers the input extension
+	// Make sure to listen to the on invoke call. This is what triggers the compose extension
 	this.c.onInvoke((msg, callback) => {
 
 		var v = msg.value;
@@ -28,8 +31,10 @@ function start_listening() {
 }
 
 function generateResults(){
+
+	faker.seed(3998);
 	var results = {
-		inputExtension:{
+		composeExtension:{
 			attachmentLayout: 'list',
 			type: 'result',			
 		}
@@ -40,7 +45,7 @@ function generateResults(){
 		attachments.push(generateResultAttachment());
 	}
 
-	results.inputExtension.attachments = attachments;
+	results.composeExtension.attachments = attachments;
 	return results;
 }
 
@@ -49,11 +54,11 @@ function generateThumbnail(){
 		contentType: 'application/vnd.microsoft.card.thumbnail',
 		content: {
 			title: faker.fake('{{commerce.productName}}'),
-			subtitle: `Assigned to ${faker.fake('{{name.firstName}} {{name.lastName}}')}`,
+			subtitle: `Assigned to ${utils.getName()}`,
 			text: faker.fake('{{lorem.sentence}}'),
 			images: [
 				{
-					url: `https://teamsnodesample.azurewebsites.net/static/img/image${Math.floor(Math.random() * (9 - 1 + 1)) + 1}.png`
+					url: `https://teamsnodesample.azurewebsites.net/static/img/image${Math.floor(Math.random() * 9) + 1}.png`
 				}
 			]
 		}

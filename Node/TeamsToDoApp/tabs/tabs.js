@@ -35,7 +35,7 @@ function start_listening() {
 
 			var num_tasks = Math.floor(Math.random() * (10 - 2 + 1)) + 2;
 			for (var j = 0; j < num_tasks; j++){
-				day.tasks.push(utils.createTask());
+				day.tasks.push(utils.createTask(`Task ${i}${j}`));
 			}
 
 			ret.push(day);

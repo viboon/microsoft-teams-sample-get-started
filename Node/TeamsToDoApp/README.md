@@ -42,7 +42,7 @@ Notifications are implemented through the bot framework. But really all you need
 Creating, updating and configuring tabs is supported in this app
 
 ### Compose Extensions
-Sample code for compose extensions exists in the "input" folder. This will show you how to create a queriable service for compose extensions
+Sample code for compose extensions exists in the "compose" folder. This will show you how to create a queriable service for compose extensions
 
 ### Input Menus
 Not implemented yet.
@@ -53,5 +53,5 @@ Not implemented yet.
 The sideloadable packages are located in the apps folder. You should be able to simply sideload these to any team. 
 
 These versions of the packages point to our cloud hosted node js code
-* Bot.zip: contains a manifest with a bot. Ask it for help. This also contains tabs, connector, and input extensions plus the home screen. 
+* Bot.zip: contains a manifest with a bot. Ask it for help. This also contains tabs, connector, and compose extensions plus the home screen. 
 * Notify.zip: contains the same manifest as above but it is a notifications only bot

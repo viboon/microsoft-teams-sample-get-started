@@ -1,7 +1,7 @@
 const builder = require("botbuilder");
 const uuid = require('node-uuid');
 const rest = require('restler');
-const starwars = require('starwars');
+const faker = require('faker');
 const utils = require('../utils/utils.js');
 
 var server;
@@ -123,6 +123,9 @@ function startConversation(user, callback) {
 		"channelData": {
 			"tenant": {
 				"id": tenant_id
+			},
+			"notification": {
+				"alert": true
 			}
 		}
 	};
@@ -132,7 +135,7 @@ function startConversation(user, callback) {
 			'Authorization': 'Bearer ' + access_token
 		},
 		'data': JSON.stringify(data)
-	}).on('complete', function(data) {
+	}).on('complete', function (data) {
 		console.log('Starting Conversation');
 		callback(data);
 	});
@@ -156,23 +159,23 @@ function start_listening() {
 
 		try {
 
-			var starwars_quote = starwars();
+			var quote = faker.fake("{{lorem.sentence}}");
 			var msg = new builder.Message().address(address);
 
-			if (type === 'text') msg.text(starwars_quote);
+			if (type === 'text') msg.text(quote);
 			if (type === 'hero') msg.addAttachment(utils.createHeroCard(builder));
 			if (type === 'thumb') msg.addAttachment(utils.createThumbnailCard(builder));
 
-			if (type === 'text') res.send('Look on MS Teams, just sent: ' + starwars_quote);
+			if (type === 'text') res.send('Look on MS Teams, just sent: ' + quote);
 			if (type === 'hero') res.send('Look on MS Teams, just sent a Hero card');
 			if (type === 'thumb') res.send('Look on MS Teams, just sent a Thumbnail card');
 
-			bot.send(msg, function(err) {
+			bot.send(msg, function (err) {
 				// Return success/failure
 				res.status(err ? 500 : 200);
 				res.end();
 			});
-		} catch (e) {}
+		} catch (e) { }
 	});
 
 	// Endpoint to send one way messages
@@ -198,30 +201,30 @@ function start_listening() {
 
 		try {
 
-			startConversation(user, function(data) {
+			startConversation(user, function (data) {
 
 				var newConversationId = data.id;
 
 				address.conversation.id = newConversationId;
 
-				var starwars_quote = starwars();
-				var msg = new builder.Message().address(address)
+				var quote = faker.fake("{{lorem.sentence}}");
+				var msg = new builder.Message().address(address);
 
-				if (type === 'text') msg.text(starwars_quote);
+				if (type === 'text') msg.text(quote);
 				if (type === 'hero') msg.addAttachment(utils.createHeroCard(builder));
 				if (type === 'thumb') msg.addAttachment(utils.createThumbnailCard(builder));
 
-				if (type === 'text') res.send('Look on MS Teams, just sent: ' + starwars_quote);
+				if (type === 'text') res.send('Look on MS Teams, just sent: ' + quote);
 				if (type === 'hero') res.send('Look on MS Teams, just sent a Hero card');
 				if (type === 'thumb') res.send('Look on MS Teams, just sent a Thumbnail card');
 
-				bot.send(msg, function(err) {
+				bot.send(msg, function (err) {
 					// Return success/failure
 					res.status(err ? 500 : 200);
 					res.end();
 				});
 			});
-		} catch (e) {}
+		} catch (e) { }
 	});
 
 	this.server.post('api/messages', c.listen()); // bind our one way bot to /api/messages
@@ -276,7 +279,7 @@ function start_listening() {
 						var user = members[i].id;
 						guid = uuid.v4();
 
-						text += `Send message to user number ${i+1}: `
+						text += `Send message to user number ${i + 1}: `
 						text += `[Text](${host}api/messages/send/user?id=${encodeURIComponent(guid)}&user=${encodeURIComponent(user)})`;
 						text += ` | [Hero Card](${host}api/messages/send/user?type=hero&id=${encodeURIComponent(guid)}&user=${encodeURIComponent(user)})`;
 						text += ` | [Thumbnail Card](${host}api/messages/send/user?type=thumb&id=${encodeURIComponent(guid)}&user=${encodeURIComponent(user)})`;
@@ -292,7 +295,7 @@ function start_listening() {
 							.textFormat(builder.TextFormat.markdown)
 							.text(text);
 
-						bot.send(msg, function(err) {
+						bot.send(msg, function (err) {
 
 						});
 					} catch (e) {
@@ -308,7 +311,7 @@ function start_listening() {
 	});
 }
 
-module.exports.init = function(server) {
+module.exports.init = function (server) {
 	this.server = server;
 	return this;
 }
