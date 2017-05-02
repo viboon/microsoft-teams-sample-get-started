@@ -1,4 +1,5 @@
 const rest = require('restler');
+const fs = require('fs-extra');
 const utils = require('../utils/utils.js');
 
 var server;
