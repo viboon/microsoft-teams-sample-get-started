@@ -4,6 +4,7 @@ const utils = require('../utils/utils.js');
 
 var server;
 var host = (process.env.ENVIROMENT === 'local') ? 'http://localhost:3998/' : 'http://teamsnodesample.azurewebsites.net/';
+var connectors = {};
 
 function start_listening() {
 
