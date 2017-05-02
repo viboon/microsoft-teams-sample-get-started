@@ -1,5 +1,8 @@
 const builder = require("botbuilder");
 const faker = require('faker');
+const utils = require('../utils/utils.js');
+
+faker.seed(3998);
 
 var c;
 var bot;
@@ -28,6 +31,8 @@ function start_listening() {
 }
 
 function generateResults(){
+
+	faker.seed(3998);
 	var results = {
 		composeExtension:{
 			attachmentLayout: 'list',
@@ -49,7 +54,7 @@ function generateThumbnail(){
 		contentType: 'application/vnd.microsoft.card.thumbnail',
 		content: {
 			title: faker.fake('{{commerce.productName}}'),
-			subtitle: `Assigned to ${faker.fake('{{name.firstName}} {{name.lastName}}')}`,
+			subtitle: `Assigned to ${utils.getName()}`,
 			text: faker.fake('{{lorem.sentence}}'),
 			images: [
 				{

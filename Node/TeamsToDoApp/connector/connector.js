@@ -50,13 +50,8 @@ function start_listening() {
             res.end();
         }
 
-        var actions = [
-            { name: 'Send Another Card', target: `${host}api/messages/connector/send?webhook_url=${webhook_url}&type=static` },
-            { name: 'Microsoft.com', target: `https://www.microsoft.com` }
-        ];
-
         // Generate connector message
-        var message = utils.generateConnectorCard(actions);
+        var message = utils.generateConnectorCard();
         res.send(`${webhook_url}`);
 
         // Post to connectors endpoint so they can route the message properly
