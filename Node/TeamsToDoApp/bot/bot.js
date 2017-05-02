@@ -68,14 +68,14 @@ function createDeepLink(message, bot, tabName) {
 	var teamId = message.sourceEvent.teamsTeamId;
 	var channelId = message.sourceEvent.teamsChannelId;
 
-	var appId = '5bebb729-cf47-4937-b4b2-8f9b818d9655'; // This is the app ID you set up in your manifest.json file.
+	var appId = '9a1d84aa-225b-4856-83f8-ebaeca22b964'; // This is the app ID you set up in your manifest.json file.
 	var entity = `todotab-${name}-${teamId}-${channelId}`; // Match the entity ID we setup when configuring the tab
 	var context = {
 		channelId: channelId,
-		canvasUrl: 'https://teams.microsoft.com'
+		canvasUrl: 'https://devspaces.skype.com'
 	};
 
-	var url = `https://teams.microsoft.com/l/entity/${encodeURIComponent(appId)}/${encodeURIComponent(entity)}?label=${encodeURIComponent(name)}&context=${encodeURIComponent(JSON.stringify(context))}`;
+	var url = `https://devspaces.skype.com/l/entity/${encodeURIComponent(appId)}/${encodeURIComponent(entity)}?label=${encodeURIComponent(name)}&context=${encodeURIComponent(JSON.stringify(context))}`;
 
 	var text = `Here's your [deeplink](${url}): \n`;
 	text += `\`${decodeURIComponent(url)}\``;
