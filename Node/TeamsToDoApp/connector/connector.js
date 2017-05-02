@@ -70,6 +70,18 @@ function start_listening() {
 
 }
 
+function sendFile(path, res){
+	
+	var data = fs.readFileSync(path, 'utf-8');
+	res.writeHead(200, {
+		'Content-Length': Buffer.byteLength(data),
+  		'Content-Type': 'text/html'
+	});
+
+	res.write(data);
+	res.end();
+}
+
 module.exports.init = function (server) {
     this.server = server;
     return this;
