@@ -147,9 +147,11 @@ function sendMessageToUser(address, type, res, isImportant = false) {
 	var quote = faker.fake("{{lorem.sentence}}");
 	var msg = new builder.Message().address(address);
 
-	if (!msg.channelData) msg.channelData = {};
-	if (!msg.channelData.notification) msg.channelData.notification = {};
-	if (!msg.channelData.notification.alert) msg.channelData.notification.alert = isImportant;
+	msg.channelData = {
+		notification: {
+			alert: 'true'
+		}
+	}
 
 	if (type === 'text') msg.text(quote);
 	if (type === 'hero') msg.addAttachment(utils.createHeroCard(builder));
