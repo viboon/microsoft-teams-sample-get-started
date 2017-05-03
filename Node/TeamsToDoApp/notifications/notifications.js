@@ -107,7 +107,7 @@ function getMembers(msg) {
 		- Note that channelData is required, but only the tenant id part if a message is being sent to a user
 		- If a message is being sent to a channel then the team id also needs to be part of channel data
 */
-function startConversation(address, callback) {
+function startConversation(user, callback) {
 
 	console.log('Trying Starting Conversation');
 	var endpoint = `${rest_endpoint}v3/conversations`;
@@ -123,9 +123,6 @@ function startConversation(address, callback) {
 		"channelData": {
 			"tenant": {
 				"id": tenant_id
-			},
-			"notification": {
-				"alert": true
 			}
 		}
 	};
@@ -144,13 +141,15 @@ function startConversation(address, callback) {
 /*
 	This is a convenience method to send a message to a user
 */
-function sendMessageToUser(address, isImportant = false) {
+function sendMessageToUser(address, type, res, isImportant = false) {
 
 	console.log('Sending message to user');
 	var quote = faker.fake("{{lorem.sentence}}");
 	var msg = new builder.Message().address(address);
 
-	msg.channelData['notification']['alert'] = 'true';
+	if (!msg.channelData) msg.channelData = {};
+	if (!msg.channelData.notification) msg.channelData.notification = {};
+	if (!msg.channelData.notification.alert) msg.channelData.notification.alert = isImportant;
 
 	if (type === 'text') msg.text(quote);
 	if (type === 'hero') msg.addAttachment(utils.createHeroCard(builder));
@@ -159,6 +158,14 @@ function sendMessageToUser(address, isImportant = false) {
 	if (type === 'text') res.send('Look on MS Teams, just sent: ' + quote);
 	if (type === 'hero') res.send('Look on MS Teams, just sent a Hero card');
 	if (type === 'thumb') res.send('Look on MS Teams, just sent a Thumbnail card');
+
+	try {
+		if (msg.attachments[0]) msg.attachments[0].content.tap = builder.CardAction.openUrl(null, 'http://teams.microsoft.com/l/', 'Open Teams');
+	}
+	catch (e) {
+		res.send('Setting tap action failed');
+
+	}
 
 	bot.send(msg, function (err) {
 		console.log('Failed to send message to user');
@@ -234,7 +241,7 @@ function start_listening() {
 
 				address.conversation.id = newConversationId;
 
-				sendMessageToUser(address, true);
+				sendMessageToUser(address, type, res, true);
 			});
 		} catch (e) { }
 	});
