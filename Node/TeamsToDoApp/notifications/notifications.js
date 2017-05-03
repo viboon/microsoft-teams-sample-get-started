@@ -107,7 +107,7 @@ function getMembers(msg) {
 		- Note that channelData is required, but only the tenant id part if a message is being sent to a user
 		- If a message is being sent to a channel then the team id also needs to be part of channel data
 */
-function startConversation(user, callback) {
+function startConversation(address, callback) {
 
 	console.log('Trying Starting Conversation');
 	var endpoint = `${rest_endpoint}v3/conversations`;
@@ -138,6 +138,33 @@ function startConversation(user, callback) {
 	}).on('complete', function (data) {
 		console.log('Starting Conversation');
 		callback(data);
+	});
+}
+
+/*
+	This is a convenience method to send a message to a user
+*/
+function sendMessageToUser(address, isImportant = false) {
+
+	console.log('Sending message to user');
+	var quote = faker.fake("{{lorem.sentence}}");
+	var msg = new builder.Message().address(address);
+
+	msg.channelData['notification']['alert'] = 'true';
+
+	if (type === 'text') msg.text(quote);
+	if (type === 'hero') msg.addAttachment(utils.createHeroCard(builder));
+	if (type === 'thumb') msg.addAttachment(utils.createThumbnailCard(builder));
+
+	if (type === 'text') res.send('Look on MS Teams, just sent: ' + quote);
+	if (type === 'hero') res.send('Look on MS Teams, just sent a Hero card');
+	if (type === 'thumb') res.send('Look on MS Teams, just sent a Thumbnail card');
+
+	bot.send(msg, function (err) {
+		console.log('Failed to send message to user');
+		// Return success/failure
+		res.status(err ? 500 : 200);
+		res.end();
 	});
 }
 
@@ -207,22 +234,7 @@ function start_listening() {
 
 				address.conversation.id = newConversationId;
 
-				var quote = faker.fake("{{lorem.sentence}}");
-				var msg = new builder.Message().address(address);
-
-				if (type === 'text') msg.text(quote);
-				if (type === 'hero') msg.addAttachment(utils.createHeroCard(builder));
-				if (type === 'thumb') msg.addAttachment(utils.createThumbnailCard(builder));
-
-				if (type === 'text') res.send('Look on MS Teams, just sent: ' + quote);
-				if (type === 'hero') res.send('Look on MS Teams, just sent a Hero card');
-				if (type === 'thumb') res.send('Look on MS Teams, just sent a Thumbnail card');
-
-				bot.send(msg, function (err) {
-					// Return success/failure
-					res.status(err ? 500 : 200);
-					res.end();
-				});
+				sendMessageToUser(address, true);
 			});
 		} catch (e) { }
 	});
