@@ -153,7 +153,7 @@ module.exports.generateConnectorCard = function () {
 	return ret;
 }
 
-const names = ["Richard Taylor", "Evangelina Gallagher", "Jess Lamontagne", "Darlene Solis", "Linda Riley", "Simone Suarez", "Alfonso Troy", "Gabriel Hendon"];
+const names = ["Evangelina Gallagher", "Jess Lamontagne", "Darlene Solis", "Linda Riley", "Simone Suarez", "Alfonso Troy", "Gabriel Hendon"];
 function getName() {
 	return names[Math.floor(Math.random() * names.length)]
 }

@@ -58,7 +58,7 @@
 			cursor: -webkit-grab;
 			box-shadow: 0 0 45px #DDD;
 			border-radius: 5px;
-			border: 3px solid white
+			border: 3px solid transparent;
 		}
 		
 		.task.selected {
@@ -157,17 +157,11 @@
 
 		var host = 'https://fd5436aa.ngrok.io';
 
-		if (auth) {
-			$.get(`${host}/graph/me`, function (data) {
-				$('#todos_signin').html(`<div class="signin">Signed in as: ${data.displayName} </div>`);
-			});
-		}
-
 		$.get(`${host}/api/tasks/team?numdays=${numdays}`, function (data) {
 
         	var html = ``;
 			var cols = data.length;			
-			var owner = (channelId) ? 'team' : 'mine';
+			var owner = (teamId) ? 'team' : 'mine';
 
 			for (var i = 0; i < cols; i++) {
 				var day = data[i];				
@@ -179,24 +173,24 @@
 						</li>
 					`;
 
-				var rows = (channelId) ? data[i].tasks.length : data[i].tasks.length * 0.3;
+				var rows = (teamId) ? data[i].tasks.length : data[i].tasks.length * 0.3;
 				for (var j = 0; j < rows; j++) {					
 					var task = day.tasks[j];
 					var subentity = `${i}${j}`;
-
-					var getLink = (channelId) ? '<p class="getlink">Get Link</p>' : '';					
-					var style = (task.assigned == 'Richard Taylor' || typeof channelId === 'undefined') ? `background-color:${color}; border-color:${color}` : '';
-					
-					var assigned = (channelId) ? `<p class="assigned">${task.assigned}</p>` : '';
+					var getLink = (teamId) ? '<p class="getlink">Get Link</p>' : '';					
+					var myTask = !teamId || (Math.floor(Math.random() * 4) == 0) //If team task board, set only some tasks to be mine
+					var myTaskClass = myTask ? 'myTask' : '';
+					var myTaskStyle = myTask ? `background-color:${color}` : '';
+					var assigned = myTask ? 'Me' : task.assigned;
 
 					var image = `https://teamsnodesample.azurewebsites.net/static/img/image${Math.floor(Math.random() * 9) + 1}.png`;
 					var taskHTML = `
-							<li class="task" id="task-${subentity}" style='${style}'">								
+							<li class="task" style="${myTaskStyle}" id="task-${subentity}">								
 								<p class="id">${subentity}</p>
 								<h3 class="title">${task.title}</h3>
 								<p>${task.description}</p>
 								<div class="image" style="background-image: url(${image});"></div>
-								<p class="assigned">${assigned}</p>
+								<p class="assigned ${myTaskClass}">${assigned}</p>
 								${getLink}
 							</li>
 						`;
@@ -232,6 +226,13 @@
 					if (context.subEntityId != null) {
 						$(`#task-${context.subEntityId}`).addClass('selected');
 					}				
+				});
+			}
+
+			if (auth) {
+				$.get(`${host}/graph/me`, function (myData) {
+					$('#todos_signin').html(`<div class="signin">Signed in as: ${myData.displayName} </div>`);
+					$('.myTask').html(myData.displayName);
 				});
 			}
 		});

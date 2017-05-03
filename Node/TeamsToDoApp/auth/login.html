@@ -79,10 +79,13 @@
 	function login() {
 		if (getURLParam('web')) {
 			window.location = authUrl + '&state=' + encodeURIComponent(getURLParam('redirectUrl'));
+			console.log('yes');
 		} else {
 			//Inside Microsoft Teams.  Login via Teams pop-up.
 			//After success, redirect popup to new 'loginresult' page.
 			//It will trigger callback below that can redirect this page.
+			console.log('no');
+			console.log(authUrl);
 			microsoftTeams.authentication.authenticate({
 				url: authUrl + '&state=loginresult',
 				width: 800,
