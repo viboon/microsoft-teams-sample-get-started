@@ -79,7 +79,6 @@ function sendFileOrLogin(path, req, res, next){
 			redirectUrl += 'web=' + req.params.web +'&';
 		}
 		redirectUrl += 'redirectUrl=' + encodeURIComponent(req.url);
-		console.log(redirectUrl);
 		res.redirect(redirectUrl, next);
 	} else {
 		sendFile(path, res);
