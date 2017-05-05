@@ -90,7 +90,8 @@ function sendTaskMessage(message, bot, taskTitle) {
 
 	var text = `Here's your task: \n\n`;
 	text += `---\n\n`;
-	text += `![**Task Title:** ${task.title}](${`https://teamsnodesample.azurewebsites.net/static/img/image${Math.floor(Math.random() * 9) + 1}.png`})\n\n`;
+	text += `**Task Title:** ${task.title}\n\n`;
+	text += `**![${task.title}](${`https://teamsnodesample.azurewebsites.net/static/img/image${Math.floor(Math.random() * 9) + 1}.png`})\n\n`;
 	text += `**Task ID:** ${10}\n\n`;
 	text += `**Task Description:** ${task.description}\n\n`;
 	text += `**Assigned To:** ${task.assigned}\n\n`;

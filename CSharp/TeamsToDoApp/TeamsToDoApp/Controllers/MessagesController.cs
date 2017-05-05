@@ -77,7 +77,7 @@ namespace TeamsToDoApp
 
                     response = new ComposeExtensionResponse()
                     {                        
-                        InputExtension = results
+                        ComposeExtension = results
                     };
                 }
             }
