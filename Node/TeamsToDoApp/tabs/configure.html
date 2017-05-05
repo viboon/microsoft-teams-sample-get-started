@@ -101,8 +101,9 @@
 						`${encodeURIComponent(context.teamId)}` + 
 						`&channelId=${encodeURIComponent(context.channelId)}` +
 						`&color=${encodeURIComponent(color)}` + 
-						`&numdays=${numdays}` + 
-						`&auth=${auth}`;
+						`&numdays=${numdays}`;
+						
+					url += (auth) ? `&auth=${auth}` : '';
 					websiteUrl = url + `&web=1`;
 
 					entity = `todotab-${name}-${context.teamId}-${context.channelId}`;
