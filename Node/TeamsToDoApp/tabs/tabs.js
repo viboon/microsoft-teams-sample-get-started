@@ -1,4 +1,3 @@
-const restify = require("restify");
 const fs = require('fs-extra');
 const moment = require('moment');
 const utils = require('../utils/utils.js');
@@ -8,7 +7,7 @@ var server;
 function start_listening() {
 
 	this.server.get('tabs/index', (req, res, next) => {
-		sendFile('./tabs/index.html', res);
+		sendFileOrLogin('./tabs/index.html', req, res, next);
 	});
 
 	this.server.get('tabs/about', (req, res, next) => {
@@ -16,7 +15,7 @@ function start_listening() {
 	});
 
 	this.server.get('tabs/configure', (req, res, next) => {
-		sendFile('./tabs/configure.html', res);
+		sendFileOrLogin('./tabs/configure.html', req, res, next);
 	});
 
 	this.server.get('api/tasks/team', (req, res, next) => {
@@ -71,6 +70,19 @@ function sendFile(path, res){
 
 	res.write(data);
 	res.end();
+}
+
+function sendFileOrLogin(path, req, res, next){
+	if (req.params.auth && (req.cookies.REFRESH_TOKEN_CACHE_KEY === undefined)) {
+		var redirectUrl = '/login?';
+		if (req.params.web) {
+			redirectUrl += 'web=' + req.params.web +'&';
+		}
+		redirectUrl += 'redirectUrl=' + encodeURIComponent(req.url);
+		res.redirect(redirectUrl, next);
+	} else {
+		sendFile(path, res);
+	}
 }
 
 module.exports.init = function(server) {

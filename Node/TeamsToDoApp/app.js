@@ -1,10 +1,12 @@
 const restify = require('restify');
 const builder = require('botbuilder');
+const CookieParser = require('restify-cookies');
 
 process.env.ENVIRONMENT = 'cloud';
 
 var server = restify.createServer();
 server.use(restify.queryParser());
+server.use(CookieParser.parse);
 
 server.listen(process.env.port || process.env.PORT || 3998, () => {
 	console.log(`Started ToDo App`);
@@ -38,3 +40,7 @@ connector.start_listening();
 var tabs = require('./tabs/tabs.js');
 tabs.init(server);
 tabs.start_listening();
+
+var auth = require('./auth/auth.js');
+auth.init(server);
+auth.start_listening();
