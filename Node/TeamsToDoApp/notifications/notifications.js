@@ -12,7 +12,7 @@ var connectors = {};
 
 var appID = (process.env.ENVIROMENT === 'local') ? '[local app id]' : '8aefbb70-ff9e-409f-acea-986b61e51cd3';
 var appPassword = (process.env.ENVIROMENT === 'local') ? '[local app id]' : 'hoCDLUcGnab6KqKa3tkvpxJ';
-var host = (process.env.ENVIROMENT === 'local') ? 'http://localhost:3998/' : 'http://teamsnodesample.azurewebsites.net/';
+var host = (process.env.ENVIROMENT === 'local') ? 'http://localhost:3998/' : 'https://01e41053.ngrok.io/';
 
 var c = new builder.ChatConnector({
 	appId: appID,
@@ -44,6 +44,7 @@ function connectToRestAPI() {
 			}
 		}).on('complete', (data) => {
 			access_token = data.access_token;
+			console.log(access_token);
 			resolve();
 		}).on('fail', (err) => {
 			console.log('Cannot connect to rest api: ' + err);
@@ -74,7 +75,8 @@ function getMembers(msg) {
 			var endpoint = `${rest_endpoint}v3/conversations/${conversationId}/members`;
 			rest.get(endpoint, {
 				'headers': {
-					'Authorization': 'Bearer ' + access_token
+					'Authorization': 'Bearer ' + access_token,
+					'X-MsTeamsTenantId': tenant_id
 				}
 			}).on('complete', (data) => {
 				console.log('Getting members');
@@ -85,6 +87,7 @@ function getMembers(msg) {
 				});
 			}).on('fail', (err) => {
 				console.log('Cannot get members: ' + err);
+				console.log(JSON.stringify(err, null, 1));
 				reject(err);
 			});
 		}, (err) => {
@@ -256,6 +259,8 @@ function start_listening() {
 		console.log('Received event');
 
 		var msg = msgs[0]; // Ideally you'd loop through messages here to make sure we don't miss one...
+
+		console.log(JSON.stringify(msg, null, 1));
 
 		if (!rest_endpoint) rest_endpoint = msg.address.serviceUrl; // This is the base URL where we will send REST API request
 		if (!tenant_id) tenant_id = msg.sourceEvent.tenant.id; // Extracting tenant ID as we will need it to create new conversations
