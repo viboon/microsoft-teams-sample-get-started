@@ -20,7 +20,7 @@ var credentials = {
   token_endpoint: '/oauth2/v2.0/token',
   client_id: '03f0f6f4-f697-4b24-8691-da1b68f78a6f',
   client_secret: 'YPMDzOgBXnJ3GqHwObbEKSn',
-  redirect_uri: 'https://fd5436aa.ngrok.io/login',
+  redirect_uri: 'https://65990975.ngrok.io/login',
   scope: 'User.Read'
 };
 

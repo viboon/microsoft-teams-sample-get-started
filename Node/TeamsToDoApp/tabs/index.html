@@ -155,7 +155,7 @@
 		var auth = getURLParam('auth');
 		var color = getURLParam('color') || '#fffad1';
 
-		var host = 'https://fd5436aa.ngrok.io';
+		var host = 'https://65990975.ngrok.io';
 
 		$.get(`${host}/api/tasks/team?numdays=${numdays}`, function (data) {
 
@@ -203,6 +203,13 @@
 
 			$('#todos_container').html(html);
 
+			if (auth) {
+				$.get(`${host}/graph/me`, function (myData) {
+					$('#todos_signin').html(`<div class="signin">Signed in as: ${myData.displayName} </div>`);
+					$('.myTask').html(myData.displayName);
+				});
+			}
+
 			$('.task').on('click', function () {
 				$('.task').removeClass('selected');
 				$(this).addClass('selected');
@@ -228,12 +235,6 @@
 				});
 			}
 
-			if (auth) {
-				$.get(`${host}/graph/me`, function (myData) {
-					$('#todos_signin').html(`<div class="signin">Signed in as: ${myData.displayName} </div>`);
-					$('.myTask').html(myData.displayName);
-				});
-			}
 		});
 	</script>
 </body>
