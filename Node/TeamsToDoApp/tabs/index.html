@@ -1,7 +1,7 @@
 <html>
 
 <head>
-	<title>Team Tasks</title>
+	<title>Tasks</title>
 	<script src="https://statics.teams.microsoft.com/sdk/v0.4/js/MicrosoftTeams.min.js"></script>
 	<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js"></script>
 	<style type="text/css">
@@ -13,9 +13,19 @@
 			font-size: 80%;
 		}
 		
+		#todos_header {
+			padding: 1% 1% 0.5%;
+			display: flex;
+			min-width: 800px;
+			font-family: 'Segoe UI Bold', sans-serif;
+			font-size: 120%;
+			color: #3F487F;
+			line-height: 0%
+		}
+
 		#todos_container {
 			margin: 0;
-			padding: 1% 2%;
+			padding: 1% 1% 0.5%;
 			display: flex;
 			width: 96%;
 			height: 90%;
@@ -48,7 +58,7 @@
 			cursor: -webkit-grab;
 			box-shadow: 0 0 45px #DDD;
 			border-radius: 5px;
-			border: 3px solid white
+			border: 3px solid transparent;
 		}
 		
 		.task.selected {
@@ -108,13 +118,22 @@
 			background-position: center;
 			background-repeat: no-repeat;
 		}
+
+		#todos_signin {
+			font-family: 'Segoe UI Bold', sans-serif;
+			font-size: 100%;
+			color: #3F487F;
+			text-align: right;
+			min-height: 16px;
+			margin: 16px 16px;
+		}
 	</style>
 </head>
 
 <body>
-	<div id="todos_container">
-
-	</div>
+    <div id="todos_signin"></div>
+    <div id="todos_header"></div>
+    <div id="todos_container"></div>
 
 	<script type="text/javascript">
 		// Gets URL parameters
@@ -132,45 +151,46 @@
 		var teamId = getURLParam('teamId');
 		var numdays = getURLParam('numdays') || 5;
 		var channelId = getURLParam('channelId');
+		var web = getURLParam('web');
+		var auth = getURLParam('auth');
 		var color = getURLParam('color') || '#fffad1';
 
-		microsoftTeams.initialize();
-
 		var host = 'https://teamsnodesample.azurewebsites.net';
-		$.get(`${host}/api/tasks/team?numdays=${numdays}`, function (data) {
-			var html = ``;
 
+		$.get(`${host}/api/tasks/team?numdays=${numdays}`, function (data) {
+
+        	var html = ``;
 			var cols = data.length;			
-			var owner = (channelId) ? 'team' : 'mine';
+			var owner = (teamId) ? 'team' : 'mine';
 
 			for (var i = 0; i < cols; i++) {
 				var day = data[i];				
 
 				var dayHTML = `
-			  		<ul id="friday" class="day">
+			  		<ul id="day-{i}" class="day">
 						<li class="title">
 							${day.title}
 						</li>
 					`;
 
-				var rows = (channelId) ? data[i].tasks.length : data[i].tasks.length * 0.3;
+				var rows = (teamId) ? data[i].tasks.length : data[i].tasks.length * 0.3;
 				for (var j = 0; j < rows; j++) {					
 					var task = day.tasks[j];
 					var subentity = `${i}${j}`;
-
-					var getLink = (channelId) ? '<p class="getlink">Get Link</p>' : '';					
-					var style = (task.assigned == 'Richard Taylor' || typeof channelId === 'undefined') ? `background-color:${color}; border-color:${color}` : '';
-					
-					var assigned = (channelId) ? `<p class="assigned">${task.assigned}</p>` : '';
+					var getLink = (teamId) ? '<p class="getlink">Get Link</p>' : '';					
+					var myTask = !teamId || (Math.floor(Math.random() * 4) == 0) //If team task board, set only some tasks to be mine
+					var myTaskClass = myTask ? 'myTask' : '';
+					var myTaskStyle = myTask ? `background-color:${color}` : '';
+					var assigned = myTask ? 'Me' : task.assigned;
 
 					var image = `https://teamsnodesample.azurewebsites.net/static/img/image${Math.floor(Math.random() * 9) + 1}.png`;
 					var taskHTML = `
-							<li class="task" id="task-${subentity}" style='${style}'">								
+							<li class="task" style="${myTaskStyle}" id="task-${subentity}">								
 								<p class="id">${subentity}</p>
 								<h3 class="title">${task.title}</h3>
 								<p>${task.description}</p>
 								<div class="image" style="background-image: url(${image});"></div>
-								${assigned}
+								<p class="assigned ${myTaskClass}">${assigned}</p>
 								${getLink}
 							</li>
 						`;
@@ -183,24 +203,37 @@
 
 			$('#todos_container').html(html);
 
+			if (auth) {
+				$.get(`${host}/graph/me`, function (myData) {
+					$('#todos_signin').html(`<div class="signin">Signed in as: ${myData.displayName} </div>`);
+					$('.myTask').html(myData.displayName);
+				});
+			}
+
 			$('.task').on('click', function () {
-				console.log('task clicked');
 				$('.task').removeClass('selected');
 				$(this).addClass('selected');
 			});
 
-			// Generates and popups up a dialog with a deep link to a sub entity
-			$('.getlink').on('click', function () {
-				var subEntityId = $(this).siblings('.id').text();
-				var subEntityLabel = $(this).siblings('.title').text();
-				microsoftTeams.shareDeepLink({ subEntityId: subEntityId, subEntityLabel: subEntityLabel });
-			});
+			if (web) {
+				$('#todos_header').html(`<h1>Task Tracker</h1>`);
+			} else {
+				// Page is inside Microsoft Teams tab.  Don't show the page header/navigation.
+				microsoftTeams.initialize();
 
-			microsoftTeams.getContext((context) => {
-				if (context.subEntityId != null) {
-					$(`#task-${context.subEntityId}`).addClass('selected');
-				}				
-			});
+				// Generates and popups up a dialog with a deep link to a sub entity
+				$('.getlink').on('click', function () {
+					var subEntityId = $(this).siblings('.id').text();
+					var subEntityLabel = $(this).siblings('.title').text();
+					microsoftTeams.shareDeepLink({subEntityId: subEntityId, subEntityLabel: subEntityLabel});
+				});
+
+				microsoftTeams.getContext((context) => {
+					if (context.subEntityId != null) {
+						$(`#task-${context.subEntityId}`).addClass('selected');
+					}				
+				});
+			}
 
 		});
 	</script>
