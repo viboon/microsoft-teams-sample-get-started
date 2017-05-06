@@ -51,13 +51,28 @@ function start_listening() {
 			res.redirect('/login', next);
 		} else {
 			var url = '/stagingbeta' + req.url.substring('/graph'.length);
-			console.log(url);
 			requestUtil.executeRequestWithErrorHandling(req, res, 'GET', url, null, (data) => {
 				res.send(data);
 				res.end();
 			});
 		}
 	});
+
+	this.server.post(/^\/graph/, (req, res, next) => {
+		console.log(req.url);
+		if (req.cookies.REFRESH_TOKEN_CACHE_KEY === undefined) {
+			res.redirect('/login', next);
+		} else {
+			var url = '/stagingbeta' + req.url.substring('/graph'.length);
+			console.log(url);
+			console.log(req);
+			requestUtil.executeRequestWithErrorHandling(req, res, 'POST', url, req.body, (data) => {
+				res.send(data);
+				res.end();
+			});
+		}
+	});
+
 }
 
 function sendFile(path, res){
