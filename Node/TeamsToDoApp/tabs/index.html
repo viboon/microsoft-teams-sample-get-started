@@ -155,7 +155,7 @@
 		var auth = getURLParam('auth');
 		var color = getURLParam('color') || '#fffad1';
 
-		var host = 'https://teamsnodesample.azurewebsites.net';
+		var host = 'https://9cd00130.ngrok.io';
 
 		$.get(`${host}/api/tasks/team?numdays=${numdays}`, function (data) {
 
@@ -216,7 +216,14 @@
 			});
 
 			if (web) {
-				$('#todos_header').html(`<h1>Task Tracker</h1>`);
+				if (auth) {
+					$.get(`${host}/graph/me/joinedTeams`, function (groupData) {
+						$('#todos_header').html(`${groupData.value[0].displayName}`);
+					});
+				}
+				else {
+					$('#todos_header').html(`<h1>Task Tracker</h1>`);
+				}
 			} else {
 				// Page is inside Microsoft Teams tab.  Don't show the page header/navigation.
 				microsoftTeams.initialize();

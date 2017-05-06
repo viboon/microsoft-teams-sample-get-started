@@ -18,10 +18,10 @@ var credentials = {
   authority: 'https://login.microsoftonline.com/common',
   authorize_endpoint: '/oauth2/v2.0/authorize',
   token_endpoint: '/oauth2/v2.0/token',
-  client_id: '03f0f6f4-f697-4b24-8691-da1b68f78a6f',
-  client_secret: 'YPMDzOgBXnJ3GqHwObbEKSn',
-  redirect_uri: 'https://teamsnodesample.azurewebsites.net/login',
-  scope: 'User.Read'
+  client_id: 'd64c574f-6cc3-420d-95eb-b0694147315d',
+  client_secret: 'nbqbrobggifsw6rOrBdkFqW',
+  redirect_uri: 'https://9cd00130.ngrok.io/login',
+  scope: 'User.Read Group.ReadWrite.All Directory.ReadWrite.All'
 };
 
 /**

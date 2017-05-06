@@ -45,11 +45,14 @@ function start_listening() {
 		res.end();
 	});
 
-	this.server.get('graph/me', (req, res, next) => {
+	this.server.get(/^\/graph/, (req, res, next) => {
+		console.log(req.url);
 		if (req.cookies.REFRESH_TOKEN_CACHE_KEY === undefined) {
-			res.redirect('login', next);
+			res.redirect('/login', next);
 		} else {
-			requestUtil.executeRequestWithErrorHandling(req, res, 'GET', '/v1.0/me', null, (data) => {
+			var url = '/stagingbeta' + req.url.substring('/graph'.length);
+			console.log(url);
+			requestUtil.executeRequestWithErrorHandling(req, res, 'GET', url, null, (data) => {
 				res.send(data);
 				res.end();
 			});
