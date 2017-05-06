@@ -65,7 +65,7 @@ function start_listening() {
 		} else {
 			var url = '/stagingbeta' + req.url.substring('/graph'.length);
 			console.log(url);
-			console.log(req);
+			console.log(req.body);
 			requestUtil.executeRequestWithErrorHandling(req, res, 'POST', url, req.body, (data) => {
 				res.send(data);
 				res.end();

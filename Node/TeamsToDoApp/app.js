@@ -7,6 +7,7 @@ process.env.ENVIRONMENT = 'cloud';
 var server = restify.createServer();
 server.use(restify.queryParser());
 server.use(CookieParser.parse);
+server.use(restify.bodyParser())
 
 server.listen(process.env.port || process.env.PORT || 3998, () => {
 	console.log(`Started ToDo App`);

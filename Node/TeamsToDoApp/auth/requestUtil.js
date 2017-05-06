@@ -61,6 +61,7 @@ function executeRequestWithErrorHandling(req, res, requestType, requestPath, req
  * Per issue #53 for BadRequest when message uses utf-8 characters: Set 'Content-Length': Buffer.byteLength(mailBody,'utf8')
  */
 function executeRequest(requestType, requestPath, requestBody, accessToken, callback) {
+  var requestBodyAsString = JSON.stringify(requestBody);
   var options = {
     host: 'graph.microsoft.com',
     path: requestPath,
@@ -68,21 +69,28 @@ function executeRequest(requestType, requestPath, requestBody, accessToken, call
     headers: {
       'Content-Type': 'application/json',
       Authorization: 'Bearer ' + accessToken,
-      'Content-Length': (requestBody == null) ? 0 : requestBody.length  // **Check
+      'Content-Length': (requestBody == null) ? 0 : requestBodyAsString.length  // **Check
     }
   };
+  console.log(requestBody);
+  console.log(requestBodyAsString);
 
   // Set up the request
   var request = https.request(options, function (response) {
     var body = '';
     response.on('data', function (d) {
       body += d;
+      console.log('data' + d);
     });
     response.on('end', function () {
+      console.log('end');
+      console.log(response.statusCode);
       var error;
             if (response.statusCode === 200) {
         callback(null, JSON.parse(body));
       } else if (response.statusCode === 202) {
+        callback(null, null);
+      } else if (response.statusCode === 204) {
         callback(null, null);
       } else {
         error = new Error();
@@ -97,6 +105,7 @@ function executeRequest(requestType, requestPath, requestBody, accessToken, call
         // it's possible that your account has not been migrated to support this flow.
         // Check the inner error object for code 'ErrorInternalServerTransientError'.
         // You can try using a newly created Microsoft account or contact support.
+        console.log(error);
         callback(error, null);
       }
     });
@@ -104,7 +113,8 @@ function executeRequest(requestType, requestPath, requestBody, accessToken, call
 
   // write the outbound data to it
   if (requestBody != null) {
-    request.write(requestBody);
+    console.log('hello');
+    request.write(requestBodyAsString);
   }
   // we're done!
   request.end();

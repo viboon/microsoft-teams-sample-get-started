@@ -24,13 +24,15 @@
 	</div>
 	<div id="sendmessageheader" class="container">
 		<h2>Send message:</h2>
-		<form>
-			<div class="form-group">
-			<label for="message">Comment:</label>
-			<textarea class="form-control" rows="5" id="message"></textarea>
-			</div>
-			<button type="button" class="btn btn-default" id="sendmessage">Send</button>
-		</form>
+		<div id="sendmessages" class="container">
+			<form>
+				<div class="form-group">
+				<label for="message">Comment:</label>
+				<textarea class="form-control" rows="5" id="message"></textarea>
+				</div>
+				<button type="button" class="btn btn-default" id="sendmessagebutton">Send</button>
+			</form>
+		</div>
 	</div>
 
 	<script type="text/javascript">
@@ -45,6 +47,7 @@
 			html += `</ul>`;
 			$('#teams').html(html);
 			$('.team').on('click', function () {
+				$('.team').removeClass('active');
 				$(this).addClass('active');
 				var teamId = $(this).attr('id');
 				$('#channelheader').show();
@@ -56,17 +59,17 @@
 					html += `</ul>`;
 					$('#channels').html(html);
 					$('.channel').on('click', function () {
+						$('.channel').removeClass('active');
 						$(this).addClass('active');
 						var channelId = $(this).attr('id');
 						$('#sendmessageheader').show();
-						$('#sendmessage').on('click', function () {
-							console.log($(this).html());
-							var message = $('#message').html();
+						$('#sendmessagebutton').on('click', function () {
+							var message = $('#message').val();
 							console.log(message);
 							var data = {
 									"rootMessage": {
 										"body": {
-											"contentType": 2,
+											"contentType": 1,
 											"content": message
 										}
 									}
