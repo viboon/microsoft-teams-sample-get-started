@@ -14,9 +14,15 @@ server.get(/\/static\/?.*/, restify.serveStatic({
     directory: __dirname 
 }));
 
+/*
 var c = new builder.ChatConnector({ 
 	appId: (process.env.ENVIRONMENT === 'local') ? '[local app id]' : 'd812b620-006e-406a-99e4-93d670f91748', 
 	appPassword: (process.env.ENVIRONMENT === 'local') ? '[local app id]' : '664Zv3Q2GJe6DawSmeAHVfq'});
+*/
+var c = new builder.ChatConnector({ 
+	appId: (process.env.ENVIRONMENT === 'local') ? '[local app id]' : '82cc5668-94fb-4486-a355-620f336b364d', 
+	appPassword: (process.env.ENVIRONMENT === 'local') ? '[local app id]' : 'rzPB0jBYPF8UEsUDtOf1iox'});
+
 var b = new builder.UniversalBot(c);
 
 var bot = require('./bot/bot.js');

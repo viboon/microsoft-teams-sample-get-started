@@ -39,7 +39,7 @@ module.exports.createThumbnailCard = function (builder) {
 module.exports.createTask = function (title) {
 	return {
 		'title': (title) ? title : faker.fake("{{commerce.productName}}"),
-		'description': faker.fake("{{lorem.sentence}}"),
+		'description': faker.fake('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vehicula, risus ac placerat vestibulum, quam metus congue augue'),
 		'assigned': getName()
 	}
 }

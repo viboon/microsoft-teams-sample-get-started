@@ -1,0 +1,77 @@
+{
+    "manifestVersion": "1.0",
+    "version": "1.0",
+    "id": "4ef12101-4381-4957-a0bb-a7ab3ac69632",
+    "packageName": "com.skype.teams.samples.sampleapp",
+    "developer": {
+        "name": "Microsoft",
+        "websiteUrl": "https://www.microsoft.com",
+        "privacyUrl": "https://www.microsoft.com/privacy",
+        "termsOfUseUrl": "https://www.microsoft.com/termsofuse"
+    },
+    "name": {
+        "short": "Build 2017 demo bot",
+        "long": "Build 2017 demo bot"
+    },
+    "description": {
+        "short": "This is the Build 2017 demo bot in Teams",
+        "full": "Click the video description for more details about this app"
+    },
+    "icons": {
+        "outline": "color_icon.png",
+        "color": "color_icon.png"
+    },
+    "accentColor": "#902D44",
+    "bots": [
+        {
+            "botId": "4ef12101-4381-4957-a0bb-a7ab3ac69632",
+            "isNotificationOnly": false,
+            "scopes": [
+                "team",
+                "personal"
+            ],
+            "commandLists": [
+                {
+                    "scopes": [
+                        "team",
+                        "personal"
+                    ],
+                    "commands": [
+                        {
+                            "title": "help",
+                            "description": "Find out what I can do"
+                        },
+                        {
+                            "title": "sing a song",
+                            "description": "Sing a new song"
+                        },
+                        {
+                            "title": "find a friend",
+                            "description": "Find a friend to hang out with"
+                        },
+                        {
+                            "title": "Tell a joke",
+                            "description": "Tell a funny joke"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "connectors": [
+        {
+            "connectorId": "ea3d0819-ddca-4066-8c85-a5c9ba397fad",
+            "scopes": [
+                "team"
+            ]
+        }
+    ],
+    "permissions": [
+        "identity",
+        "messageTeamMembers"
+    ],
+    "validDomains": [
+        "teamsnodesample.azurewebsites.net",
+        "*.teamsnodesample.azurewebsites.net"
+    ]
+}
