@@ -9,7 +9,7 @@ server.use(restify.queryParser());
 server.use(CookieParser.parse);
 
 server.listen(process.env.port || process.env.PORT || 3998, () => {
-	console.log(`Started ToDo App`);
+	console.log(`Started Sample App`);
 });
 
 server.get(/\/static\/?.*/, restify.serveStatic({

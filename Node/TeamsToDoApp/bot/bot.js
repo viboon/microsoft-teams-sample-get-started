@@ -29,7 +29,7 @@ function start_listening() {
 		// Parse the command and go do the right thing
 		if (split[0].includes('create') || split[0].includes('find')) sendTaskMessage(session.message, this.bot, q.join(' '));
 		else if (split[0].includes('link')) createDeepLink(session.message, this.bot, q.join(' '));
-		else if (split[0].includes('help')) sendHelpMessage(session.message, this.bot, `Hi, I'm teamstodobot`);
+		else if (split[0].includes('help')) sendHelpMessage(session.message, this.bot, `Hi, I'm a sample bot`);
 		else {
 			sendHelpMessage(session.message, this.bot, `I'm sorry, I did not understand you :( `);
 			return;
@@ -55,7 +55,7 @@ function start_listening() {
 			// See if the member added was our bot
 			if (members[i].id.includes('e68061f5-239f-4768-8ed9-ebe804d572d3') || members[i].id.includes('d812b620-006e-406a-99e4-93d670f91748')) {
 				console.log('Bot added to team');
-				sendHelpMessage(msg, this.bot, `Hi, I'm teamstodobot!!`);
+				sendHelpMessage(msg, this.bot, `Hi, I'm a sample bot!!`);
 			}
 		}
 	});

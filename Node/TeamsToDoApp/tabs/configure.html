@@ -36,6 +36,14 @@
 				min-height: 16px;
 				margin: 0 16px;
 			}
+			select#color {
+				background: transparent;
+				border: 1px solid #3F487F;
+				margin: 0 0 0 8px;
+				padding: 2px 15px;
+				text-align: left;
+				font-family: "Segoe UI Semilight","Segoe WPC","Segoe UI", Helvetica, Arial, "Arial Unicode MS", sans-serif;
+			}
 		</style>
 	</head>
 	<body>
@@ -50,7 +58,12 @@
 		</div>
 		<div class="row"> 
 			<label for="color">Pick a color for your tasks: </label>
-			<input type="text" name="color" id="color" value="#fffad1" />
+			<select  name="color" id="color">
+				<option value="#fffad1" selected>Yellow</option> 
+				<option value="#d1fdff">Blue</option>
+				<option value="#ffd1d1">Red</option>
+				<option value="#daffd1">Green</option>
+			</select>
 		</div>
 
 
