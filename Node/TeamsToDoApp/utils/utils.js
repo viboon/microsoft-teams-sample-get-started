@@ -6,7 +6,7 @@ module.exports.createHeroCard = function (builder) {
 		.title(getTitle())
 		.subtitle(`Assigned to: ${getName()}`)
 		.text(faker.fake("{{lorem.paragraph}}"))
-		.images([builder.CardImage.create(null, `https://teamsnodesample.azurewebsites.net/static/img/image${Math.floor(Math.random() * 9) + 1}.png`)])
+		.images([builder.CardImage.create(null, `${process.env.HOST}/static/img/image${Math.floor(Math.random() * 9) + 1}.png`)])
 		.buttons([
 			builder.CardAction.openUrl(null, 'http://www.microsoft.com', 'Microsoft'),
 			builder.CardAction.openUrl(null, 'https://products.office.com/en-us/microsoft-teams/group-chat-software', 'Teams'),
@@ -21,7 +21,7 @@ module.exports.createThumbnailCard = function (builder) {
 		.subtitle(`Assigned to: ${getName()}`)
 		.text(faker.fake("{{lorem.paragraph}}"))
 		.images([
-			builder.CardImage.create(null, `https://teamsnodesample.azurewebsites.net/static/img/image${Math.floor(Math.random() * 9) + 1}.png`)
+			builder.CardImage.create(null, `${process.env.HOST}/static/img/image${Math.floor(Math.random() * 9) + 1}.png`)
 		])
 		.buttons([
 			builder.CardAction.openUrl(null, 'http://www.microsoft.com', 'Microsoft'),
@@ -41,7 +41,7 @@ module.exports.generateConnectorCard = function () {
 		'sections': [{
 			'activityTitle': summary,
 			'activitySubtitle': 'On Project Tango',
-			'activityImage': `https://teamsnodesample.azurewebsites.net/static/img/image${Math.floor(Math.random() * 9) + 1}.png`,
+			'activityImage': `${process.env.HOST}/static/img/image${Math.floor(Math.random() * 9) + 1}.png`,
 			'text': faker.fake('{{lorem.paragraphs}}'),
 			'facts': [
 				{

@@ -6,7 +6,7 @@ const utils = require('../utils/utils.js');
 //	Local Variables
 ///////////////////////////////////////////////////////
 var server; //Restify server
-var host = (process.env.ENVIROMENT === 'local') ? 'http://localhost:3998/' : 'https://teamsnodesample.azurewebsites.net/'; // Host where our app is pointed so we can generate proper urls
+var host = process.env.HOST;
 var connectors = {}; //Array of connectors that have been hooked up
 
 ///////////////////////////////////////////////////////

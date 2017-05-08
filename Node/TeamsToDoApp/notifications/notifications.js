@@ -12,9 +12,9 @@ var access_token = null; //Bearer token return by the auth call to the REST API
 var rest_endpoint = null; //Endpoint to make REST requests, this is given to us when we start listening to a bot
 var tenant_id = null; //Our current tenant ID, his is given to us when we start listening to a bot
 
-var appID = process.env.NOTIFY_APP_ID; //(process.env.ENVIROMENT === 'local') ? '[local app id]' : '8aefbb70-ff9e-409f-acea-986b61e51cd3'; // Our current bot app ID.
-var appPassword = process.env.NOTIFY_SECRET; //(process.env.ENVIROMENT === 'local') ? '[local app id]' : 'hoCDLUcGnab6KqKa3tkvpxJ'; // Our bot app secret
-var host = (process.env.ENVIROMENT === 'local') ? 'http://localhost:3998/' : 'https://teamsnodesample.azurewebsites.net/'; // Our host endpoint
+var appID = process.env.NOTIFY_APP_ID; // Our current bot app ID.
+var appPassword = process.env.NOTIFY_SECRET; // Our bot app secret
+var host = process.env.HOST // Our host endpoint
 
  //This is the connector
 var c = new builder.ChatConnector({

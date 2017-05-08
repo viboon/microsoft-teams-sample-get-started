@@ -69,7 +69,7 @@
 
 	microsoftTeams.initialize();
 
-	var host = 'https://teamsnodesample.azurewebsites.net';
+	var host = `https://${window.location.hostname}`;
 	var authUrl;
 	$.get(`${host}/auth/url`, function (data) {
 		authUrl = data.authUrl;

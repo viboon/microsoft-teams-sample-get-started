@@ -66,7 +66,7 @@ function generateThumbnail(){
 			text: faker.fake('{{lorem.sentence}}'),
 			images: [
 				{
-					url: `https://teamsnodesample.azurewebsites.net/static/img/image${Math.floor(Math.random() * 9) + 1}.png`
+					url: `${process.env.HOST}/static/img/image${Math.floor(Math.random() * 9) + 1}.png`
 				}
 			]
 		}
@@ -75,9 +75,8 @@ function generateThumbnail(){
 
 // This generates a single random result
 function generateResultAttachment(){
-	var thumb = generateThumbnail();
-	var attachment = thumb;
-	attachment.preview = thumb;
+	var attachment = generateThumbnail();
+	attachment.preview = generateThumbnail();
 	return attachment;
 }
 

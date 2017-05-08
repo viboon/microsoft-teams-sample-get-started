@@ -111,7 +111,7 @@
 		.task .image {
 			width: 100%;
 			height: 110px;
-			margin-top: 25px;
+			margin: 25px 0;
 			background-size: cover;
 			border-radius: 10px;
 			background-position: center;
@@ -154,7 +154,7 @@
 		var auth = getURLParam('auth');
 		var color = getURLParam('color') || '#fffad1';
 
-		var host = 'https://teamsnodesample.azurewebsites.net';
+		var host = `https://${window.location.hostname}`;
 
 		$.get(`${host}/api/tasks/team?numdays=${numdays}`, function (data) {
 
@@ -182,7 +182,7 @@
 					var myTaskStyle = myTask ? `background-color:${color}` : '';
 					var assigned = myTask ? 'Me' : task.assigned;
 
-					var image = `https://teamsnodesample.azurewebsites.net/static/img/image${Math.floor(Math.random() * 9) + 1}.png`;
+					var image = `https://${window.location.hostname}/static/img/image${Math.floor(Math.random() * 9) + 1}.png`;
 					var taskHTML = `
 							<li class="task" style="${myTaskStyle}" id="task-${subentity}">								
 								<p class="id">${subentity}</p>

@@ -9,6 +9,7 @@ process.env.NOTIFY_APP_ID = (process.env.NOTIFY_APP_ID) ? process.env.NOTIFY_APP
 process.env.NOTIFY_SECRET = (process.env.NOTIFY_SECRET) ? process.env.NOTIFY_SECRET : '[notifications only bot secret]';
 process.env.AUTH_CLIENT_ID = (process.env.AUTH_CLIENT_ID) ? process.env.AUTH_CLIENT_ID : '[auth client ID]';
 process.env.AUTH_CLIENT_SECRET = (process.env.AUTH_CLIENT_SECRET) ? process.env.AUTH_CLIENT_SECRET : '[auth client secret]';
+process.env.HOST = (process.env.HOST) ? process.env.HOST : '[the host name for your application]';
 
 var server = restify.createServer();
 server.use(restify.queryParser());

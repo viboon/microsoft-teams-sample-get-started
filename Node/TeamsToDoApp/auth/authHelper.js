@@ -20,7 +20,7 @@ var credentials = {
   token_endpoint: '/oauth2/v2.0/token',
   client_id: process.env.AUTH_CLIENT_ID,
   client_secret: process.env.AUTH_CLIENT_SECRET,
-  redirect_uri: 'https://teamsnodesample.azurewebsites.net/login',
+  redirect_uri: `https://${window.location.hostname}/login`,
   scope: 'User.Read'
 };
 

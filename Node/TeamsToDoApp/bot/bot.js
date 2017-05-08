@@ -112,7 +112,7 @@ function sendTaskMessage(message, bot, taskTitle) {
 	var text = `Here's your task: \n\n`;
 	text += `---\n\n`;
 	text += `**Task Title:** ${task.title}\n\n`;
-	text += `**![${task.title}](${`https://teamsnodesample.azurewebsites.net/static/img/image${Math.floor(Math.random() * 9) + 1}.png`})\n\n`;
+	text += `**![${task.title}](${`${process.env.HOST}/static/img/image${Math.floor(Math.random() * 9) + 1}.png`})\n\n`;
 	text += `**Task ID:** ${10}\n\n`;
 	text += `**Task Description:** ${task.description}\n\n`;
 	text += `**Assigned To:** ${task.assigned}\n\n`;
@@ -158,7 +158,7 @@ function sendCardMessage(session, bot, taskTitle) {
 		.subtitle('UNASSIGNED')
 		.text(task.description)
 		.images([
-			builder.CardImage.create(null, `https://teamsnodesample.azurewebsites.net/static/img/image${Math.floor(Math.random() * 9) + 1}.png`)
+			builder.CardImage.create(null, `${process.env.HOST}/static/img/image${Math.floor(Math.random() * 9) + 1}.png`)
 		])
 		.buttons([
 			builder.CardAction.openUrl(null, 'http://www.microsoft.com', 'View task'),
