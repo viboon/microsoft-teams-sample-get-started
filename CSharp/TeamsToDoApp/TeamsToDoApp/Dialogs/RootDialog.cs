@@ -10,6 +10,9 @@ using Newtonsoft.Json;
 
 namespace TeamsToDoApp.Dialogs
 {
+    /// <summary>
+    /// Basic dialog implemention showing how to create an interactive chat bot.
+    /// </summary>
     [Serializable]
     public class RootDialog : IDialog<object>
     {

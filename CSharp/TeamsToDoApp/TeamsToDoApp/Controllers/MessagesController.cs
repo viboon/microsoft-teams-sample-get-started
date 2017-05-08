@@ -32,7 +32,7 @@ namespace TeamsToDoApp
             else if (activity.Type == ActivityTypes.Invoke) // Received an invoke
             {
                 // Determine the response object to reply with
-                var invokeResponse = GetInvokeResponse(activity);
+                var invokeResponse = new ComposeExtension(activity).CreateComposeExtensionResponse();
 
                 // Return the response
                 return Request.CreateResponse<ComposeExtensionResponse>(HttpStatusCode.OK, invokeResponse);

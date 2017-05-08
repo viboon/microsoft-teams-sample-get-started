@@ -1,14 +1,24 @@
 const builder = require("botbuilder");
 const utils = require('../utils/utils.js');
 const Client = require("node-rest-client").Client;
+const uuid = require('node-uuid');
 
 var client = new Client();
 var server;
 var c;
 var bot;
 
+/*
+  Dictionary that maps task IDs to messages that have already been sent.
+*/
+var sentMessages = {};
+
 function start_listening() {
 	this.server.post('api/bot', this.c.listen());
+
+	this.c.onInvoke((msg, callback) => {
+		console.log("got an invoke!");
+	});
 
 	/*
 		Listen for bot dialog messages
@@ -26,10 +36,31 @@ function start_listening() {
 
 		var q = split.slice(1);
 
+		var cmd = split[0].toLowerCase();
+		var params = q.join(' ');
+
 		// Parse the command and go do the right thing
+
 		if (split[0].includes('create') || split[0].includes('find')) sendTaskMessage(session.message, this.bot, q.join(' '));
 		else if (split[0].includes('link')) createDeepLink(session.message, this.bot, q.join(' '));
 		else if (split[0].includes('help')) sendHelpMessage(session.message, this.bot, `Hi, I'm a sample bot`);
+
+		if (cmd.includes('create') || cmd.includes('find')) {
+			sendCardMessage(session, this.bot, q.join(' '));
+		}
+		else if (cmd.includes('assign')) {
+			var taskId = params;
+			if (sentMessages[taskId]) {
+				// Send message update.
+				sendCardUpdate(session, this.bot, taskId);
+			}
+		}
+		else if (cmd.includes('link')) {
+			createDeepLink(session.message, this.bot, q.join(' '));
+		}
+		else if (cmd.includes('help')) {
+			sendHelpMessage(session.message, this.bot, `Hi, I'm teamstodobot`);
+		}
 		else {
 			sendHelpMessage(session.message, this.bot, `I'm sorry, I did not understand you :( `);
 			return;
@@ -62,6 +93,9 @@ function start_listening() {
 	*/
 }
 
+/**
+ * Generate a deep link that points to a tab
+ */
 function createDeepLink(message, bot, tabName) {
 
 	var name = tabName;
@@ -97,6 +131,71 @@ function sendTaskMessage(message, bot, taskTitle) {
 	text += `**Assigned To:** ${task.assigned}\n\n`;
 
 	sendMessage(message, bot, text);
+}
+
+/**
+ * Send a card update for the given task ID.
+ */
+function sendCardUpdate(session, bot, taskId) {
+	var sentMsg = sentMessages[taskId];
+
+	var origAttachment = sentMsg.msg.data.attachments[0];
+	origAttachment.content.subtitle = 'Assigned to Larry Jin';
+
+	var updatedMsg = new builder.Message()
+		.address(sentMsg.address)
+		.textFormat(builder.TextFormat.markdown)
+		.addAttachment(origAttachment)
+		.toMessage();
+
+	session.connector.update(updatedMsg, function(err, addresses) {
+		if (err) {
+			console.log(`Could not updated message with task ID: ${taskId}`);
+		}
+	});
+}
+
+/**
+ * Helper method to generate a card message for a given task.
+ */
+function sendCardMessage(session, bot, taskTitle) {
+	var task = utils.createTask();
+
+	task.title = taskTitle;
+	// Generate a random GUID for this task object.
+	var taskId = uuid.v4();
+
+	var updateBtn = new builder.CardAction()
+		.title('Assign to me')
+		.type('imBack')
+		.value('assign ' + taskId);
+
+	var card = new builder.ThumbnailCard()
+		.title(task.title)
+		.subtitle('UNASSIGNED')
+		.text(task.description)
+		.images([
+			builder.CardImage.create(null, `https://teamsnodesample.azurewebsites.net/static/img/image${Math.floor(Math.random() * 9) + 1}.png`)
+		])
+		.buttons([
+			builder.CardAction.openUrl(null, 'http://www.microsoft.com', 'View task'),
+			builder.CardAction.openUrl(null, 'https://products.office.com/en-us/microsoft-teams/group-chat-software', 'View in list'),
+			updateBtn,
+		]);
+
+	var msg = new builder.Message()
+		.address(session.message.address)
+		.textFormat(builder.TextFormat.markdown)
+		.addAttachment(card);
+
+	bot.send(msg, function(err, addresses) {
+		// Record the bot ID.
+		if (addresses && addresses.length > 0) {
+			sentMessages[taskId] = {
+				'msg': msg, 'address': addresses[0]
+			};
+		}
+	});
 }
 
 function sendMessage(message, bot, text) {

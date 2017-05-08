@@ -1,0 +1,105 @@
+{
+    "manifestVersion": "1.0",
+    "version": "1.0",
+    "id": "6c5a1f6a-b8da-4c75-93ca-e5e5cddd095b",
+    "packageName": "com.skype.teams.samples.sampleappnotify",
+    "developer": {
+        "name": "Microsoft",
+        "websiteUrl": "https://www.microsoft.com",
+        "privacyUrl": "https://www.microsoft.com/privacy",
+        "termsOfUseUrl": "https://www.microsoft.com/termsofuse"
+    },
+    "name": {
+        "short": "Teams Sample App",
+        "long": "Teams Sample App"
+    },
+    "description": {
+        "short": "This is a small sample app we made for you!",
+        "full": "This is a small sample app we made for you! This app has samples of all capabilities MS Teams supports"
+    },
+    "icons": {
+        "outline": "https://lucarras.azurewebsites.net/static/img/outline_icon.png",
+        "color": "https://lucarras.azurewebsites.net/static/img/color_icon.png"
+    },
+    "accentColor": "#3F487F",
+    "staticTabs": [
+        {
+            "entityId": "mytasks",
+            "name": "My Tasks",
+            "contentUrl": "https://teamsnodesample.azurewebsites.net/tabs/index",
+            "websiteUrl": "https://teamsnodesample.azurewebsites.net/tabs/index",
+            "scopes": [
+                "personal"
+            ]
+        },
+        {
+            "entityId": "about",
+            "name": "About",
+            "contentUrl": "https://teamsnodesample.azurewebsites.net/tabs/about",
+            "websiteUrl": "https://teamsnodesample.azurewebsites.net/tabs/about",
+            "scopes": [
+                "personal"
+            ]
+        }
+    ],
+    "configurableTabs": [
+        {
+            "configurationUrl": "https://teamsnodesample.azurewebsites.net/tabs/configure",
+            "canUpdateConfiguration": true,
+            "scopes": [
+                "team"
+            ]
+        }
+    ],
+    "bots": [
+        {
+            "botId": "8aefbb70-ff9e-409f-acea-986b61e51cd3",
+            "isNotificationOnly": true,
+            "scopes": [
+                "team",
+                "personal"
+            ]
+        }
+    ],
+    "connectors": [
+        {
+            "connectorId": "e9343a03-0a5e-4c1f-95a8-263a565505a5",
+            "scopes": [
+                "team"
+            ]
+        }
+    ],
+    "composeExtensions": [
+        {
+            "botId": "d812b620-006e-406a-99e4-93d670f91748",
+            "description": "Search todos",
+            "scopes": [
+                "personal",
+                "team"
+            ],
+            "commands": [
+                {
+                    "id": "searchCmd",
+                    "title": "Search todos",
+                    "description": "Search todos",
+                    "parameters": [
+                        {
+                            "name": "search",
+                            "title": "search",
+                            "description": "search todos",
+                            "value": ""
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "permissions": [
+        "identity",
+        "messageTeamMembers"
+    ],
+    "validDomains": [
+        "teamsnodesample.azurewebsites.net",
+        "*.teamsnodesample.azurewebsites.net"
+    ]
+}
