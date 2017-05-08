@@ -95,7 +95,7 @@
     "inputExtensions": [
         {
             "botId": "d812b620-006e-406a-99e4-93d670f91748",
-            "description": "Search todos",
+            "description": "Search tasks",
             "scopes": [
                 "personal",
                 "team"
@@ -103,13 +103,13 @@
             "commands": [
                 {
                     "id": "searchCmd",
-                    "title": "Search todos",
-                    "description": "Search todos",
+                    "title": "Search tasks",
+                    "description": "Search tasks",
                     "parameters": [
                         {
                             "name": "search",
                             "title": "search",
-                            "description": "search todos",
+                            "description": "search tasks",
                             "value": ""
                         }
                     ]

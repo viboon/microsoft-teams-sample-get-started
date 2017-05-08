@@ -33,13 +33,13 @@
             "commands": [
                 {
                     "id": "searchCmd",
-                    "title": "Search todos",
-                    "description": "Search todos",
+                    "title": "Search tasks",
+                    "description": "Search tasks",
                     "parameters": [
                         {
                             "name": "search",
                             "title": "search",
-                            "description": "search todos",
+                            "description": "search tasks",
                             "value": ""
                         }
                     ]

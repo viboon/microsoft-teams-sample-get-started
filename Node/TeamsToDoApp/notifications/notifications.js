@@ -293,7 +293,7 @@ function start_listening() {
 					// Prepare a message to the channel about the addition of this app. Write convenience URLs so 
 					// we can easily send messages to the channel and individually to any user
 					var guid = uuid.v4();
-					var text = `##Just added the To Do App!! \n Send message to channel: `
+					var text = `##Just added the Sample App!! \n Send message to channel: `
 					text += `[Text](${host}api/messages/send/team?id=${encodeURIComponent(guid)})`;
 					text += ` | [Hero Card](${host}api/messages/send/team?type=hero&id=${encodeURIComponent(guid)})`;
 					text += ` | [Thumbnail Card](${host}api/messages/send/team?type=thumb&id=${encodeURIComponent(guid)})`;

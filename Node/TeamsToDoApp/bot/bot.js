@@ -59,7 +59,7 @@ function start_listening() {
 			createDeepLink(session.message, this.bot, q.join(' '));
 		}
 		else if (cmd.includes('help')) {
-			sendHelpMessage(session.message, this.bot, `Hi, I'm teamstodobot`);
+			sendHelpMessage(session.message, this.bot, `Hi, I'm a sample bot`);
 		}
 		else {
 			sendHelpMessage(session.message, this.bot, `I'm sorry, I did not understand you :( `);
