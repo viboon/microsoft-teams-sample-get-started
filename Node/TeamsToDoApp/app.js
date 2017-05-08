@@ -3,6 +3,12 @@ const builder = require('botbuilder');
 const CookieParser = require('restify-cookies');
 
 process.env.ENVIRONMENT = 'cloud';
+process.env.BOT_APP_ID = '[bot app id]';
+process.env.BOT_SECRET = '[bot app secret]';
+process.env.NOTIFY_APP_ID = '[notifications only bot app id]';
+process.env.NOTIFY_SECRET = '[notifications only bot secret]';
+process.env.AUTH_CLIENT_ID = '[auth client ID]';
+process.env.AUTH_CLIENT_SECRET = '[auth client secret]';
 
 var server = restify.createServer();
 server.use(restify.queryParser());
@@ -17,8 +23,9 @@ server.get(/\/static\/?.*/, restify.serveStatic({
 }));
 
 var c = new builder.ChatConnector({ 
-	appId: (process.env.ENVIRONMENT === 'local') ? '[local app id]' : 'd812b620-006e-406a-99e4-93d670f91748', 
-	appPassword: (process.env.ENVIRONMENT === 'local') ? '[local app id]' : '664Zv3Q2GJe6DawSmeAHVfq'});
+	appId: process.env.BOT_APP_ID, 
+	appPassword: process.env.BOT_SECRET
+});
 
 var b = new builder.UniversalBot(c);
 

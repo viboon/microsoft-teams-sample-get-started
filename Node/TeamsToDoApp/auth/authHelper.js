@@ -18,8 +18,8 @@ var credentials = {
   authority: 'https://login.microsoftonline.com/common',
   authorize_endpoint: '/oauth2/v2.0/authorize',
   token_endpoint: '/oauth2/v2.0/token',
-  client_id: '03f0f6f4-f697-4b24-8691-da1b68f78a6f',
-  client_secret: 'YPMDzOgBXnJ3GqHwObbEKSn',
+  client_id: process.env.AUTH_CLIENT_ID,
+  client_secret: process.env.AUTH_CLIENT_SECRET,
   redirect_uri: 'https://teamsnodesample.azurewebsites.net/login',
   scope: 'User.Read'
 };
