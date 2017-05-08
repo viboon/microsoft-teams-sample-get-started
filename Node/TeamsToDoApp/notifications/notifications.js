@@ -4,23 +4,193 @@ const rest = require('restler');
 const faker = require('faker');
 const utils = require('../utils/utils.js');
 
-var server;
-var access_token = null;
-var rest_endpoint = null;
-var tenant_id = null;
-var connectors = {};
+///////////////////////////////////////////////////////
+//	Local Variables
+///////////////////////////////////////////////////////
+var server; //Restify server
+var access_token = null; //Bearer token return by the auth call to the REST API
+var rest_endpoint = null; //Endpoint to make REST requests, this is given to us when we start listening to a bot
+var tenant_id = null; //Our current tenant ID, his is given to us when we start listening to a bot
 
-var appID = (process.env.ENVIROMENT === 'local') ? '[local app id]' : '8aefbb70-ff9e-409f-acea-986b61e51cd3';
-var appPassword = (process.env.ENVIROMENT === 'local') ? '[local app id]' : 'hoCDLUcGnab6KqKa3tkvpxJ';
-var host = (process.env.ENVIROMENT === 'local') ? 'http://localhost:3998/' : 'https://teamsnodesample.azurewebsites.net/';
+var appID = (process.env.ENVIROMENT === 'local') ? '[local app id]' : '8aefbb70-ff9e-409f-acea-986b61e51cd3'; // Our current bot app ID.
+var appPassword = (process.env.ENVIROMENT === 'local') ? '[local app id]' : 'hoCDLUcGnab6KqKa3tkvpxJ'; // Our bot app secret
+var host = (process.env.ENVIROMENT === 'local') ? 'http://localhost:3998/' : 'https://01e41053.ngrok.io/'; // Our host endpoint
 
+ //This is the connector
 var c = new builder.ChatConnector({
 	appId: appID,
 	appPassword: appPassword
 });
 
-var bot = new builder.UniversalBot(c);
+var bot = new builder.UniversalBot(c);  //Bot from botbuilder sdk
 var addresses = {}; // Place to save bot connections
+
+
+///////////////////////////////////////////////////////
+//	Bot and listening
+///////////////////////////////////////////////////////
+function start_listening() {
+
+	// Endpoint to send one way messages to the team. If a message is important it will appear on a user's feed
+	this.server.get('api/messages/send/team', (req, res) => {
+
+		var address = addresses[decodeURIComponent(req.params.id)];
+		var type = (typeof req.params.type === 'string') ? req.params.type : 'text';
+		var isImportant = (typeof req.params.isImportant === 'string' && req.params.isImportant === 'true') ? true : false;
+
+		if (!address) {
+			res.send('Sorry cannot find your bot, please re-add the app');
+			res.end();
+			return;
+		}
+
+		console.log(`Sending Message to team: isImportant=${isImportant}`);
+
+		try {
+
+			var quote = faker.fake("{{lorem.sentence}}");
+			var msg = new builder.Message().address(address);
+			if (isImportant) msg.channelData = { notification: { alert: 'true'}}; 
+
+			if (type === 'text') msg.text(quote);
+			if (type === 'hero') msg.addAttachment(utils.createHeroCard(builder));
+			if (type === 'thumb') msg.addAttachment(utils.createThumbnailCard(builder));
+
+			if (type === 'text') res.send('Look on MS Teams, just sent: ' + quote);
+			if (type === 'hero') res.send('Look on MS Teams, just sent a Hero card');
+			if (type === 'thumb') res.send('Look on MS Teams, just sent a Thumbnail card');
+
+			bot.send(msg, function (err) {
+				// Return success/failure
+				res.status(err ? 500 : 200);
+				res.end();
+			});
+		} catch (e) { }
+	});
+
+	// Endpoint to send one way messages to individual users
+	this.server.get('api/messages/send/user', (req, res) => {
+
+		var address = addresses[decodeURIComponent(req.params.id)];
+		var user = decodeURIComponent(req.params.user);
+		var type = (typeof req.params.type === 'string') ? req.params.type : 'text';
+		var isImportant = (typeof req.params.isImportant === 'string' && req.params.isImportant === 'true') ? true : false;
+
+		if (!address) {
+			res.send('Sorry cannot find your bot, please re-add the app');
+			res.end();
+			return;
+		}
+
+		if (!user) {
+			res.send('Sorry cannot find your user, please re-add the app');
+			res.end();
+			return;
+		}
+
+		try {
+
+			startConversation(user, function (data) {
+
+				var newConversationId = data.id;
+
+				address.conversation.id = newConversationId;
+
+				sendMessageToUser(address, type, res, isImportant);
+			});
+		} catch (e) { }
+	});
+
+	this.server.post('api/messages', c.listen()); // bind our one way bot to /api/messages
+
+	// When a bot is added or removed we get an event here. Event type we are looking for is teamMember added
+	bot.on('conversationUpdate', (msg) => {
+
+		console.log('Sample app was added to the team');
+
+		if (!rest_endpoint) rest_endpoint = msg.address.serviceUrl; // This is the base URL where we will send REST API request
+		if (!tenant_id) tenant_id = msg.sourceEvent.tenant.id; // Extracting tenant ID as we will need it to create new conversations
+		if (!msg.eventType === 'teamMemberAdded') return;
+
+		if (!Array.isArray(msg.membersAdded) || msg.membersAdded.length < 1) return;
+
+		var members = msg.membersAdded;
+
+		// We are keeping track of unique addresses so we can send messages to multiple users and channels at the same time
+		// Clean up so we don't blow up memory (I know, I know, but still)
+		if (addresses.length > 100) addresses = {};
+
+		// Loop through all members that were just added to the team
+		for (var i = 0; i < members.length; i++) {
+
+			// See if the member added was our bot
+			if (members[i].id.includes('8aefbb70-ff9e-409f-acea-986b61e51cd3') || members[i].id.includes('150d0c56-1423-4e6d-80d3-afce6cc8bace')) {
+
+				// Find all members currently in the team so we can send them a welcome message
+				getMembers(msg).then((ret) => {
+
+					var msg = ret.msg;
+					var members = ret.members;
+
+					console.log('got members');
+
+					// Prepare a message to the channel about the addition of this app. Write convenience URLs so 
+					// we can easily send messages to the channel and individually to any user
+					var guid = uuid.v4();
+					var text = `##Just added the Sample App!! \n Send message to channel: `
+					text += `[Text](${host}api/messages/send/team?id=${encodeURIComponent(guid)}) ([Important](${host}api/messages/send/team?id=${encodeURIComponent(guid)}&isImportant=true))`;
+					text += ` | [Hero Card](${host}api/messages/send/team?type=hero&id=${encodeURIComponent(guid)}) ([Important](${host}api/messages/send/team?type=hero&id=${encodeURIComponent(guid)}&isImportant=true))`;
+					text += ` | [Thumbnail Card](${host}api/messages/send/team?type=thumb&id=${encodeURIComponent(guid)}) ([Important](${host}api/messages/send/team?type=thumb&id=${encodeURIComponent(guid)}&isImportant=true))`;
+					addresses[guid] = msg.address;
+
+					function getEndpoint(type, guid, user, isImportant){
+						return `${host}api/messages/send/user?type=${encodeURIComponent(type)}&id=${encodeURIComponent(guid)}&user=${encodeURIComponent(user)}&isImportant=${encodeURIComponent(isImportant)}`;
+					}
+
+					// Loop through and prepare convenience URLs for each user
+					text += '\n\n';
+					for (var i = 0; i < members.length; i++) {
+						var user = members[i].id;
+						var name = members[i].givenName || null;
+						guid = uuid.v4();
+
+						var nameString = (name) ? name : `user number ${i + 1}`;
+
+						text += `Send message to ${nameString}: `
+						text += `[Text](${getEndpoint('text',guid,user,false)}) ([Important](${getEndpoint('text',guid,user,true)}))`;
+						text += ` | [Hero Card](${getEndpoint('hero',guid,user,false)}) ([Important](${getEndpoint('hero',guid,user,true)}))`;
+						text += ` | [Thumbnail Card](${getEndpoint('thumb',guid,user,false)} ([Important](${getEndpoint('thumb',guid,user,true)}))`;
+						text += '\n\n';
+
+						addresses[guid] = JSON.parse(JSON.stringify(msg.address)); // Make sure we mae a copy of an address to add to our addresses array
+					}
+
+					// Go ahead and send the message
+					try {
+						var msg = new builder.Message()
+							.address(msg.address)
+							.textFormat(builder.TextFormat.markdown)
+							.text(text);
+
+						bot.send(msg, function (err) {
+
+						});
+					} catch (e) {
+						console.log(`Cannot send message: ${e}`);
+					}
+
+				}, (err) => {
+
+				});
+
+			}
+		}
+	});
+}
+
+///////////////////////////////////////////////////////
+//	Helpers and other methods
+///////////////////////////////////////////////////////
 
 /*
 	Convenience method for connecting to the bot framework REST API.
@@ -44,10 +214,8 @@ function connectToRestAPI() {
 			}
 		}).on('complete', (data) => {
 			access_token = data.access_token;
-			console.log(access_token);
 			resolve();
 		}).on('fail', (err) => {
-			console.log('Cannot connect to rest api: ' + err);
 			reject();
 		});
 	});
@@ -79,19 +247,16 @@ function getMembers(msg) {
 					'X-MsTeamsTenantId': tenant_id
 				}
 			}).on('complete', (data) => {
-				console.log('Getting members');
-
+				console.log('Got members:');
+				console.log(JSON.stringify(data, null, 1));
 				resolve({
 					msg: msg,
 					members: data
 				});
 			}).on('fail', (err) => {
-				console.log('Cannot get members: ' + err);
-				console.log(JSON.stringify(err, null, 1));
 				reject(err);
 			});
 		}, (err) => {
-			console.log("Get Members failed");
 			reject(err);
 		});
 
@@ -112,9 +277,7 @@ function getMembers(msg) {
 */
 function startConversation(user, callback) {
 
-	console.log('Trying Starting Conversation');
 	var endpoint = `${rest_endpoint}v3/conversations`;
-
 	var data = {
 		"bot": {
 			"id": "28:" + appID,
@@ -141,20 +304,14 @@ function startConversation(user, callback) {
 	});
 }
 
-/*
-	This is a convenience method to send a message to a user
-*/
+// This is a convenience method to send a message to a user
 function sendMessageToUser(address, type, res, isImportant = false) {
 
-	console.log('Sending message to user');
+	console.log(`Sending message to user: isImportant=${isImportant}`);
 	var quote = faker.fake("{{lorem.sentence}}");
 	var msg = new builder.Message().address(address);
 
-	msg.channelData = {
-		notification: {
-			alert: 'true'
-		}
-	}
+	if (isImportant) msg.channelData = { notification: { alert: 'true'}}; 
 
 	if (type === 'text') msg.text(quote);
 	if (type === 'hero') msg.addAttachment(utils.createHeroCard(builder));
@@ -173,170 +330,15 @@ function sendMessageToUser(address, type, res, isImportant = false) {
 	}
 
 	bot.send(msg, function (err) {
-		console.log('Failed to send message to user');
 		// Return success/failure
 		res.status(err ? 500 : 200);
 		res.end();
 	});
 }
 
-function start_listening() {
-
-	// Endpoint to send one way messages
-	this.server.get('api/messages/send/team', (req, res) => {
-
-		var address = addresses[decodeURIComponent(req.params.id)];
-		var type = (typeof req.params.type === 'string') ? req.params.type : 'text';
-
-		if (!address) {
-			res.send('Sorry cannot find your bot, please re-add the app');
-			res.end();
-			return;
-		}
-
-		console.log('Sending Message to team');
-
-		try {
-
-			var quote = faker.fake("{{lorem.sentence}}");
-			var msg = new builder.Message().address(address);
-
-			if (type === 'text') msg.text(quote);
-			if (type === 'hero') msg.addAttachment(utils.createHeroCard(builder));
-			if (type === 'thumb') msg.addAttachment(utils.createThumbnailCard(builder));
-
-			if (type === 'text') res.send('Look on MS Teams, just sent: ' + quote);
-			if (type === 'hero') res.send('Look on MS Teams, just sent a Hero card');
-			if (type === 'thumb') res.send('Look on MS Teams, just sent a Thumbnail card');
-
-			bot.send(msg, function (err) {
-				// Return success/failure
-				res.status(err ? 500 : 200);
-				res.end();
-			});
-		} catch (e) { }
-	});
-
-	// Endpoint to send one way messages
-	this.server.get('api/messages/send/user', (req, res) => {
-
-		var address = addresses[decodeURIComponent(req.params.id)];
-		var user = decodeURIComponent(req.params.user);
-		var type = (typeof req.params.type === 'string') ? req.params.type : 'text';
-
-		if (!address) {
-			res.send('Sorry cannot find your bot, please re-add the app');
-			res.end();
-			return;
-		}
-
-		if (!user) {
-			res.send('Sorry cannot find your user, please re-add the app');
-			res.end();
-			return;
-		}
-
-		console.log('Sending Message to user');
-
-		try {
-
-			startConversation(user, function (data) {
-
-				var newConversationId = data.id;
-
-				address.conversation.id = newConversationId;
-
-				sendMessageToUser(address, type, res, true);
-			});
-		} catch (e) { }
-	});
-
-	this.server.post('api/messages', c.listen()); // bind our one way bot to /api/messages
-
-	// When a bot is added or removed we get an event here. Event type we are looking for is teamMember added
-	c.onEvent((msgs) => {
-
-		console.log('Received event');
-
-		var msg = msgs[0]; // Ideally you'd loop through messages here to make sure we don't miss one...
-
-		console.log(JSON.stringify(msg, null, 1));
-
-		if (!rest_endpoint) rest_endpoint = msg.address.serviceUrl; // This is the base URL where we will send REST API request
-		if (!tenant_id) tenant_id = msg.sourceEvent.tenant.id; // Extracting tenant ID as we will need it to create new conversations
-		if (!msg.eventType === 'teamMemberAdded') return;
-
-		if (!Array.isArray(msg.membersAdded) || msg.membersAdded.length < 1) return;
-
-		var members = msg.membersAdded;
-
-		// We are keeping track of unique addresses so we can send messages to multiple users and channels at the same time
-		// Clean up so we don't blow up memory (I know, I know, but still)
-		if (addresses.length > 100) addresses = {};
-
-		// Loop through all members that were just added to the team
-		for (var i = 0; i < members.length; i++) {
-
-			// See if the member added was our bot
-			if (members[i].id.includes('8aefbb70-ff9e-409f-acea-986b61e51cd3') || members[i].id.includes('150d0c56-1423-4e6d-80d3-afce6cc8bace')) {
-
-				console.log('Bot added to team');
-
-				// Find all members currently in the team so we can send them a welcome message
-				getMembers(msg).then((ret) => {
-
-					var msg = ret.msg;
-					var members = ret.members;
-
-					console.log('got members');
-
-					// Prepare a message to the channel about the addition of this app. Write convenience URLs so 
-					// we can easily send messages to the channel and individually to any user
-					var guid = uuid.v4();
-					var text = `##Just added the Sample App!! \n Send message to channel: `
-					text += `[Text](${host}api/messages/send/team?id=${encodeURIComponent(guid)})`;
-					text += ` | [Hero Card](${host}api/messages/send/team?type=hero&id=${encodeURIComponent(guid)})`;
-					text += ` | [Thumbnail Card](${host}api/messages/send/team?type=thumb&id=${encodeURIComponent(guid)})`;
-					addresses[guid] = msg.address;
-
-					// Loop through and prepare convenience URLs for each user
-					text += '\n\n';
-					for (var i = 0; i < members.length; i++) {
-						var user = members[i].id;
-						guid = uuid.v4();
-
-						text += `Send message to user number ${i + 1}: `
-						text += `[Text](${host}api/messages/send/user?id=${encodeURIComponent(guid)}&user=${encodeURIComponent(user)})`;
-						text += ` | [Hero Card](${host}api/messages/send/user?type=hero&id=${encodeURIComponent(guid)}&user=${encodeURIComponent(user)})`;
-						text += ` | [Thumbnail Card](${host}api/messages/send/user?type=thumb&id=${encodeURIComponent(guid)}&user=${encodeURIComponent(user)})`;
-						text += '\n\n';
-
-						addresses[guid] = JSON.parse(JSON.stringify(msg.address)); // Make sure we mae a copy of an address to add to our addresses array
-					}
-
-					// Go ahead and send the message
-					try {
-						var msg = new builder.Message()
-							.address(msg.address)
-							.textFormat(builder.TextFormat.markdown)
-							.text(text);
-
-						bot.send(msg, function (err) {
-
-						});
-					} catch (e) {
-						console.log(`Cannot send message: ${e}`);
-					}
-
-				}, (err) => {
-
-				});
-
-			}
-		}
-	});
-}
-
+///////////////////////////////////////////////////////
+//	Exports
+///////////////////////////////////////////////////////
 module.exports.init = function (server) {
 	this.server = server;
 	return this;

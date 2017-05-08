@@ -2,17 +2,22 @@ const rest = require('restler');
 const fs = require('fs-extra');
 const utils = require('../utils/utils.js');
 
-var server;
-var host = (process.env.ENVIROMENT === 'local') ? 'http://localhost:3998/' : 'http://teamsnodesample.azurewebsites.net/';
-var connectors = {};
+///////////////////////////////////////////////////////
+//	Local Variables
+///////////////////////////////////////////////////////
+var server; //Restify server
+var host = (process.env.ENVIROMENT === 'local') ? 'http://localhost:3998/' : 'https://01e41053.ngrok.io/'; // Host where our app is pointed so we can generate proper urls
+var connectors = {}; //Array of connectors that have been hooked up
 
+///////////////////////////////////////////////////////
+//	Bot and listening
+///////////////////////////////////////////////////////
 function start_listening() {
 
     this.server.get('connector/setup', (req, res, next) => {
 		sendFile('./connector/setup.html', res);
 	});
 
-    // TODO: Figure out how to register this to teams and not to emails
     this.server.get('api/messages/connector/register', (req, res) => {
         
         // Parse register message from connector, find the group name and webhook url
@@ -33,15 +38,13 @@ function start_listening() {
 
         // Post to connectors endpoint so they can route the message properly
         rest.postJson(webhook_url, message).on('complete', function (data, response) {
-            console.log(JSON.stringify(data, null, 1));
-            console.log(JSON.stringify(response, null, 1));
-            console.log('completed connector request');
             res.end();
         });
     });
 
     // This endpoint allows for sending connector messages. It checks if a webhook URL has been passed in first (set up as an incoming webhook)
-    // if not it checks if a connector has been registered with us
+    // if not it checks if a connector has been registered with us.
+    // This endpoint also allows to send yourself messages through a webhook as long as you pass in a webhook url
     this.server.get('api/messages/connector/send', (req, res) => {
 
         // Handshake and figure out if we already know about this connector config
@@ -64,9 +67,6 @@ function start_listening() {
 
         // Post to connectors endpoint so they can route the message properly
         rest.postJson(webhook_url, message).on('complete', function (data, response) {
-            console.log(JSON.stringify(data, null, 1));
-            console.log(JSON.stringify(response, null, 1));
-            console.log('completed connector request');
             res.end();
         });
 
@@ -74,6 +74,10 @@ function start_listening() {
 
 }
 
+///////////////////////////////////////////////////////
+//	Helpers and other methods
+///////////////////////////////////////////////////////
+// Sends back an html file
 function sendFile(path, res){
 	
 	var data = fs.readFileSync(path, 'utf-8');
@@ -86,6 +90,9 @@ function sendFile(path, res){
 	res.end();
 }
 
+///////////////////////////////////////////////////////
+//	Exports
+///////////////////////////////////////////////////////
 module.exports.init = function (server) {
     this.server = server;
     return this;

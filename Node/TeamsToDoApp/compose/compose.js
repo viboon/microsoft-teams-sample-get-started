@@ -2,10 +2,17 @@ const builder = require("botbuilder");
 const faker = require('faker');
 const utils = require('../utils/utils.js');
 
-var c;
-var bot;
-var server;
+///////////////////////////////////////////////////////
+//	Local Variables
+///////////////////////////////////////////////////////
+var c; //This is the connector
+var bot; //Bot from botbuilder sdk
+var server; //Dictionary that maps task IDs to messages that have already been sent.
 
+///////////////////////////////////////////////////////
+//	Bot and listening
+///////////////////////////////////////////////////////
+// Starts the bot functionality of this app
 function start_listening() {
 
 	this.server.post('api/bot', this.c.listen());
@@ -28,6 +35,10 @@ function start_listening() {
 	});
 }
 
+///////////////////////////////////////////////////////
+//	Helpers and other methods
+///////////////////////////////////////////////////////
+// This generates an array of random results
 function generateResults(){
 	var results = {
 		composeExtension:{
@@ -45,6 +56,7 @@ function generateResults(){
 	return results;
 }
 
+// This generates a single random thumbnail
 function generateThumbnail(){
 	return {
 		contentType: 'application/vnd.microsoft.card.thumbnail',
@@ -61,12 +73,17 @@ function generateThumbnail(){
 	}
 }
 
+// This generates a single random result
 function generateResultAttachment(){
-	var attachment = generateThumbnail();
-	attachment.preview = generateThumbnail();
+	var thumb = generateThumbnail();
+	var attachment = thumb;
+	attachment.preview = thumb;
 	return attachment;
 }
 
+///////////////////////////////////////////////////////
+//	Exports
+///////////////////////////////////////////////////////
 module.exports.init = function(server, connector, bot) {
 	this.server = server;
 	this.c = connector;

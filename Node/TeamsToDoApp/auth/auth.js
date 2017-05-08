@@ -15,7 +15,6 @@ function start_listening() {
 					res.setCookie(authHelper.REFRESH_TOKEN_CACHE_KEY, refreshToken);
 					res.redirect(req.params.state, next);
 				} else {
-					console.log(JSON.parse(e.data).error_description);
 					res.status(500);
 					res.send();
 				}

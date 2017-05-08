@@ -2,8 +2,14 @@ const fs = require('fs-extra');
 const moment = require('moment');
 const utils = require('../utils/utils.js');
 
-var server;
+///////////////////////////////////////////////////////
+//	Local Variables
+///////////////////////////////////////////////////////
+var server;  //Restify server
 
+///////////////////////////////////////////////////////
+//	Bot and listening
+///////////////////////////////////////////////////////
 function start_listening() {
 
 	this.server.get('tabs/index', (req, res, next) => {
@@ -60,6 +66,10 @@ function start_listening() {
 	});
 }
 
+///////////////////////////////////////////////////////
+//	Helpers and other methods
+///////////////////////////////////////////////////////
+// Sends a static HTML File
 function sendFile(path, res){
 	
 	var data = fs.readFileSync(path, 'utf-8');
@@ -85,6 +95,9 @@ function sendFileOrLogin(path, req, res, next){
 	}
 }
 
+///////////////////////////////////////////////////////
+//	Exports
+///////////////////////////////////////////////////////
 module.exports.init = function(server) {
 	this.server = server;
 	return this;

@@ -3,26 +3,23 @@ const utils = require('../utils/utils.js');
 const Client = require("node-rest-client").Client;
 const uuid = require('node-uuid');
 
-var client = new Client();
-var server;
-var c;
-var bot;
+///////////////////////////////////////////////////////
+//	Local Variables
+///////////////////////////////////////////////////////
+var client = new Client(); //Restler client so we can make rest requests
+var server; //Restify server
+var c; //This is the connector
+var bot; //Bot from botbuilder sdk
+var sentMessages = {}; //Dictionary that maps task IDs to messages that have already been sent.
 
-/*
-  Dictionary that maps task IDs to messages that have already been sent.
-*/
-var sentMessages = {};
-
+///////////////////////////////////////////////////////
+//	Bot and listening
+///////////////////////////////////////////////////////
+// Starts the bot functionality of this app
 function start_listening() {
 	this.server.post('api/bot', this.c.listen());
 
-	this.c.onInvoke((msg, callback) => {
-		console.log("got an invoke!");
-	});
-
-	/*
-		Listen for bot dialog messages
-	*/
+	// Listen for bot dialog messages
 	this.bot.dialog('/', (session) => {
 
 		var text = utils.getTextWithoutMentions(session.message); // Make sure you strip mentions out before you parse the message
@@ -69,13 +66,8 @@ function start_listening() {
 	});
 
 	// When a bot is added or removed we get an event here. Event type we are looking for is teamMember added
-	
-	// This does not work at the moment. If we listen for this event, then bot.dialog above does not fire 
-	/*
-	this.c.onEvent((msgs) => {
-		console.log('Received event');
-
-		var msg = msgs[0]; // Ideally you'd loop through messages here to make sure we don't miss one...
+	this.bot.on('conversationUpdate', (msg) => {
+		console.log('Sample app was added to the team');
 		if (!msg.eventType === 'teamMemberAdded') return;
 		if (!Array.isArray(msg.membersAdded) || msg.membersAdded.length < 1) return;
 		var members = msg.membersAdded;
@@ -85,17 +77,16 @@ function start_listening() {
 
 			// See if the member added was our bot
 			if (members[i].id.includes('e68061f5-239f-4768-8ed9-ebe804d572d3') || members[i].id.includes('d812b620-006e-406a-99e4-93d670f91748')) {
-				console.log('Bot added to team');
 				sendHelpMessage(msg, this.bot, `Hi, I'm a sample bot!!`);
 			}
 		}
 	});
-	*/
 }
 
-/**
- * Generate a deep link that points to a tab
- */
+///////////////////////////////////////////////////////
+//	Helpers and other methods
+///////////////////////////////////////////////////////
+// Generate a deep link that points to a tab
 function createDeepLink(message, bot, tabName) {
 
 	var name = tabName;
@@ -106,10 +97,10 @@ function createDeepLink(message, bot, tabName) {
 	var entity = `todotab-${name}-${teamId}-${channelId}`; // Match the entity ID we setup when configuring the tab
 	var context = {
 		channelId: channelId,
-		canvasUrl: 'https://devspaces.skype.com'
+		canvasUrl: 'https://teams.microsoft.com'
 	};
 
-	var url = `https://devspaces.skype.com/l/entity/${encodeURIComponent(appId)}/${encodeURIComponent(entity)}?label=${encodeURIComponent(name)}&context=${encodeURIComponent(JSON.stringify(context))}`;
+	var url = `https://teams.microsoft.com/l/entity/${encodeURIComponent(appId)}/${encodeURIComponent(entity)}?label=${encodeURIComponent(name)}&context=${encodeURIComponent(JSON.stringify(context))}`;
 
 	var text = `Here's your [deeplink](${url}): \n`;
 	text += `\`${decodeURIComponent(url)}\``;
@@ -117,6 +108,7 @@ function createDeepLink(message, bot, tabName) {
 	sendMessage(message, bot, text);
 }
 
+// Stub for sending a message with a new task
 function sendTaskMessage(message, bot, taskTitle) {
 	var task = utils.createTask();
 
@@ -133,9 +125,7 @@ function sendTaskMessage(message, bot, taskTitle) {
 	sendMessage(message, bot, text);
 }
 
-/**
- * Send a card update for the given task ID.
- */
+// Send a card update for the given task ID.
 function sendCardUpdate(session, bot, taskId) {
 	var sentMsg = sentMessages[taskId];
 
@@ -155,13 +145,11 @@ function sendCardUpdate(session, bot, taskId) {
 	});
 }
 
-/**
- * Helper method to generate a card message for a given task.
- */
+// Helper method to generate a card message for a given task.
 function sendCardMessage(session, bot, taskTitle) {
 	var task = utils.createTask();
-
 	task.title = taskTitle;
+
 	// Generate a random GUID for this task object.
 	var taskId = uuid.v4();
 
@@ -189,7 +177,6 @@ function sendCardMessage(session, bot, taskTitle) {
 		.addAttachment(card);
 
 	bot.send(msg, function(err, addresses) {
-		// Record the bot ID.
 		if (addresses && addresses.length > 0) {
 			sentMessages[taskId] = {
 				'msg': msg, 'address': addresses[0]
@@ -198,6 +185,7 @@ function sendCardMessage(session, bot, taskTitle) {
 	});
 }
 
+// Helper method to send a text message
 function sendMessage(message, bot, text) {
 	var msg = new builder.Message()
 		.address(message.address)
@@ -207,21 +195,19 @@ function sendMessage(message, bot, text) {
 	bot.send(msg, function(err) {});
 }
 
+// Helper method to send a generic help message
 function sendHelpMessage(message, bot, firstLine) {
-	sendMessage(message, bot, createHelpMessage(firstLine));
-}
-
-function createHelpMessage(firstLine) {
 	var text = `##${firstLine} \n\n Here's what I can help you do \n\n`
-	text += `---\n\n`;
-	text += `* To create a new task, you can type **create** followed by the task name\n\n`
-	text += `* To find an existing task, you can type **find** followed by the task name\n\n`
-	text += `* To create a deep link, you can type **link** followed by the tab name`;
+	text += `To create a new task, you can type **create** followed by the task name\n\n`
+	text += `To find an existing task, you can type **find** followed by the task name\n\n`
+	text += `To create a deep link, you can type **link** followed by the tab name`;
 
-	return text;
+	sendMessage(message, bot, text);
 }
 
-
+///////////////////////////////////////////////////////
+//	Exports
+///////////////////////////////////////////////////////
 module.exports.init = function(server, connector, bot) {
 	this.server = server;
 	this.c = connector;

@@ -1,8 +1,6 @@
 const faker = require('faker');
 
-/*
-	Convenience method to create a Hero card. Takes in an instance of BotBuilder and returns an attachment of type HeroCard
-*/
+// Convenience method to create a Hero card. Takes in an instance of BotBuilder and returns an attachment of type HeroCard
 module.exports.createHeroCard = function (builder) {
 	return new builder.HeroCard()
 		.title(getTitle())
@@ -16,9 +14,7 @@ module.exports.createHeroCard = function (builder) {
 		]);
 }
 
-/*
-	Convenience method to create a Thumbnail card. Takes in an instance of BotBuilder and returns an attachment of type ThumbnailCard
-*/
+// Convenience method to create a Thumbnail card. Takes in an instance of BotBuilder and returns an attachment of type ThumbnailCard
 module.exports.createThumbnailCard = function (builder) {
 	return new builder.ThumbnailCard()
 		.title(getTitle())
@@ -32,29 +28,6 @@ module.exports.createThumbnailCard = function (builder) {
 			builder.CardAction.openUrl(null, 'https://products.office.com/en-us/microsoft-teams/group-chat-software', 'Teams'),
 			builder.CardAction.openUrl(null, 'http://www.bing.com', 'Bing')
 		]);
-}
-
-// Creates a random task
-module.exports.createTask = function (title) {
-	return {
-		'title': (title) ? title : getTitle(),
-		'description': faker.fake("{{lorem.paragraph}}"),
-		'assigned': getName()
-	}
-}
-
-// Convenience method to strip out @ mentions from bot text
-module.exports.getTextWithoutMentions = function (message) {
-	var text = message.text;
-	if (message.entities) {
-		message.entities
-			.filter(entity => entity.type === "mention")
-			.forEach(entity => {
-				text = text.replace(entity.text, "");
-			});
-		text = text.trim();
-	}
-	return text;
 }
 
 // Generates rich connector card.
@@ -152,10 +125,35 @@ module.exports.generateConnectorCard = function () {
 	return ret;
 }
 
+// Creates a random task
+module.exports.createTask = function (title) {
+	return {
+		'title': (title) ? title : getTitle(),
+		'description': faker.fake("{{lorem.paragraph}}"),
+		'assigned': getName()
+	}
+}
+
+// Convenience method to strip out @ mentions from bot text
+module.exports.getTextWithoutMentions = function (message) {
+	var text = message.text;
+	if (message.entities) {
+		message.entities
+			.filter(entity => entity.type === "mention")
+			.forEach(entity => {
+				text = text.replace(entity.text, "");
+			});
+		text = text.trim();
+	}
+	return text;
+}
+
+// Generates random names
 const names = ['Evangelina Gallagher', 'Jess Lamontagne', 'Darlene Solis', 'Linda Riley', 'Simone Suarez', 'Alfonso Troy', 'Gabriel Hendon'];
 function getName() { return names[Math.floor(Math.random() * names.length)]}
 module.exports.getName = getName; 
 
+// Generates random task titles
 const titles = ['Create new tenant', 'Add new team members', 'Hire two new developers', 'Interview design candidates', 'Set up the project', 'Decide on project tools', 'Assign new tasks', 'Generate new leads', 'Meet with clients', 'Meet with the press', 'Sleep'];
 function getTitle() { return titles[Math.floor(Math.random() * titles.length)]}
 module.exports.getTitle = getTitle;
