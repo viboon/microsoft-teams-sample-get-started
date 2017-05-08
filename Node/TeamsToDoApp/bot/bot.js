@@ -37,11 +37,6 @@ function start_listening() {
 		var params = q.join(' ');
 
 		// Parse the command and go do the right thing
-
-		if (split[0].includes('create') || split[0].includes('find')) sendTaskMessage(session.message, this.bot, q.join(' '));
-		else if (split[0].includes('link')) createDeepLink(session.message, this.bot, q.join(' '));
-		else if (split[0].includes('help')) sendHelpMessage(session.message, this.bot, `Hi, I'm a sample bot`);
-
 		if (cmd.includes('create') || cmd.includes('find')) {
 			sendCardMessage(session, this.bot, q.join(' '));
 		}
