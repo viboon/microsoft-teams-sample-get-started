@@ -12,45 +12,53 @@ var authHelper = require('./authHelper.js');
  * @param {string} getPath the resource path from which to retrieve data
  * @param {callback} callback with (data) successfully retrieved
  */
-function executeRequestWithErrorHandling(req, res, requestType, requestPath, requestBody, callback) {
-  executeRequest(
-    requestType,
-    requestPath,
-    requestBody,
-    req.cookies.ACCESS_TOKEN_CACHE_KEY,
-    function (firstRequestError, firstTryUser) {
-      if (!firstRequestError) {
-        callback(firstTryUser);   
-      } else if (hasAccessTokenExpired(firstRequestError)) {
-        // Handle the refresh flow
-        authHelper.getTokenFromRefreshToken(
-          req.cookies.REFRESH_TOKEN_CACHE_KEY,
-          function (refreshError, accessToken) {
-            res.setCookie(authHelper.ACCESS_TOKEN_CACHE_KEY, accessToken);
-            if (accessToken !== null) {
-              executeRequest(
-                requestType,
-                requestPath,
-                requestBody,
-                req.cookies.ACCESS_TOKEN_CACHE_KEY,
-                function (secondRequestError, secondTryUser) {
-                  if (!secondRequestError) {
-                    callback(secondTryUser);
-                  } else {
-                    clearCookies(res);
-                    renderError(res, secondRequestError);
-                  }
-                }
-              );
-            } else {
-              renderError(res, refreshError);
-            }
-          });
-      } else {
-        renderError(res, firstRequestError);
-      }
+function executeRequestWithErrorHandling(req, res, requestType, requestPath, callback) {
+		if (req.cookies.REFRESH_TOKEN_CACHE_KEY === undefined) {
+			res.redirect('/login', next);
     }
-  );
+    else
+    {
+      executeRequest(
+        requestType,
+        requestPath,
+        req.body,
+        req.cookies.ACCESS_TOKEN_CACHE_KEY,
+        function (firstRequestError, firstTryUser) {
+          if (!firstRequestError) {
+            callback(firstTryUser);   
+          } else if (hasAccessTokenExpired(firstRequestError)) {
+            // Handle the refresh flow
+            authHelper.getTokenFromRefreshToken(
+              req.cookies.REFRESH_TOKEN_CACHE_KEY,
+              function (refreshError, accessToken) {
+                res.setCookie(authHelper.ACCESS_TOKEN_CACHE_KEY, accessToken);
+                if (accessToken !== null) {
+                  executeRequest(
+                    requestType,
+                    requestPath,
+                    req.body,
+                    req.cookies.ACCESS_TOKEN_CACHE_KEY,
+                    function (secondRequestError, secondTryUser) {
+                      if (!secondRequestError) {
+                        callback(secondTryUser);
+                      } else {
+                        clearCookies(res);
+                        renderError(res, secondRequestError);
+                      }
+                    }
+                  );
+                } else {
+                  renderError(res, refreshError);
+                }
+              });
+          } else {
+            renderError(res, firstRequestError);
+          }
+        }
+      );
+        
+    }
+
 }
 
 /**

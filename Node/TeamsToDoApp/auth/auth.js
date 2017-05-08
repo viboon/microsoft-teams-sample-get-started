@@ -31,7 +31,7 @@ function start_listening() {
    		sendFile('./auth/loginresult.html', res);
 	});
 
-	this.server.get('/disconnect', function (req, res, next) {
+	this.server.get('disconnect', function (req, res, next) {
 		// check for token
 		res.clearCookie('nodecookie');
 		requestUtil.clearCookies(res);
@@ -46,33 +46,20 @@ function start_listening() {
 	});
 
 	this.server.get(/^\/graph/, (req, res, next) => {
-		console.log(req.url);
-		if (req.cookies.REFRESH_TOKEN_CACHE_KEY === undefined) {
-			res.redirect('/login', next);
-		} else {
-			var url = '/stagingbeta' + req.url.substring('/graph'.length);
-			requestUtil.executeRequestWithErrorHandling(req, res, 'GET', url, null, (data) => {
-				res.send(data);
-				res.end();
-			});
-		}
+		var url = '/stagingbeta' + req.url.substring('/graph'.length);
+		requestUtil.executeRequestWithErrorHandling(req, res, 'GET', url, (data) => {
+			res.send(data);
+			res.end();
+		});
 	});
 
-	this.server.post(/^\/graph/, (req, res, next) => {
-		console.log(req.url);
-		if (req.cookies.REFRESH_TOKEN_CACHE_KEY === undefined) {
-			res.redirect('/login', next);
-		} else {
-			var url = '/stagingbeta' + req.url.substring('/graph'.length);
-			console.log(url);
-			console.log(req.body);
-			requestUtil.executeRequestWithErrorHandling(req, res, 'POST', url, req.body, (data) => {
-				res.send(data);
-				res.end();
-			});
-		}
+	this.server.put(/^\/graph/, (req, res, next) => {
+		var url = '/stagingbeta' + req.url.substring('/graph'.length);
+		requestUtil.executeRequestWithErrorHandling(req, res, 'PUT', url, (data) => {
+			res.send(data);
+			res.end();
+		});
 	});
-
 }
 
 function sendFile(path, res){
