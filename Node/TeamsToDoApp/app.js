@@ -2,13 +2,13 @@ const restify = require('restify');
 const builder = require('botbuilder');
 const CookieParser = require('restify-cookies');
 
-process.env.ENVIRONMENT = 'cloud';
-process.env.BOT_APP_ID = '[bot app id]';
-process.env.BOT_SECRET = '[bot app secret]';
-process.env.NOTIFY_APP_ID = '[notifications only bot app id]';
-process.env.NOTIFY_SECRET = '[notifications only bot secret]';
-process.env.AUTH_CLIENT_ID = '[auth client ID]';
-process.env.AUTH_CLIENT_SECRET = '[auth client secret]';
+process.env.ENVIRONMENT = (process.env.ENVIRONMENT) ? process.env.ENVIRONMENT : 'cloud';
+process.env.BOT_APP_ID = (process.env.BOT_APP_ID) ? process.env.BOT_APP_ID : '[bot app id]';
+process.env.BOT_SECRET = (process.env.BOT_SECRET) ? process.env.BOT_SECRET : '[bot app secret]';
+process.env.NOTIFY_APP_ID = (process.env.NOTIFY_APP_ID) ? process.env.NOTIFY_APP_ID : '[notifications only bot app id]';
+process.env.NOTIFY_SECRET = (process.env.NOTIFY_SECRET) ? process.env.NOTIFY_SECRET : '[notifications only bot secret]';
+process.env.AUTH_CLIENT_ID = (process.env.AUTH_CLIENT_ID) ? process.env.AUTH_CLIENT_ID : '[auth client ID]';
+process.env.AUTH_CLIENT_SECRET = (process.env.AUTH_CLIENT_SECRET) ? process.env.AUTH_CLIENT_SECRET : '[auth client secret]';
 
 var server = restify.createServer();
 server.use(restify.queryParser());
