@@ -1,14 +1,13 @@
 const faker = require('faker');
-faker.seed(3998);
 
 /*
 	Convenience method to create a Hero card. Takes in an instance of BotBuilder and returns an attachment of type HeroCard
 */
 module.exports.createHeroCard = function (builder) {
 	return new builder.HeroCard()
-		.title('This is a Hero Card')
-		.subtitle('Card subtitle')
-		.text('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vehicula, risus ac placerat vestibulum, quam metus congue augue, sed placerat elit metus a odio. Suspendisse nec odio in elit bibendum mollis vel eu diam. Integer id mollis orci, sed iaculis nibh. Suspendisse venenatis lacus neque, quis semper arcu tempus sed. Nunc quam augue, pulvinar at eros ac, bibendum ornare metus. Phasellus vitae enim augue.')
+		.title(getTitle())
+		.subtitle(`Assigned to: ${getName()}`)
+		.text(faker.fake("{{lorem.paragraph}}"))
 		.images([builder.CardImage.create(null, `https://teamsnodesample.azurewebsites.net/static/img/image${Math.floor(Math.random() * 9) + 1}.png`)])
 		.buttons([
 			builder.CardAction.openUrl(null, 'http://www.microsoft.com', 'Microsoft'),
@@ -22,9 +21,9 @@ module.exports.createHeroCard = function (builder) {
 */
 module.exports.createThumbnailCard = function (builder) {
 	return new builder.ThumbnailCard()
-		.title('This is a Thumbnail Card')
-		.subtitle('Card subtitle')
-		.text('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vehicula, risus ac placerat vestibulum, quam metus congue augue, sed placerat elit metus a odio. Suspendisse nec odio in elit bibendum mollis vel eu diam. Integer id mollis orci, sed iaculis nibh. Suspendisse venenatis lacus neque, quis semper arcu tempus sed. Nunc quam augue, pulvinar at eros ac, bibendum ornare metus. Phasellus vitae enim augue.')
+		.title(getTitle())
+		.subtitle(`Assigned to: ${getName()}`)
+		.text(faker.fake("{{lorem.paragraph}}"))
 		.images([
 			builder.CardImage.create(null, `https://teamsnodesample.azurewebsites.net/static/img/image${Math.floor(Math.random() * 9) + 1}.png`)
 		])
@@ -38,8 +37,8 @@ module.exports.createThumbnailCard = function (builder) {
 // Creates a random task
 module.exports.createTask = function (title) {
 	return {
-		'title': (title) ? title : faker.fake("{{commerce.productName}}"),
-		'description': faker.fake('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vehicula, risus ac placerat vestibulum, quam metus congue augue'),
+		'title': (title) ? title : getTitle(),
+		'description': faker.fake("{{lorem.paragraph}}"),
 		'assigned': getName()
 	}
 }
@@ -153,8 +152,10 @@ module.exports.generateConnectorCard = function () {
 	return ret;
 }
 
-const names = ["Evangelina Gallagher", "Jess Lamontagne", "Darlene Solis", "Linda Riley", "Simone Suarez", "Alfonso Troy", "Gabriel Hendon"];
-function getName() {
-	return names[Math.floor(Math.random() * names.length)]
-}
+const names = ['Evangelina Gallagher', 'Jess Lamontagne', 'Darlene Solis', 'Linda Riley', 'Simone Suarez', 'Alfonso Troy', 'Gabriel Hendon'];
+function getName() { return names[Math.floor(Math.random() * names.length)]}
 module.exports.getName = getName; 
+
+const titles = ['Create new tenant', 'Add new team members', 'Hire two new developers', 'Interview design candidates', 'Set up the project', 'Decide on project tools', 'Assign new tasks', 'Generate new leads', 'Meet with clients', 'Meet with the press', 'Sleep'];
+function getTitle() { return titles[Math.floor(Math.random() * titles.length)]}
+module.exports.getTitle = getTitle;
