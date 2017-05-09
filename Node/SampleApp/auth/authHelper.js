@@ -21,8 +21,8 @@ var credentials = {
   token_endpoint: '/oauth2/v2.0/token',
   client_id: process.env.AUTH_CLIENT_ID,
   client_secret: process.env.AUTH_CLIENT_SECRET,
-  redirect_uri: `${process.env.HOST}/login`,
-  scope: 'User.Read'
+  redirect_uri: `https://${process.env.HOST}/login`,
+  scope: 'User.Read Group.ReadWrite.All'
 };
 
 /**

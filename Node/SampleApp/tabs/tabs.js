@@ -24,6 +24,10 @@ function start_listening() {
 		files.sendFileOrLogin('./tabs/configure.html', req, res, next);
 	});
 
+	this.server.get('tabs/sendmessage', (req, res, next) => {
+		files.sendFileOrLogin('./tabs/sendmessage.html', req, res, next);
+	});
+
 	this.server.get('api/tasks/team', (req, res, next) => {
 
 		var numdays = (typeof req.params.numdays === 'string') ? parseInt(req.params.numdays) : 5;
