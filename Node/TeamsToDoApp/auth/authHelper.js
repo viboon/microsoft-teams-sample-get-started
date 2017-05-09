@@ -14,13 +14,14 @@ var OAuth = require('oauth');
 var uuid = require('node-uuid');
 
 // The application registration (must match Azure AD config)
+// If running in cloud, configure details as env variables, otherwise configure them locally.
 var credentials = {
   authority: 'https://login.microsoftonline.com/common',
   authorize_endpoint: '/oauth2/v2.0/authorize',
   token_endpoint: '/oauth2/v2.0/token',
-  client_id: 'd64c574f-6cc3-420d-95eb-b0694147315d',
-  client_secret: 'nbqbrobggifsw6rOrBdkFqW',
-  redirect_uri: `${process.env.host}/login`,
+  client_id: `${process.env.ClientId}`,
+  client_secret: `${process.env.ClientSecret}`,
+  redirect_uri: `${process.env.WEBSITE_HOSTNAME}/login`,
   scope: 'User.Read Group.ReadWrite.All Directory.ReadWrite.All'
 };
 

@@ -3,8 +3,18 @@ const builder = require('botbuilder');
 const CookieParser = require('restify-cookies');
 
 process.env.ENVIRONMENT = 'cloud';
-process.env.host = 'https://9cd00130.ngrok.io';
-console.log(process.env.APPSETTING_ClientSecret);
+
+// If running in cloud, hostname should be available as env variables, otherwise configure it locally.
+console.log(process.env.WEBSITE_HOSTNAME);
+if (!process.env.WEBSITE_HOSTNAME) {
+	process.env.WEBSITE_HOSTNAME = 'https://9cd00130.ngrok.io';
+}
+if (!process.env.ClientId) {
+  process.env.ClientId = 'd64c574f-6cc3-420d-95eb-b0694147315d';
+}
+if (!process.env.ClientSecret) {
+  process.env.ClientSecret = 'nbqbrobggifsw6rOrBdkFqW';
+}
 
 var server = restify.createServer();
 server.use(restify.queryParser());

