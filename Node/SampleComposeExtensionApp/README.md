@@ -1,4 +1,4 @@
-# Sample Compose Extension
+# Sample Compose Extension App
 This is a sample node.js project that leverages full capability of compose extensions in Microsoft Teams, including an authentication flow.
 It uses Facebook Event as an example, to search for an event, and insert it as a thumbnail card into the compose box of Teams client.
 
