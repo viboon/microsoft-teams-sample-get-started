@@ -1,0 +1,8 @@
+﻿extends layout
+
+block content
+  script(type='text/javascript').
+    microsoftTeams.initialize();
+    microsoftTeams.getContext((context) => {
+      window.location = '#{host}' + '/auth/oauth/' + '#{userId}/' + context.teamId + '/' + context.channelId;
+    });

@@ -1,0 +1,57 @@
+{
+  "manifestVersion": "1.0",
+  "version": "1.0",
+  "id": "Your Teams app id",
+  "packageName": "com.skype.teams.samples.facebookEvent",
+  "developer": {
+    "name": "Your name",
+    "websiteUrl": "https://yourwebsite/",
+    "privacyUrl": "https://yourwebsite/privacy",
+    "termsOfUseUrl": "https://yourwebsite/termsofuse"
+  },
+  "name": {
+    "short": "Facebook Event",
+    "long": "Facebook Event"
+  },
+  "description": {
+    "short": "Insert Facebook event as cards",
+    "full": "Insert Facebook event as cards"
+  },
+  "icons": {
+    "outline": "https://facebookbrand.com/wp-content/themes/fb-branding/prj-fb-branding/assets/images/fb-art.png",
+    "color": "https://facebookbrand.com/wp-content/themes/fb-branding/prj-fb-branding/assets/images/fb-art.png"
+  },
+  "accentColor": "#ff6a00",
+  "composeExtensions": [
+    {
+      "botId": "Your bot framework app id",
+      "description": "Insert Facebook Event into Teams",
+      "scopes": [
+        "personal",
+        "team"
+      ],
+      "commands": [
+        {
+          "title": "Insert Facebook event",
+          "description": "Insert Facebook event",
+          "id": "insertFbEvent",
+          "initialRun": true,
+          "parameters": [
+            {
+              "name": "searchKeyword",
+              "title": "Search for event",
+              "description": "Search for event"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "permissions": [
+    "identity",
+    "messageTeamMembers"
+  ],
+  "validDomains": [
+    "Your host domain"
+  ]
+}
