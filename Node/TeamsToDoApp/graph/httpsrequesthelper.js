@@ -3,14 +3,15 @@
  * See LICENSE in the project root for license information.
  */
 var https = require('https');
-var authHelper = require('./authHelper.js');
+var authHelper = require('../auth/authHelper.js');
 
 /** 
- * Get data from the specified path, handling errors
+ * Execute HTTPS request to the specified path, handling errors
  * @param req Incoming user request context
  * @param res Outgoing response context
- * @param {string} getPath the resource path from which to retrieve data
- * @param {callback} callback with (data) successfully retrieved
+ * @param {string} requestType the HTTPS request type
+ * @param {string} requestPath the resource path to which to send the request
+ * @param {callback} callback with data successfully retrieved.
  */
 function executeRequestWithErrorHandling(req, res, requestType, requestPath, callback) {
 		if (req.cookies.REFRESH_TOKEN_CACHE_KEY === undefined) {
@@ -18,41 +19,45 @@ function executeRequestWithErrorHandling(req, res, requestType, requestPath, cal
     }
     else
     {
-      executeRequest(
+      //Step 1. Attempt the request
+      executeHttpsRequest(
         requestType,
         requestPath,
         req.body,
         req.cookies.ACCESS_TOKEN_CACHE_KEY,
-        function (firstRequestError, firstTryUser) {
+        function (firstRequestError, data) {
           if (!firstRequestError) {
-            callback(firstTryUser);   
+            //Success.  Return data.
+            callback(data);   
           } else if (hasAccessTokenExpired(firstRequestError)) {
-            // Handle the refresh flow
+            //Step 2. Request didn't work because access token expired.  Handle the refresh flow
             authHelper.getTokenFromRefreshToken(
               req.cookies.REFRESH_TOKEN_CACHE_KEY,
               function (refreshError, accessToken) {
                 res.setCookie(authHelper.ACCESS_TOKEN_CACHE_KEY, accessToken);
                 if (accessToken !== null) {
-                  executeRequest(
+                  //Step 3. Got a new access token.  Attempt the request again.
+                  executeHttpsRequest(
                     requestType,
                     requestPath,
                     req.body,
                     req.cookies.ACCESS_TOKEN_CACHE_KEY,
-                    function (secondRequestError, secondTryUser) {
+                    function (secondRequestError, data) {
                       if (!secondRequestError) {
-                        callback(secondTryUser);
+                        //Success.  Return data.
+                        callback(data);
                       } else {
                         clearCookies(res);
-                        renderError(res, secondRequestError);
+                        renderError(res, secondRequestError);  //Step 3 failed.
                       }
                     }
                   );
                 } else {
-                  renderError(res, refreshError);
+                  renderError(res, refreshError);  //Step 2 failed.
                 }
               });
           } else {
-            renderError(res, firstRequestError);
+            renderError(res, firstRequestError);  //Step 1 failed.
           }
         }
       );
@@ -62,13 +67,14 @@ function executeRequestWithErrorHandling(req, res, requestType, requestPath, cal
 }
 
 /**
- * Generates a POST request to the SendMail endpoint
+ * Execute HTTPS request to the specified endpoint
+ * @param {string} requestType the HTTPS request type
+ * @param {string} requestPath the resource path from which to retrieve data
+ * @param {object} requestBody the data to be 'POST'ed
  * @param {string} accessToken the access token with which the request should be authenticated
- * @param {string} data the data which will be 'POST'ed
  * @param {callback} callback
- * Per issue #53 for BadRequest when message uses utf-8 characters: Set 'Content-Length': Buffer.byteLength(mailBody,'utf8')
  */
-function executeRequest(requestType, requestPath, requestBody, accessToken, callback) {
+function executeHttpsRequest(requestType, requestPath, requestBody, accessToken, callback) {
   var requestBodyAsString = JSON.stringify(requestBody);
   var options = {
     host: 'graph.microsoft.com',
@@ -77,11 +83,10 @@ function executeRequest(requestType, requestPath, requestBody, accessToken, call
     headers: {
       'Content-Type': 'application/json',
       Authorization: 'Bearer ' + accessToken,
-      'Content-Length': (requestBody == null) ? 0 : requestBodyAsString.length  // **Check
+      'Content-Length': (requestBody == null) ? 0 : requestBodyAsString.length
     }
   };
-  console.log(requestBody);
-  console.log(requestBodyAsString);
+  console.log('Sending it');
 
   // Set up the request
   var request = https.request(options, function (response) {
@@ -104,15 +109,8 @@ function executeRequest(requestType, requestPath, requestBody, accessToken, call
         error = new Error();
         error.code = response.statusCode;
         error.message = response.statusMessage;
-        // The error body sometimes includes an empty space
-        // before the first character, remove it or it causes an error.
         body = body.trim();
         error.innerError = JSON.parse(body).error;
-        // Note: If you receive a 500 - Internal Server Error
-        // while using a Microsoft account (outlok.com, hotmail.com or live.com),
-        // it's possible that your account has not been migrated to support this flow.
-        // Check the inner error object for code 'ErrorInternalServerTransientError'.
-        // You can try using a newly created Microsoft account or contact support.
         console.log(error);
         callback(error, null);
       }
@@ -132,23 +130,6 @@ function executeRequest(requestType, requestPath, requestBody, accessToken, call
   });
 }
 
-function hasAccessTokenExpired(e) {
-  var expired;
-  if (!e.innerError) {
-    expired = false;
-  } else {
-    expired = e.code === 401 &&
-      e.innerError.code === 'InvalidAuthenticationToken' &&
-      e.innerError.message === 'Access token has expired.';
-  }
-  return expired;
-}
-
-function clearCookies(res) {
-  res.clearCookie(authHelper.ACCESS_TOKEN_CACHE_KEY);
-  res.clearCookie(authHelper.REFRESH_TOKEN_CACHE_KEY);
-}
-
 function renderError(res, e) {
   res.send({
     message: e.message,
@@ -158,4 +139,3 @@ function renderError(res, e) {
 }
 
 exports.executeRequestWithErrorHandling = executeRequestWithErrorHandling;
-exports.clearCookies = clearCookies;

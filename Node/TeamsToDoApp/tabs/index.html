@@ -203,6 +203,11 @@
 
 			$('#todos_container').html(html);
 
+			$('.task').on('click', function () {
+				$('.task').removeClass('selected');
+				$(this).addClass('selected');
+			});
+
 			if (auth) {
 				$.get(`${host}/graph/me`, function (myData) {
 					$('#todos_signin').html(`<div class="signin">Signed in as: ${myData.displayName} </div>`);
@@ -210,31 +215,21 @@
 				});
 			}
 
-			$('.task').on('click', function () {
-				$('.task').removeClass('selected');
-				$(this).addClass('selected');
-			});
-
 			if (web) {
-				if (auth) {
-					$.get(`${host}/graph/me/joinedTeams`, function (groupData) {
-						$('#todos_header').html(`${groupData.value[0].displayName}`);
-					});
-				}
-				else {
-					$('#todos_header').html(`<h1>Task Tracker</h1>`);
-				}
+				$('#todos_header').html(`<h1>Task Tracker</h1>`);
 			} else {
 				// Page is inside Microsoft Teams tab.  Don't show the page header/navigation.
 				microsoftTeams.initialize();
 
-				// Generates and popups up a dialog with a deep link to a sub entity
+				// If 'get link' clicked on a task, ask Microsoft Teams to show dialog with a deep link to it
 				$('.getlink').on('click', function () {
 					var subEntityId = $(this).siblings('.id').text();
 					var subEntityLabel = $(this).siblings('.title').text();
 					microsoftTeams.shareDeepLink({subEntityId: subEntityId, subEntityLabel: subEntityLabel});
 				});
 
+				//If we arrived at this page by following a deep link to a task,
+				//then its id will be in the 'subentityId'.  Select this task.
 				microsoftTeams.getContext((context) => {
 					if (context.subEntityId != null) {
 						$(`#task-${context.subEntityId}`).addClass('selected');

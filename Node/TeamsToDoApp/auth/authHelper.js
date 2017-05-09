@@ -100,9 +100,28 @@ function getTokenFromRefreshToken(refreshToken, callback) {
   );
 }
 
+function hasAccessTokenExpired(e) {
+  var expired;
+  if (!e.innerError) {
+    expired = false;
+  } else {
+    expired = e.code === 401 &&
+      e.innerError.code === 'InvalidAuthenticationToken' &&
+      e.innerError.message === 'Access token has expired.';
+  }
+  return expired;
+}
+
+function clearCookies(res) {
+  res.clearCookie(authHelper.ACCESS_TOKEN_CACHE_KEY);
+  res.clearCookie(authHelper.REFRESH_TOKEN_CACHE_KEY);
+}
+
 exports.credentials = credentials;
 exports.getAuthUrl = getAuthUrl;
 exports.getTokenFromCode = getTokenFromCode;
 exports.getTokenFromRefreshToken = getTokenFromRefreshToken;
+exports.hasAccessTokenExpired = hasAccessTokenExpired;
+exports.clearCookies = clearCookies;
 exports.ACCESS_TOKEN_CACHE_KEY = 'ACCESS_TOKEN_CACHE_KEY';
 exports.REFRESH_TOKEN_CACHE_KEY = 'REFRESH_TOKEN_CACHE_KEY';

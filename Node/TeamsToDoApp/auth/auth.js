@@ -1,6 +1,9 @@
+/*
+ * Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license.
+ * See LICENSE in the project root for license information.
+ */
 const fs = require('fs-extra');
 const authHelper = require('./authHelper.js');
-const requestUtil = require('./requestUtil.js');
 
 var server;
 
@@ -10,12 +13,13 @@ function start_listening() {
 		if (req.query.code !== undefined) {
 			authHelper.getTokenFromCode(req.query.code, function (e, accessToken, refreshToken) {
 				if (e === null) {
-					// cache the refresh token in a cookie and go to page configured in 'state' param
+					// Cache the access and refresh token in a cookie for simplicity.
+					// DON'T DO THIS IN A PRODUCTION APP.
 					res.setCookie(authHelper.ACCESS_TOKEN_CACHE_KEY, accessToken);
 					res.setCookie(authHelper.REFRESH_TOKEN_CACHE_KEY, refreshToken);
+					// Now we're signed in, go to the originally requested page, as configured in 'state' param.
 					res.redirect(req.params.state, next);
 				} else {
-					console.log(JSON.parse(e.data).error_description);
 					res.status(500);
 					res.send();
 				}
@@ -32,33 +36,17 @@ function start_listening() {
 	});
 
 	this.server.get('disconnect', function (req, res, next) {
-		// check for token
 		res.clearCookie('nodecookie');
-		requestUtil.clearCookies(res);
+		authHelper.clearCookies(res);
 		res.status(200);
 		res.redirect('/login', next);
 	});
 
 	this.server.get('auth/url', (req, res, next) => {
+		// Get the authentication login URL for use client side.
 		var ret = { authUrl: authHelper.getAuthUrl() };
 		res.send(ret);
 		res.end();
-	});
-
-	this.server.get(/^\/graph/, (req, res, next) => {
-		var url = '/stagingbeta' + req.url.substring('/graph'.length);
-		requestUtil.executeRequestWithErrorHandling(req, res, 'GET', url, (data) => {
-			res.send(data);
-			res.end();
-		});
-	});
-
-	this.server.put(/^\/graph/, (req, res, next) => {
-		var url = '/stagingbeta' + req.url.substring('/graph'.length);
-		requestUtil.executeRequestWithErrorHandling(req, res, 'PUT', url, (data) => {
-			res.send(data);
-			res.end();
-		});
 	});
 }
 
