@@ -2,7 +2,6 @@ const restify = require('restify');
 const builder = require('botbuilder');
 const CookieParser = require('restify-cookies');
 
-process.env.ENVIRONMENT = (process.env.ENVIRONMENT) ? process.env.ENVIRONMENT : 'cloud';
 process.env.BOT_APP_ID = (process.env.BOT_APP_ID) ? process.env.BOT_APP_ID : '[bot app id]';
 process.env.BOT_SECRET = (process.env.BOT_SECRET) ? process.env.BOT_SECRET : '[bot app secret]';
 process.env.NOTIFY_APP_ID = (process.env.NOTIFY_APP_ID) ? process.env.NOTIFY_APP_ID : '[notifications only bot app id]';
@@ -14,6 +13,7 @@ process.env.HOST = (process.env.HOST) ? process.env.HOST : '[the host name for y
 var server = restify.createServer();
 server.use(restify.queryParser());
 server.use(CookieParser.parse);
+server.use(restify.bodyParser());
 
 server.listen(process.env.port || process.env.PORT || 3998, () => {
 	console.log(`Started Sample App`);
@@ -53,3 +53,7 @@ tabs.start_listening();
 var auth = require('./auth/auth.js');
 auth.init(server);
 auth.start_listening();
+
+var graph = require('./graph/graph.js');
+graph.init(server);
+graph.start_listening();

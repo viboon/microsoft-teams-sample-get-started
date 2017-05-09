@@ -158,6 +158,7 @@
 
 		var host = `https://${window.location.hostname}`;
 
+		// Get fake task data
 		$.get(`${host}/api/tasks/team?numdays=${numdays}`, function (data) {
 
         	var html = ``;
@@ -178,13 +179,17 @@
 				for (var j = 0; j < rows; j++) {					
 					var task = day.tasks[j];
 					var subentity = `${i}${j}`;
-					var getLink = (teamId) ? '<p class="getlink">Get Link</p>' : '';					
-					var myTask = !teamId || (Math.floor(Math.random() * 4) == 0) //If team task board, set only some tasks to be mine
+					var getLink = (teamId) ? '<p class="getlink">Get Link</p>' : '';
+
+					//Adjust fake data:
+					//- If personal task board, set all tasks to be mine.
+					//- If team task board, set only some tasks to be mine leaving the remainder assigned to others.
+					var myTask = !teamId || (Math.floor(Math.random() * 4) == 0)
 					var myTaskClass = myTask ? 'myTask' : '';
 					var myTaskStyle = myTask ? `background-color:${color}` : '';
 					var assigned = myTask ? 'Me' : task.assigned;
 
-					var image = `https://${window.location.hostname}/static/img/image${Math.floor(Math.random() * 9) + 1}.png`;
+					var image = `${host}/static/img/image${Math.floor(Math.random() * 9) + 1}.png`;
 					var taskHTML = `
 							<li class="task" style="${myTaskStyle}" id="task-${subentity}">								
 								<p class="id">${subentity}</p>
@@ -204,17 +209,21 @@
 
 			$('#todos_container').html(html);
 
+			$('.task').on('click', function () {
+				$('.task').removeClass('selected');
+				$(this).addClass('selected');
+			});
+
 			if (auth) {
-				$.get(`${host}/graph/me`, function (myData) {
+				// Call Microsoft Graph, via server proxy, to get user name.
+				$.get(`${host}/graph/beta/me`, function (myData) {
 					$('#todos_signin').html(`<div class="signin">Signed in as: ${myData.displayName} </div>`);
 					$('.myTask').html(myData.displayName);
 				});
 			}
 
-			$('.task').on('click', function () {
-				$('.task').removeClass('selected');
-				$(this).addClass('selected');
-			});
+			// Everything above here is part of the original Task Tracking app.
+			// The following code is all that was added to make it work inside Microsoft Teams.
 
 			if (web) {
 				$('#todos_header').html(`<h1>Task Tracker</h1>`);
@@ -222,13 +231,15 @@
 				// Page is inside Microsoft Teams tab.  Don't show the page header/navigation.
 				microsoftTeams.initialize();
 
-				// Generates and popups up a dialog with a deep link to a sub entity
+				// If 'get link' clicked on a task, ask Microsoft Teams to show dialog with a deep link to it
 				$('.getlink').on('click', function () {
 					var subEntityId = $(this).siblings('.id').text();
 					var subEntityLabel = $(this).siblings('.title').text();
 					microsoftTeams.shareDeepLink({subEntityId: subEntityId, subEntityLabel: subEntityLabel});
 				});
 
+				//If we arrived at this page by following a deep link to a task,
+				//then its id will be in the 'subentityId'.  Select this task.
 				microsoftTeams.getContext((context) => {
 					if (context.subEntityId != null) {
 						$(`#task-${context.subEntityId}`).addClass('selected');

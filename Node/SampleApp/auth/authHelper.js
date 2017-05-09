@@ -14,6 +14,7 @@ var OAuth = require('oauth');
 var uuid = require('node-uuid');
 
 // The application registration (must match Azure AD config)
+// If running in cloud, configure details as env variables, otherwise configure them locally.
 var credentials = {
   authority: 'https://login.microsoftonline.com/common',
   authorize_endpoint: '/oauth2/v2.0/authorize',
@@ -100,9 +101,28 @@ function getTokenFromRefreshToken(refreshToken, callback) {
   );
 }
 
+function hasAccessTokenExpired(e) {
+  var expired;
+  if (!e.innerError) {
+    expired = false;
+  } else {
+    expired = e.code === 401 &&
+      e.innerError.code === 'InvalidAuthenticationToken' &&
+      e.innerError.message === 'Access token has expired.';
+  }
+  return expired;
+}
+
+function clearCookies(res) {
+  res.clearCookie('ACCESS_TOKEN_CACHE_KEY');
+  res.clearCookie('REFRESH_TOKEN_CACHE_KEY');
+}
+
 exports.credentials = credentials;
 exports.getAuthUrl = getAuthUrl;
 exports.getTokenFromCode = getTokenFromCode;
 exports.getTokenFromRefreshToken = getTokenFromRefreshToken;
+exports.hasAccessTokenExpired = hasAccessTokenExpired;
+exports.clearCookies = clearCookies;
 exports.ACCESS_TOKEN_CACHE_KEY = 'ACCESS_TOKEN_CACHE_KEY';
 exports.REFRESH_TOKEN_CACHE_KEY = 'REFRESH_TOKEN_CACHE_KEY';

@@ -67,21 +67,28 @@
 		}
 	}
 
-	microsoftTeams.initialize();
 
 	var host = `https://${window.location.hostname}`;
 	var authUrl;
-	$.get(`${host}/auth/url`, function (data) {
+	$.get(`${host}/api/authurl`, function (data) {
 		authUrl = data.authUrl;
 	});
+
+	if (!getURLParam('web')) {
+		//If inside iframe in Microsoft Teams, then intialize Teams library.
+		microsoftTeams.initialize();
+	}
 	
 	function login() {
 		if (getURLParam('web')) {
+			//Regular login outside of Microsoft Teams.
+			//Redirect to auth URL asking for redirect to originally requested page.
 			window.location = authUrl + '&state=' + encodeURIComponent(getURLParam('redirectUrl'));
 		} else {
-			//Inside Microsoft Teams.  Login via Teams pop-up.
-			//After success, redirect popup to new 'loginresult' page.
-			//It will trigger callback below that can redirect this page.
+			//If inside iframe in Microsoft Teams, then login via Teams pop-up because
+			//auth URL won't load in an iframe.
+			//After success, redirect pop-up to new 'loginresult' page.
+			//It will trigger callback below that can redirect to originally requested page.
 			microsoftTeams.authentication.authenticate({
 				url: authUrl + '&state=loginresult',
 				width: 800,
