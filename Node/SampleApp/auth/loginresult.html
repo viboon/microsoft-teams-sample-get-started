@@ -4,8 +4,9 @@
 	<script src="https://statics.teams.microsoft.com/sdk/v0.4/js/MicrosoftTeams.min.js"></script>
 </head>
 <body>
-<p onclick="success()">Success!</p>
+<p>Success!</p>
 <script type="text/javascript">
+	//Call Microsoft Teams library.  This results in callback handled in login.html
 	microsoftTeams.initialize();
 	microsoftTeams.authentication.notifySuccess();
 </script>

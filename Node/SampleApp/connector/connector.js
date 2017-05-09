@@ -1,6 +1,7 @@
 const rest = require('restler');
 const fs = require('fs-extra');
 const utils = require('../utils/utils.js');
+const files = require('../utils/files.js');
 
 ///////////////////////////////////////////////////////
 //	Local Variables
@@ -15,7 +16,7 @@ var connectors = {}; //Array of connectors that have been hooked up
 function start_listening() {
 
     this.server.get('connector/setup', (req, res, next) => {
-		sendFile('./connector/setup.html', res);
+		files.sendFile('./connector/setup.html', res);
 	});
 
     this.server.get('api/messages/connector/register', (req, res) => {
