@@ -20,7 +20,7 @@ var credentials = {
   token_endpoint: '/oauth2/v2.0/token',
   client_id: 'd64c574f-6cc3-420d-95eb-b0694147315d',
   client_secret: 'nbqbrobggifsw6rOrBdkFqW',
-  redirect_uri: 'https://9cd00130.ngrok.io/login',
+  redirect_uri: `${process.env.host}/login`,
   scope: 'User.Read Group.ReadWrite.All Directory.ReadWrite.All'
 };
 
@@ -113,8 +113,8 @@ function hasAccessTokenExpired(e) {
 }
 
 function clearCookies(res) {
-  res.clearCookie(ACCESS_TOKEN_CACHE_KEY);
-  res.clearCookie(REFRESH_TOKEN_CACHE_KEY);
+  res.clearCookie('ACCESS_TOKEN_CACHE_KEY');
+  res.clearCookie('REFRESH_TOKEN_CACHE_KEY');
 }
 
 exports.credentials = credentials;

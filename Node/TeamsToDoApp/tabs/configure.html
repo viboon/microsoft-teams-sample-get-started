@@ -67,7 +67,7 @@
 				}
 			}
 			
-			var host = 'https://9cd00130.ngrok.io';
+			var host = window.location.hostname;
 			var color = '';
 			var name = '';
 			var entity = '';
@@ -97,7 +97,7 @@
 					name = $('#name').val();
 					numdays = $('#numdays').val();
 
-					url = `${host}/tabs/index?teamId=` +
+					url = `https://${host}/tabs/index?teamId=` +
 						`${encodeURIComponent(context.teamId)}` + 
 						`&channelId=${encodeURIComponent(context.channelId)}` +
 						`&color=${encodeURIComponent(color)}` + 
@@ -120,7 +120,7 @@
 			});
 
 			if (auth) {
-				$.get(`${host}/graph/beta/me`, function (data) {
+				$.get(`https://${host}/graph/beta/me`, function (data) {
 					$('#todos_signin').html(`<div class="signin">Signed in as: ${data.displayName} </div>`);
 				});
 			}

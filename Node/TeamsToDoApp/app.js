@@ -3,6 +3,7 @@ const builder = require('botbuilder');
 const CookieParser = require('restify-cookies');
 
 process.env.ENVIRONMENT = 'cloud';
+process.env.host = 'https://9cd00130.ngrok.io';
 console.log(process.env.APPSETTING_ClientSecret);
 
 var server = restify.createServer();

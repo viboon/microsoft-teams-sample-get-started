@@ -155,10 +155,10 @@
 		var auth = getURLParam('auth');
 		var color = getURLParam('color') || '#fffad1';
 
-		var host = 'https://9cd00130.ngrok.io';
+		var host = window.location.hostname;
 
 		// Get fake task data
-		$.get(`${host}/api/tasks/team?numdays=${numdays}`, function (data) {
+		$.get(`https://${host}/api/tasks/team?numdays=${numdays}`, function (data) {
 
         	var html = ``;
 			var cols = data.length;			
@@ -215,7 +215,7 @@
 
 			if (auth) {
 				// Call Microsoft Graph, via server proxy, to get user name.
-				$.get(`${host}/graph/beta/me`, function (myData) {
+				$.get(`https://${host}/graph/beta/me`, function (myData) {
 					$('#todos_signin').html(`<div class="signin">Signed in as: ${myData.displayName} </div>`);
 					$('.myTask').html(myData.displayName);
 				});

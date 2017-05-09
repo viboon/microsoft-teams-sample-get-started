@@ -38,8 +38,9 @@
 	<script type="text/javascript">
 		$('#channelheader').hide();	
 		$('#sendmessageheader').hide();	
-		var host = 'https://teamsnodesampleritaylor.azurewebsites.net';
-		$.get(`${host}/graph/beta/me/joinedTeams`, function (groupData) {
+		var host = window.location.hostname;
+		console.log(host);
+		$.get(`https://${host}/graph/beta/me/joinedTeams`, function (groupData) {
 			var html = `<ul class="list-group">`;
 			for (var j = 0; j < groupData.value.length; j++) {					
 				html += `<li class="list-group-item team" id="${groupData.value[j].id}">${groupData.value[j].displayName}</li>`
@@ -51,7 +52,7 @@
 				$(this).addClass('active');
 				var teamId = $(this).attr('id');
 				$('#channelheader').show();
-				$.get(`${host}/graph/beta/groups/${teamId}/channels`, function (channelData) {
+				$.get(`https://${host}/graph/beta/groups/${teamId}/channels`, function (channelData) {
 					var html = `<ul class="list-group">`;
 					for (var k = 0; k < channelData.value.length; k++) {					
 						html += `<li class="list-group-item channel" id="${channelData.value[k].id}">${channelData.value[k].displayName}</li>`
@@ -77,7 +78,7 @@
 							console.log(JSON.stringify(data));
 							$.ajax({
 								type: "POST",
-								url: `${host}/graph/beta/groups/${teamId}/channels/${channelId}/chatThreads`,
+								url: `https://${host}/graph/beta/groups/${teamId}/channels/${channelId}/chatThreads`,
 								data: JSON.stringify(data),                      
 								contentType: "application/json",
 								processData: false,
