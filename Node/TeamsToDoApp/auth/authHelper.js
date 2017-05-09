@@ -21,7 +21,7 @@ var credentials = {
   token_endpoint: '/oauth2/v2.0/token',
   client_id: `${process.env.ClientId}`,
   client_secret: `${process.env.ClientSecret}`,
-  redirect_uri: `${process.env.WEBSITE_HOSTNAME}/login`,
+  redirect_uri: `https://${process.env.WEBSITE_HOSTNAME}/login`,
   scope: 'User.Read Group.ReadWrite.All Directory.ReadWrite.All'
 };
 
