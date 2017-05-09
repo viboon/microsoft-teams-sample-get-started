@@ -1,0 +1,131 @@
+{
+  "$schema": "https://statics.teams.microsoft.com/sdk/v1.0/manifest/MicrosoftTeams.schema.json",
+  "manifestVersion": "1.0",
+  "version": "1.0",
+  "id": "1ce4a0e8-d676-4d0a-b3c1-b9d1b1bdc76e",
+  "packageName": "com.skype.teams.cssamples.todo",
+  "developer": {
+    "name": "Microsoft Corporation",
+    "websiteUrl": "https://www.microsoft.com",
+    "privacyUrl": "https://www.microsoft.com/privacy",
+    "termsOfUseUrl": "https://www.microsoft.com/termsofuse"
+  },
+  "name": {
+    "short": "Fabrikam",
+    "long": "Fabrikam tasks"
+  },
+  "description": {
+    "short": "Project management app",
+    "full": "Project management app that allows teams to collaborate on tasks"
+  },
+  "icons": {
+    "outline": "outline_icon.png",
+    "color": "color_icon.png"
+  },
+  "accentColor": "#3F487F",
+  "staticTabs": [
+    {
+      "entityId": "index",
+      "name": "My Tasks",
+      "contentUrl": "https://teamsnodesample.azurewebsites.net/tabs/index",
+      "websiteUrl": "https://teamsnodesample.azurewebsites.net/tabs/index",
+      "scopes": [
+        "personal"
+      ]
+    },
+    {
+      "entityId": "appinfo",
+      "name": "Info",
+      "contentUrl": "https://teamsnodesample.azurewebsites.net/tabs/about",
+      "websiteUrl": "https://teamsnodesample.azurewebsites.net/tabs/index",
+      "scopes": [
+        "personal"
+      ]
+    }
+  ],
+  "galleryTabs": [
+    {
+      "configurationUrl": "https://teamsnodesample.azurewebsites.net/tabs/configure",
+      "canUpdateConfiguration": true,
+      "scopes": [
+        "personal",
+        "team"
+      ]
+    }
+  ],
+  "bots": [
+    {
+      "botId": "1ce4a0e8-d676-4d0a-b3c1-b9d1b1bdc76e",
+      "isNotificationOnly": false,
+      "scopes": [
+        "personal",
+        "team"
+      ],
+      "commandLists": [
+        {
+          "scopes": [
+            "team",
+            "personal"
+          ],
+          "commands": [
+            {
+              "title": "help",
+              "description": "Displays the help message"
+            },
+            {
+              "title": "create",
+              "description": "Creates a new random task with the given title"
+            },
+            {
+              "title": "find",
+              "description": "Finds an existing task with the given title"
+            },
+            {
+              "title": "link",
+              "description": "Creates a link to one of the Channel's Tabs with the given title"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "connectors": [
+    {
+      "connectorId": "1ce4a0e8-d676-4d0a-b3c1-b9d1b1bdc76e",
+      "scopes": [ "team" ]
+    }
+  ],
+  "composeExtensions": [
+    {
+      "botId": "1ce4a0e8-d676-4d0a-b3c1-b9d1b1bdc76e",
+      "description": "Search todos",
+      "scopes": [
+        "personal",
+        "team"
+      ],
+      "commands": [
+        {
+          "id": "searchCmd",
+          "title": "Search todos",
+          "description": "Search todos",
+          "parameters": [
+            {
+              "name": "search",
+              "description": "search todos",
+              "title": "search todos",
+              "value": ""
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "permissions": [
+    "identity",
+    "messageTeamMembers"
+  ],
+  "validDomains": [
+    "teamsnodesample.azurewebsites.net",
+    "*.teamsnodesample.azurewebsites.net"
+  ]
+}

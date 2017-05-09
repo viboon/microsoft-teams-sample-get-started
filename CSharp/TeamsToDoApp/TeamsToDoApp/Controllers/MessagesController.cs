@@ -6,15 +6,15 @@ using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
 using Microsoft.Bot.Connector.Teams;
 using Newtonsoft.Json;
-using TeamsToDoApp.Utils;
+using TeamsSampleTaskApp.Utils;
 using Bogus;
 using System.Collections.Generic;
 using System;
 using Microsoft.Bot.Connector.Teams.Models;
 
-namespace TeamsToDoApp
+namespace TeamsSampleTaskApp
 {
-    [BotAuthentication]
+    //[BotAuthentication]
     public class MessagesController : ApiController
     {
 
@@ -24,6 +24,7 @@ namespace TeamsToDoApp
         /// </summary>
         public async Task<HttpResponseMessage> Post([FromBody]Activity activity)
         {
+            MicrosoftAppCredentials.TrustServiceUrl(activity.ServiceUrl);
             
             if (activity.Type == ActivityTypes.Message) // If we just received a message, then let Dialogs process it.
             {
@@ -31,11 +32,17 @@ namespace TeamsToDoApp
             }
             else if (activity.Type == ActivityTypes.Invoke) // Received an invoke
             {
-                // Determine the response object to reply with
-                var invokeResponse = new ComposeExtension(activity).CreateComposeExtensionResponse();
+                if (activity.IsComposeExtensionQuery())
+                {
+                    // Determine the response object to reply with
+                    var invokeResponse = new ComposeExtension(activity).CreateComposeExtensionResponse();
 
-                // Return the response
-                return Request.CreateResponse<ComposeExtensionResponse>(HttpStatusCode.OK, invokeResponse);
+                    // Return the response
+                    return Request.CreateResponse<ComposeExtensionResponse>(HttpStatusCode.OK, invokeResponse);
+                } else
+                {
+                    // Handle other types of Invoke activities here.
+                }
             }
             else
             {
