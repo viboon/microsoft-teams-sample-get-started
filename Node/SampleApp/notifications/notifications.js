@@ -149,10 +149,10 @@ function start_listening() {
 
 					// Prepare a message to the channel about the addition of this app. Write convenience URLs so 
 					// we can easily send messages to the channel and individually to any user					
-					var text = `##Just added the Sample App!! \n Send message to [channel](http://www.microsoft.com): `
-					// text += `[Text](${host}/api/messages/send/team?id=${encodeURIComponent(guid)}) [Important](${host}api/messages/send/team?id=${encodeURIComponent(guid)}&isImportant=true)`;
-					// text += ` | [Hero Card](${host}/api/messages/send/team?type=hero&id=${encodeURIComponent(guid)}) [Important](${host}api/messages/send/team?type=hero&id=${encodeURIComponent(guid)}&isImportant=true)`;
-					// text += ` | [Thumbnail Card](${host}/api/messages/send/team?type=thumb&id=${encodeURIComponent(guid)}) [Important](${host}api/messages/send/team?type=thumb&id=${encodeURIComponent(guid)}&isImportant=true)`;
+					var text = `##Just added the Sample App!! \n Send message to: `
+					text += `[Text](${host}/api/messages/send/team?id=${encodeURIComponent(guid)}) [Important](${host}api/messages/send/team?id=${encodeURIComponent(guid)}&isImportant=true)`;
+					text += ` | [Hero Card](${host}/api/messages/send/team?type=hero&id=${encodeURIComponent(guid)}) [Important](${host}api/messages/send/team?type=hero&id=${encodeURIComponent(guid)}&isImportant=true)`;
+					text += ` | [Thumbnail Card](${host}/api/messages/send/team?type=thumb&id=${encodeURIComponent(guid)}) [Important](${host}api/messages/send/team?type=thumb&id=${encodeURIComponent(guid)}&isImportant=true)`;
 					addresses[guid] = msg.address;
 
 					function getEndpoint(type, guid, user, isImportant) {
