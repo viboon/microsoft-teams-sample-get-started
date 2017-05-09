@@ -1,4 +1,3 @@
-const fs = require('fs-extra');
 const moment = require('moment');
 const utils = require('../utils/utils.js');
 
@@ -7,19 +6,19 @@ var server;
 function start_listening() {
 
 	this.server.get('tabs/index', (req, res, next) => {
-		sendFileOrLogin('./tabs/index.html', req, res, next);
+		utils.sendFileOrLogin('./tabs/index.html', req, res, next);
 	});
 
 	this.server.get('tabs/about', (req, res, next) => {
-		sendFile('./tabs/about.html', res);
+		utils.sendFile('./tabs/about.html', res);
 	});
 
 	this.server.get('tabs/configure', (req, res, next) => {
-		sendFileOrLogin('./tabs/configure.html', req, res, next);
+		utils.sendFileOrLogin('./tabs/configure.html', req, res, next);
 	});
 
 	this.server.get('tabs/sendmessage', (req, res, next) => {
-		sendFileOrLogin('./tabs/sendmessage.html', req, res, next);
+		utils.sendFileOrLogin('./tabs/sendmessage.html', req, res, next);
 	});
 
 	this.server.get('api/tasks/team', (req, res, next) => {
@@ -62,31 +61,6 @@ function start_listening() {
 		res.end();
 
 	});
-}
-
-function sendFile(path, res){
-	
-	var data = fs.readFileSync(path, 'utf-8');
-	res.writeHead(200, {
-		'Content-Length': Buffer.byteLength(data),
-  		'Content-Type': 'text/html'
-	});
-
-	res.write(data);
-	res.end();
-}
-
-function sendFileOrLogin(path, req, res, next){
-	if (req.params.auth && (req.cookies.REFRESH_TOKEN_CACHE_KEY === undefined)) {
-		var redirectUrl = '/login?';
-		if (req.params.web) {
-			redirectUrl += 'web=' + req.params.web +'&';
-		}
-		redirectUrl += 'redirectUrl=' + encodeURIComponent(req.url);
-		res.redirect(redirectUrl, next);
-	} else {
-		sendFile(path, res);
-	}
 }
 
 module.exports.init = function(server) {

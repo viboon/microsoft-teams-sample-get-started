@@ -2,8 +2,8 @@
  * Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license.
  * See LICENSE in the project root for license information.
  */
-const fs = require('fs-extra');
 const authHelper = require('./authHelper.js');
+const utils = require('../utils/utils.js');
 
 var server;
 
@@ -27,12 +27,12 @@ function start_listening() {
 		}
 		else
 		{
-    		sendFile('./auth/login.html', res);
+    		utils.sendFile('./auth/login.html', res);
 		}
 	});
 
     this.server.get('loginresult', (req, res, next) => {
-   		sendFile('./auth/loginresult.html', res);
+   		utils.sendFile('./auth/loginresult.html', res);
 	});
 
 	this.server.get('disconnect', function (req, res, next) {
@@ -42,23 +42,12 @@ function start_listening() {
 		res.redirect('/login', next);
 	});
 
-	this.server.get('auth/url', (req, res, next) => {
+	this.server.get('api/authurl', (req, res, next) => {
 		// Get the authentication login URL for use client side.
 		var ret = { authUrl: authHelper.getAuthUrl() };
 		res.send(ret);
 		res.end();
 	});
-}
-
-function sendFile(path, res){
-	var data = fs.readFileSync(path, 'utf-8');
-	res.writeHead(200, {
-		'Content-Length': Buffer.byteLength(data),
-  		'Content-Type': 'text/html'
-	});
-
-	res.write(data);
-	res.end();
 }
 
 module.exports.init = function(server) {

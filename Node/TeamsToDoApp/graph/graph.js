@@ -2,8 +2,6 @@
  * Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license.
  * See LICENSE in the project root for license information.
  */
-const fs = require('fs-extra');
-const authHelper = require('../auth/authhelper.js');
 const httpsrequesthelper = require('./httpsrequesthelper.js');
 
 var server;

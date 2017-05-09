@@ -9,7 +9,7 @@ var connectors = {};
 function start_listening() {
 
     this.server.get('connector/setup', (req, res, next) => {
-		sendFile('./connector/setup.html', res);
+		utils.sendFile('./connector/setup.html', res);
 	});
 
     // TODO: Figure out how to register this to teams and not to emails
@@ -72,18 +72,6 @@ function start_listening() {
 
     });
 
-}
-
-function sendFile(path, res){
-	
-	var data = fs.readFileSync(path, 'utf-8');
-	res.writeHead(200, {
-		'Content-Length': Buffer.byteLength(data),
-  		'Content-Type': 'text/html'
-	});
-
-	res.write(data);
-	res.end();
 }
 
 module.exports.init = function (server) {
