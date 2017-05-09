@@ -48,18 +48,6 @@ function start_listening() {
 		res.send(ret);
 		res.end();
 	});
-
-	this.server.get('api/temp', (req, res, next) => {
-		// Get the authentication login URL for use client side.
-		var ret = { clientSecret: process.env.ClientSecret,
-			clientSecret2: process.env.APPSETTING_ClientSecret,
-			host: process.env.WEBSITE_HOSTNAME,
-			host2: process.env.host
-		 };
-		res.send(ret);
-		res.end();
-	});
-
 }
 
 module.exports.init = function(server) {
