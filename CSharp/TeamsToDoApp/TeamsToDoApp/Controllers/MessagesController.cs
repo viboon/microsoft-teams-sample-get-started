@@ -52,6 +52,70 @@ namespace TeamsSampleTaskApp
             return response;
         }
 
+        private ComposeExtensionResponse GetInvokeResponse(Activity activity)
+        {
+            ComposeExtensionResponse response = null;
+
+            var invoke = activity as IInvokeActivity;
+
+            if (activity.IsComposeExtensionQuery())
+            {
+                var query = activity.GetComposeExtensionQueryData();
+                if (query.CommandId == null || query.Parameters == null)
+                {
+                    return null;
+                }
+                if (query.CommandId == "searchCmd") // This is specified in bot manifest
+                {
+                    // query.Parameters has the parameters sent by client
+
+                    var results = new ComposeExtensionResult()
+                    {
+                        AttachmentLayout = "list",
+                        Type = "result",
+                        Attachments = new List<ComposeExtensionAttachment>(),
+                    };
+                    for (var i = 0; i < 5; i++)
+                    {
+                        var composeExtensionAttachment = this.GenerateThumbnailCard().ToAttachment().ToComposeExtensionAttachment();
+                        
+                        results.Attachments.Add(composeExtensionAttachment);
+                    }
+
+                    response = new ComposeExtensionResponse()
+                    {                        
+                        ComposeExtension = results
+                    };
+                }
+            }
+            else
+            {
+                // Handle other types here
+            }
+
+            return response;
+        }
+
+        private ThumbnailCard GenerateThumbnailCard()
+        {
+            var faker = new Faker();
+            var random = new Random();
+
+            return new ThumbnailCard()
+            {
+                Title = faker.Commerce.ProductName(),
+                Subtitle = $"Assigned to {faker.Name.FirstName()} {faker.Name.LastName()}",
+                Text = faker.Lorem.Sentence(),
+                Images = new List<CardImage>()
+                {
+                    new CardImage()
+                    {
+                        Url = $"https://teamsnodesample.azurewebsites.net/static/img/image{random.Next(1, 9)}.png",
+                    }
+                }
+            };
+        }
+
         private Activity HandleSystemMessage(Activity message)
         {
             if (message.Type == ActivityTypes.DeleteUserData)
