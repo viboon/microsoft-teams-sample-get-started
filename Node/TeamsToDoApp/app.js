@@ -7,13 +7,13 @@ process.env.ENVIRONMENT = 'cloud';
 // If running in cloud, hostname should be available as env variables, otherwise configure it locally.
 console.log(process.env.WEBSITE_HOSTNAME);
 if (!process.env.WEBSITE_HOSTNAME) {
-	process.env.WEBSITE_HOSTNAME = '9cd00130.ngrok.io';
+	process.env.WEBSITE_HOSTNAME = 'ENTER_YOUR_LOCALHOST_OR_NGROK_URL';
 }
 if (!process.env.ClientId) {
-  process.env.ClientId = 'd64c574f-6cc3-420d-95eb-b0694147315d';
+  process.env.ClientId = 'ENTER_YOUR_CLIENT_ID';
 }
 if (!process.env.ClientSecret) {
-  process.env.ClientSecret = 'nbqbrobggifsw6rOrBdkFqW';
+  process.env.ClientSecret = 'ENTER_YOUR_CLIENT_SECRET';
 }
 
 var server = restify.createServer();
