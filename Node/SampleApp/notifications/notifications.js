@@ -8,9 +8,9 @@ const utils = require('../utils/utils.js');
 //	Local Variables
 ///////////////////////////////////////////////////////
 var server; //Restify server
-var access_token = null; //Bearer token return by the auth call to the REST API
+var access_token = {}; //Bearer token return by the auth call to the REST API
 var rest_endpoint = null; //Endpoint to make REST requests, this is given to us when we start listening to a bot
-var tenant_id = null; //Our current tenant ID, his is given to us when we start listening to a bot
+var tenant_id = {}; //Our current tenant ID, his is given to us when we start listening to a bot
 
 var appID = process.env.NOTIFY_APP_ID; // Our current bot app ID.
 var appPassword = process.env.NOTIFY_SECRET; // Our bot app secret
@@ -71,7 +71,8 @@ function start_listening() {
 	// Endpoint to send one way messages to individual users
 	this.server.get('api/messages/send/user', (req, res) => {
 
-		var address = addresses[decodeURIComponent(req.params.id)];
+		var guid = decodeURIComponent(req.params.id);
+		var address = addresses[guid];
 		var user = decodeURIComponent(req.params.user);
 		var type = (typeof req.params.type === 'string') ? req.params.type : 'text';
 		var isImportant = (typeof req.params.isImportant === 'string' && req.params.isImportant === 'true') ? true : false;
@@ -90,12 +91,9 @@ function start_listening() {
 
 		try {
 
-			startConversation(user, function (data) {
-
+			startConversation(user, guid, function (data) {
 				var newConversationId = data.id;
-
 				address.conversation.id = newConversationId;
-
 				sendMessageToUser(address, type, res, isImportant);
 			});
 		} catch (e) { }
@@ -108,8 +106,7 @@ function start_listening() {
 
 		console.log('Sample app was added to the team');
 
-		if (!rest_endpoint) rest_endpoint = msg.address.serviceUrl; // This is the base URL where we will send REST API request
-		if (!tenant_id) tenant_id = msg.sourceEvent.tenant.id; // Extracting tenant ID as we will need it to create new conversations
+		if (!rest_endpoint) rest_endpoint = msg.address.serviceUrl; // This is the base URL where we will send REST API request		
 		if (!msg.eventType === 'teamMemberAdded') return;
 
 		if (!Array.isArray(msg.membersAdded) || msg.membersAdded.length < 1) return;
@@ -118,7 +115,11 @@ function start_listening() {
 
 		// We are keeping track of unique addresses so we can send messages to multiple users and channels at the same time
 		// Clean up so we don't blow up memory (I know, I know, but still)
-		if (addresses.length > 100) addresses = {};
+		if (addresses.length > 100) {
+			addresses = {};
+			tenant_id = {};
+			access_token = {};
+		}
 
 		var botmessage = new builder.Message()
 			.address(msg.address)
@@ -132,8 +133,11 @@ function start_listening() {
 			// See if the member added was our bot
 			if (members[i].id.includes('8aefbb70-ff9e-409f-acea-986b61e51cd3') || members[i].id.includes('150d0c56-1423-4e6d-80d3-afce6cc8bace')) {
 
+				var guid = uuid.v4();
+				tenant_id[guid] = msg.sourceEvent.tenant.id; // Extracting tenant ID as we will need it to create new conversations
+
 				// Find all members currently in the team so we can send them a welcome message
-				getMembers(msg).then((ret) => {
+				getMembers(msg, guid).then((ret) => {
 
 					var msg = ret.msg;
 					var members = ret.members;
@@ -141,8 +145,7 @@ function start_listening() {
 					console.log('got members');
 
 					// Prepare a message to the channel about the addition of this app. Write convenience URLs so 
-					// we can easily send messages to the channel and individually to any user
-					var guid = uuid.v4();
+					// we can easily send messages to the channel and individually to any user					
 					var text = `##Just added the Sample App!! \n Send message to channel: `
 					text += `[Text](${host}/api/messages/send/team?id=${encodeURIComponent(guid)}) ([Important](${host}api/messages/send/team?id=${encodeURIComponent(guid)}&isImportant=true))`;
 					text += ` | [Hero Card](${host}/api/messages/send/team?type=hero&id=${encodeURIComponent(guid)}) ([Important](${host}api/messages/send/team?type=hero&id=${encodeURIComponent(guid)}&isImportant=true))`;
@@ -165,7 +168,7 @@ function start_listening() {
 						text += `Send message to ${nameString}: `
 						text += `[Text](${getEndpoint('text', guid, user, false)}) ([Important](${getEndpoint('text', guid, user, true)}))`;
 						text += ` | [Hero Card](${getEndpoint('hero', guid, user, false)}) ([Important](${getEndpoint('hero', guid, user, true)}))`;
-						text += ` | [Thumbnail Card](${getEndpoint('thumb', guid, user, false)} ([Important](${getEndpoint('thumb', guid, user, true)}))`;
+						text += ` | [Thumbnail Card](${getEndpoint('thumb', guid, user, false)}) ([Important](${getEndpoint('thumb', guid, user, true)}))`;
 						text += '\n\n';
 
 						addresses[guid] = JSON.parse(JSON.stringify(msg.address)); // Make sure we mae a copy of an address to add to our addresses array
@@ -203,12 +206,12 @@ function start_listening() {
 	Note that this endpoint requires data in the multipart/form format
 	This method returns a promise with the bearer token to make subsequent REST API calls
 */
-function connectToRestAPI() {
+function connectToRestAPI(guid) {
 	return new Promise((resolve, reject) => {
 
 		var endpoint = 'https://login.microsoftonline.com/botframework.com/oauth2/v2.0/token';
 
-		if (access_token !== null) resolve();
+		if (typeof access_token[guid] !== 'undefined') resolve();
 
 		rest.post(endpoint, {
 			multipart: true,
@@ -219,8 +222,8 @@ function connectToRestAPI() {
 				'grant_type': 'client_credentials'
 			}
 		}).on('complete', (data) => {
-			access_token = data.access_token;
-			resolve();
+			access_token[guid] = data.access_token;
+			resolve(data.access_token);
 		}).on('fail', (err) => {
 			reject();
 		});
@@ -240,17 +243,22 @@ function connectToRestAPI() {
 		- the rest enpoint URL is contained in the msg as the serviceURL
 		- conversation id is the full id returned in a message looks like 29:[someid]@skype....
 */
-function getMembers(msg) {
-	
+function getMembers(msg, guid) {
+
 	var conversationId = msg.address.conversation.id;
 
+	console.log('Getting Members');
+	console.log('Access token: ' + access_token[guid]);
+	console.log('Tenant ID: ' + tenant_id[guid]);
+	console.log('GUID: ' + guid);
+
 	return new Promise((resolve, reject) => {
-		connectToRestAPI().then(() => {
+		connectToRestAPI(guid).then((token) => {
 			var endpoint = `${rest_endpoint}v3/conversations/${conversationId}/members`;
 			rest.get(endpoint, {
 				'headers': {
-					'Authorization': 'Bearer ' + access_token,
-					'X-MsTeamsTenantId': tenant_id
+					'Authorization': 'Bearer ' + access_token[guid],
+					'X-MsTeamsTenantId': tenant_id[guid]
 				}
 			}).on('complete', (data) => {
 				console.log('Got members:');
@@ -281,7 +289,7 @@ function getMembers(msg) {
 		- Note that channelData is required, but only the tenant id part if a message is being sent to a user
 		- If a message is being sent to a channel then the team id also needs to be part of channel data
 */
-function startConversation(user, callback) {
+function startConversation(user, guid, callback) {
 
 	var endpoint = `${rest_endpoint}v3/conversations`;
 	var data = {
@@ -294,14 +302,14 @@ function startConversation(user, callback) {
 		}],
 		"channelData": {
 			"tenant": {
-				"id": tenant_id
+				"id": tenant_id[guid]
 			}
 		}
 	};
 
 	rest.post(endpoint, {
 		'headers': {
-			'Authorization': 'Bearer ' + access_token
+			'Authorization': 'Bearer ' + access_token[guid]
 		},
 		'data': JSON.stringify(data)
 	}).on('complete', function (data) {
