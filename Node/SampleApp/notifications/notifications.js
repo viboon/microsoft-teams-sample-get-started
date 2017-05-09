@@ -104,10 +104,13 @@ function start_listening() {
 	// When a bot is added or removed we get an event here. Event type we are looking for is teamMember added
 	bot.on('conversationUpdate', (msg) => {
 
-		console.log('Sample app was added to the team');
+		console.log('Notify got message');
 
 		if (!rest_endpoint) rest_endpoint = msg.address.serviceUrl; // This is the base URL where we will send REST API request		
 		if (!msg.eventType === 'teamMemberAdded') return;
+
+		console.log('Sample app was added to the team');
+		console.log(JSON.stringify(msg, null, 1));
 
 		if (!Array.isArray(msg.membersAdded) || msg.membersAdded.length < 1) return;
 
@@ -125,7 +128,7 @@ function start_listening() {
 			.address(msg.address)
 			.text('Hello, I am a sample app. I am looking for the team members and will shortly send you a message');
 
-		bot.send(botmessage, function (err) {});
+		bot.send(botmessage, function (err) { });
 
 		// Loop through all members that were just added to the team
 		for (var i = 0; i < members.length; i++) {
@@ -146,10 +149,10 @@ function start_listening() {
 
 					// Prepare a message to the channel about the addition of this app. Write convenience URLs so 
 					// we can easily send messages to the channel and individually to any user					
-					var text = `##Just added the Sample App!! \n Send message to channel: `
-					text += `[Text](${host}/api/messages/send/team?id=${encodeURIComponent(guid)}) ([Important](${host}api/messages/send/team?id=${encodeURIComponent(guid)}&isImportant=true))`;
-					text += ` | [Hero Card](${host}/api/messages/send/team?type=hero&id=${encodeURIComponent(guid)}) ([Important](${host}api/messages/send/team?type=hero&id=${encodeURIComponent(guid)}&isImportant=true))`;
-					text += ` | [Thumbnail Card](${host}/api/messages/send/team?type=thumb&id=${encodeURIComponent(guid)}) ([Important](${host}api/messages/send/team?type=thumb&id=${encodeURIComponent(guid)}&isImportant=true))`;
+					var text = `##Just added the Sample App!! \n Send message to: `
+					text += `[Text](${host}/api/messages/send/team?id=${encodeURIComponent(guid)}) [Important](${host}api/messages/send/team?id=${encodeURIComponent(guid)}&isImportant=true)`;
+					text += ` | [Hero Card](${host}/api/messages/send/team?type=hero&id=${encodeURIComponent(guid)}) [Important](${host}api/messages/send/team?type=hero&id=${encodeURIComponent(guid)}&isImportant=true)`;
+					text += ` | [Thumbnail Card](${host}/api/messages/send/team?type=thumb&id=${encodeURIComponent(guid)}) [Important](${host}api/messages/send/team?type=thumb&id=${encodeURIComponent(guid)}&isImportant=true)`;
 					addresses[guid] = msg.address;
 
 					function getEndpoint(type, guid, user, isImportant) {
@@ -164,11 +167,13 @@ function start_listening() {
 						guid = uuid.v4();
 
 						var nameString = (name) ? name : `user number ${i + 1}`;
-
 						text += `Send message to ${nameString}: `
-						text += `[Text](${getEndpoint('text', guid, user, false)}) ([Important](${getEndpoint('text', guid, user, true)}))`;
-						text += ` | [Hero Card](${getEndpoint('hero', guid, user, false)}) ([Important](${getEndpoint('hero', guid, user, true)}))`;
-						text += ` | [Thumbnail Card](${getEndpoint('thumb', guid, user, false)}) ([Important](${getEndpoint('thumb', guid, user, true)}))`;
+						text += `[Text](${getEndpoint('text', guid, user, false)}), `;
+						text += `[Text alert](${getEndpoint('text', guid, user, true)}), `;
+						text += `[Hero](${getEndpoint('hero', guid, user, false)}), ` 
+						text += `[Hero Alert](${getEndpoint('hero', guid, user, true)}), `;
+						text += `[Thumb](${getEndpoint('thumb', guid, user, false)}), `
+						text += `[Thumb Alert](${getEndpoint('thumb', guid, user, true)})`;
 						text += '\n\n';
 
 						addresses[guid] = JSON.parse(JSON.stringify(msg.address)); // Make sure we mae a copy of an address to add to our addresses array
@@ -212,6 +217,7 @@ function connectToRestAPI(guid) {
 
 		var endpoint = 'https://login.microsoftonline.com/botframework.com/oauth2/v2.0/token';
 
+		console.log('Connecting to rest API: ' + access_token[guid]);
 		if (typeof access_token[guid] !== 'undefined') resolve();
 
 		rest.post(endpoint, {
@@ -248,13 +254,17 @@ function getMembers(msg, guid) {
 
 	var conversationId = msg.address.conversation.id;
 
-	console.log('Getting Members');
-	console.log('Access token: ' + access_token[guid]);
-	console.log('Tenant ID: ' + tenant_id[guid]);
-	console.log('GUID: ' + guid);
+
 
 	return new Promise((resolve, reject) => {
 		connectToRestAPI(guid).then((token) => {
+			access_token[guid] = token;
+
+			console.log('Getting Members');
+			console.log('Access token: ' + access_token[guid]);
+			console.log('Tenant ID: ' + tenant_id[guid]);
+			console.log('GUID: ' + guid);
+
 			var endpoint = `${rest_endpoint}v3/conversations/${conversationId}/members`;
 			rest.get(endpoint, {
 				'headers': {

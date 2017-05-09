@@ -133,7 +133,7 @@
 			});
 
 			if (auth) {
-				$.get(`${host}/graph/me`, function (data) {
+				$.get(`${host}/graph/beta/me`, function (data) {
 					$('#todos_signin').html(`<div class="signin">Signed in as: ${data.displayName} </div>`);
 				});
 			}
