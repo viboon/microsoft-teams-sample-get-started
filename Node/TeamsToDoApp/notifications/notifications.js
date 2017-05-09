@@ -138,13 +138,13 @@ function start_listening() {
 					// we can easily send messages to the channel and individually to any user
 					var guid = uuid.v4();
 					var text = `##Just added the Sample App!! \n Send message to channel: `
-					text += `[Text](${host}api/messages/send/team?id=${encodeURIComponent(guid)}) ([Important](${host}api/messages/send/team?id=${encodeURIComponent(guid)}&isImportant=true))`;
-					text += ` | [Hero Card](${host}api/messages/send/team?type=hero&id=${encodeURIComponent(guid)}) ([Important](${host}api/messages/send/team?type=hero&id=${encodeURIComponent(guid)}&isImportant=true))`;
-					text += ` | [Thumbnail Card](${host}api/messages/send/team?type=thumb&id=${encodeURIComponent(guid)}) ([Important](${host}api/messages/send/team?type=thumb&id=${encodeURIComponent(guid)}&isImportant=true))`;
+					text += `[Text](${host}/api/messages/send/team?id=${encodeURIComponent(guid)}) ([Important](${host}api/messages/send/team?id=${encodeURIComponent(guid)}&isImportant=true))`;
+					text += ` | [Hero Card](${host}/api/messages/send/team?type=hero&id=${encodeURIComponent(guid)}) ([Important](${host}api/messages/send/team?type=hero&id=${encodeURIComponent(guid)}&isImportant=true))`;
+					text += ` | [Thumbnail Card](${host}/api/messages/send/team?type=thumb&id=${encodeURIComponent(guid)}) ([Important](${host}api/messages/send/team?type=thumb&id=${encodeURIComponent(guid)}&isImportant=true))`;
 					addresses[guid] = msg.address;
 
 					function getEndpoint(type, guid, user, isImportant){
-						return `${host}api/messages/send/user?type=${encodeURIComponent(type)}&id=${encodeURIComponent(guid)}&user=${encodeURIComponent(user)}&isImportant=${encodeURIComponent(isImportant)}`;
+						return `${host}/api/messages/send/user?type=${encodeURIComponent(type)}&id=${encodeURIComponent(guid)}&user=${encodeURIComponent(user)}&isImportant=${encodeURIComponent(isImportant)}`;
 					}
 
 					// Loop through and prepare convenience URLs for each user
