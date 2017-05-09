@@ -10,7 +10,7 @@ function start_listening() {
  
 	this.server.get(/^\/graph/, (req, res, next) => {
 		// Proxy requests onto the Microsoft Graph
-		var url = '/stagingbeta' + req.url.substring('/graph'.length);
+		var url = req.url.substring('/graph'.length);
 		httpsrequesthelper.executeRequestWithErrorHandling(req, res, 'GET', url, (data) => {
 			res.send(data);
 			res.end();
@@ -19,9 +19,9 @@ function start_listening() {
 
 	this.server.post(/^\/graph/, (req, res, next) => {
 		// Proxy requests onto the Microsoft Graph
-		var url = '/stagingbeta' + req.url.substring('/graph'.length);
+		var url = req.url.substring('/graph'.length);
 		httpsrequesthelper.executeRequestWithErrorHandling(req, res, 'POST', url, (data) => {
-			res.send(data);
+			if (data) { res.send(data); }
 			res.end();
 		});
 	});

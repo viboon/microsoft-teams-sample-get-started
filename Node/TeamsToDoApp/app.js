@@ -42,9 +42,9 @@ var tabs = require('./tabs/tabs.js');
 tabs.init(server);
 tabs.start_listening();
 
-var graph = require('./auth/auth.js');
-graph.init(server);
-graph.start_listening();
+var auth = require('./auth/auth.js');
+auth.init(server);
+auth.start_listening();
 
 var graph = require('./graph/graph.js');
 graph.init(server);

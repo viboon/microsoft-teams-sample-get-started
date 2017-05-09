@@ -39,7 +39,7 @@
 		$('#channelheader').hide();	
 		$('#sendmessageheader').hide();	
 		var host = 'https://9cd00130.ngrok.io';
-		$.get(`${host}/graph/me/joinedTeams`, function (groupData) {
+		$.get(`${host}/graph/beta/me/joinedTeams`, function (groupData) {
 			var html = `<ul class="list-group">`;
 			for (var j = 0; j < groupData.value.length; j++) {					
 				html += `<li class="list-group-item team" id="${groupData.value[j].id}">${groupData.value[j].displayName}</li>`
@@ -51,7 +51,7 @@
 				$(this).addClass('active');
 				var teamId = $(this).attr('id');
 				$('#channelheader').show();
-				$.get(`${host}/graph/groups/${teamId}/channels`, function (channelData) {
+				$.get(`${host}/graph/beta/groups/${teamId}/channels`, function (channelData) {
 					var html = `<ul class="list-group">`;
 					for (var k = 0; k < channelData.value.length; k++) {					
 						html += `<li class="list-group-item channel" id="${channelData.value[k].id}">${channelData.value[k].displayName}</li>`
@@ -77,7 +77,7 @@
 							console.log(JSON.stringify(data));
 							$.ajax({
 								type: "POST",
-								url: `${host}/graph/groups/${teamId}/channels/${channelId}/chatThreads`,
+								url: `${host}/graph/beta/groups/${teamId}/channels/${channelId}/chatThreads`,
 								data: JSON.stringify(data),                      
 								contentType: "application/json",
 								processData: false,

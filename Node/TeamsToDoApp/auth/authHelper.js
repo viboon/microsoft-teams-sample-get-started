@@ -113,8 +113,8 @@ function hasAccessTokenExpired(e) {
 }
 
 function clearCookies(res) {
-  res.clearCookie(authHelper.ACCESS_TOKEN_CACHE_KEY);
-  res.clearCookie(authHelper.REFRESH_TOKEN_CACHE_KEY);
+  res.clearCookie(ACCESS_TOKEN_CACHE_KEY);
+  res.clearCookie(REFRESH_TOKEN_CACHE_KEY);
 }
 
 exports.credentials = credentials;

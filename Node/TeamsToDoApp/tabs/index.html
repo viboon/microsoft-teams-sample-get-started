@@ -209,7 +209,7 @@
 			});
 
 			if (auth) {
-				$.get(`${host}/graph/me`, function (myData) {
+				$.get(`${host}/graph/beta/me`, function (myData) {
 					$('#todos_signin').html(`<div class="signin">Signed in as: ${myData.displayName} </div>`);
 					$('.myTask').html(myData.displayName);
 				});

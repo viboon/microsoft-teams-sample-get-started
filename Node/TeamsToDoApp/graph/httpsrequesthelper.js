@@ -29,7 +29,7 @@ function executeRequestWithErrorHandling(req, res, requestType, requestPath, cal
           if (!firstRequestError) {
             //Success.  Return data.
             callback(data);   
-          } else if (hasAccessTokenExpired(firstRequestError)) {
+          } else if (authHelper.hasAccessTokenExpired(firstRequestError)) {
             //Step 2. Request didn't work because access token expired.  Handle the refresh flow
             authHelper.getTokenFromRefreshToken(
               req.cookies.REFRESH_TOKEN_CACHE_KEY,
@@ -47,7 +47,7 @@ function executeRequestWithErrorHandling(req, res, requestType, requestPath, cal
                         //Success.  Return data.
                         callback(data);
                       } else {
-                        clearCookies(res);
+                        authHelper.clearCookies(res);
                         renderError(res, secondRequestError);  //Step 3 failed.
                       }
                     }
@@ -86,20 +86,15 @@ function executeHttpsRequest(requestType, requestPath, requestBody, accessToken,
       'Content-Length': (requestBody == null) ? 0 : requestBodyAsString.length
     }
   };
-  console.log('Sending it');
 
-  // Set up the request
   var request = https.request(options, function (response) {
     var body = '';
     response.on('data', function (d) {
       body += d;
-      console.log('data' + d);
     });
     response.on('end', function () {
-      console.log('end');
-      console.log(response.statusCode);
       var error;
-            if (response.statusCode === 200) {
+      if (response.statusCode === 200) {
         callback(null, JSON.parse(body));
       } else if (response.statusCode === 202) {
         callback(null, null);
@@ -119,14 +114,13 @@ function executeHttpsRequest(requestType, requestPath, requestBody, accessToken,
 
   // write the outbound data to it
   if (requestBody != null) {
-    console.log('hello');
     request.write(requestBodyAsString);
   }
   // we're done!
   request.end();
 
   request.on('error', function (e) {
-    callback(e);
+    callback(e, null);
   });
 }
 
