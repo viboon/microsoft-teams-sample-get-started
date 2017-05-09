@@ -38,7 +38,7 @@
 	<script type="text/javascript">
 		$('#channelheader').hide();	
 		$('#sendmessageheader').hide();	
-		var host = 'https://9cd00130.ngrok.io';
+		var host = 'https://teamsnodesampleritaylor.azurewebsites.net';
 		$.get(`${host}/graph/beta/me/joinedTeams`, function (groupData) {
 			var html = `<ul class="list-group">`;
 			for (var j = 0; j < groupData.value.length; j++) {					
