@@ -1,0 +1,10 @@
+{
+  "app_id": "073b9db9-6046-42ef-a92f-8b4473ec4b76",
+  "app_password": "bCQXVKRMPsAraDqf37dnsPF",
+  "client_id": "712153018986453",
+  "client_secret": "0069ac7f896e60227ec32e8c1cd1bf7d",
+  "scope": "public_profile",
+  "host": "https://54f79f79.ngrok.io",
+  "redirect_uri": "auth/callback",
+  "auth_uri": "auth/start/"
+}
