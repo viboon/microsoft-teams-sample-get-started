@@ -3,6 +3,7 @@ const builder = require('botbuilder');
 const CookieParser = require('restify-cookies');
 
 process.env.ENVIRONMENT = 'cloud';
+console.log(process.env.APPSETTING_ClientSecret);
 
 var server = restify.createServer();
 server.use(restify.queryParser());
