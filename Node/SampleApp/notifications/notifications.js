@@ -16,7 +16,7 @@ var appID = process.env.NOTIFY_APP_ID; // Our current bot app ID.
 var appPassword = process.env.NOTIFY_SECRET; // Our bot app secret
 var host = process.env.HOST // Our host endpoint
 
- //This is the connector
+//This is the connector
 var c = new builder.ChatConnector({
 	appId: appID,
 	appPassword: appPassword
@@ -50,7 +50,7 @@ function start_listening() {
 
 			var quote = faker.fake("{{lorem.sentence}}");
 			var msg = new builder.Message().address(address);
-			if (isImportant) msg.channelData = { notification: { alert: 'true'}}; 
+			if (isImportant) msg.channelData = { notification: { alert: 'true' } };
 
 			if (type === 'text') msg.text(quote);
 			if (type === 'hero') msg.addAttachment(utils.createHeroCard(builder));
@@ -120,6 +120,12 @@ function start_listening() {
 		// Clean up so we don't blow up memory (I know, I know, but still)
 		if (addresses.length > 100) addresses = {};
 
+		var botmessage = new builder.Message()
+			.address(msg.address)
+			.text('Hello, I am a sample app. I am looking for the team members and will shortly send you a message');
+
+		bot.send(botmessage, function (err) {});
+
 		// Loop through all members that were just added to the team
 		for (var i = 0; i < members.length; i++) {
 
@@ -143,7 +149,7 @@ function start_listening() {
 					text += ` | [Thumbnail Card](${host}/api/messages/send/team?type=thumb&id=${encodeURIComponent(guid)}) ([Important](${host}api/messages/send/team?type=thumb&id=${encodeURIComponent(guid)}&isImportant=true))`;
 					addresses[guid] = msg.address;
 
-					function getEndpoint(type, guid, user, isImportant){
+					function getEndpoint(type, guid, user, isImportant) {
 						return `${host}/api/messages/send/user?type=${encodeURIComponent(type)}&id=${encodeURIComponent(guid)}&user=${encodeURIComponent(user)}&isImportant=${encodeURIComponent(isImportant)}`;
 					}
 
@@ -157,9 +163,9 @@ function start_listening() {
 						var nameString = (name) ? name : `user number ${i + 1}`;
 
 						text += `Send message to ${nameString}: `
-						text += `[Text](${getEndpoint('text',guid,user,false)}) ([Important](${getEndpoint('text',guid,user,true)}))`;
-						text += ` | [Hero Card](${getEndpoint('hero',guid,user,false)}) ([Important](${getEndpoint('hero',guid,user,true)}))`;
-						text += ` | [Thumbnail Card](${getEndpoint('thumb',guid,user,false)} ([Important](${getEndpoint('thumb',guid,user,true)}))`;
+						text += `[Text](${getEndpoint('text', guid, user, false)}) ([Important](${getEndpoint('text', guid, user, true)}))`;
+						text += ` | [Hero Card](${getEndpoint('hero', guid, user, false)}) ([Important](${getEndpoint('hero', guid, user, true)}))`;
+						text += ` | [Thumbnail Card](${getEndpoint('thumb', guid, user, false)} ([Important](${getEndpoint('thumb', guid, user, true)}))`;
 						text += '\n\n';
 
 						addresses[guid] = JSON.parse(JSON.stringify(msg.address)); // Make sure we mae a copy of an address to add to our addresses array
@@ -167,12 +173,12 @@ function start_listening() {
 
 					// Go ahead and send the message
 					try {
-						var msg = new builder.Message()
+						var botmessage = new builder.Message()
 							.address(msg.address)
 							.textFormat(builder.TextFormat.markdown)
 							.text(text);
 
-						bot.send(msg, function (err) {
+						bot.send(botmessage, function (err) {
 
 						});
 					} catch (e) {
@@ -235,7 +241,7 @@ function connectToRestAPI() {
 		- conversation id is the full id returned in a message looks like 29:[someid]@skype....
 */
 function getMembers(msg) {
-
+	
 	var conversationId = msg.address.conversation.id;
 
 	return new Promise((resolve, reject) => {
@@ -311,7 +317,7 @@ function sendMessageToUser(address, type, res, isImportant = false) {
 	var quote = faker.fake("{{lorem.sentence}}");
 	var msg = new builder.Message().address(address);
 
-	if (isImportant) msg.channelData = { notification: { alert: 'true'}}; 
+	if (isImportant) msg.channelData = { notification: { alert: 'true' } };
 
 	if (type === 'text') msg.text(quote);
 	if (type === 'hero') msg.addAttachment(utils.createHeroCard(builder));
