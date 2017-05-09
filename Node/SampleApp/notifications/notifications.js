@@ -172,6 +172,7 @@ function start_listening() {
 						text += '\n\n';
 
 						addresses[guid] = JSON.parse(JSON.stringify(msg.address)); // Make sure we mae a copy of an address to add to our addresses array
+						tenant_id[guid] = msg.sourceEvent.tenant.id; // Extracting tenant ID as we will need it to create new conversations
 					}
 
 					// Go ahead and send the message
