@@ -39,7 +39,6 @@
 		$('#channelheader').hide();	
 		$('#sendmessageheader').hide();	
 		var host = window.location.hostname;
-		console.log(host);
 		$.get(`https://${host}/graph/beta/me/joinedTeams`, function (groupData) {
 			var html = `<ul class="list-group">`;
 			for (var j = 0; j < groupData.value.length; j++) {					
@@ -66,7 +65,6 @@
 						$('#sendmessageheader').show();
 						$('#sendmessagebutton').on('click', function () {
 							var message = $('#message').val();
-							console.log(message);
 							var data = {
 									"rootMessage": {
 										"body": {
@@ -75,7 +73,6 @@
 										}
 									}
 								};
-							console.log(JSON.stringify(data));
 							$.ajax({
 								type: "POST",
 								url: `https://${host}/graph/beta/groups/${teamId}/channels/${channelId}/chatThreads`,

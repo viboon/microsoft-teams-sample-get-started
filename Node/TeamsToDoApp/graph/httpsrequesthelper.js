@@ -21,7 +21,6 @@ function executeRequestWithErrorHandling(req, res, next, requestType, requestPat
     else
     {
       //Step 1. Attempt the request
-            console.log('Step 1');
       executeHttpsRequest(
         requestType,
         requestPath,
@@ -32,7 +31,6 @@ function executeRequestWithErrorHandling(req, res, next, requestType, requestPat
             //Success.  Return data.
             callback(data);   
           } else if (authHelper.hasAccessTokenExpired(firstRequestError)) {
-            console.log('Step 2');
             //Step 2. Request didn't work because access token expired.  Handle the refresh flow
             authHelper.getTokenFromRefreshToken(
               req.cookies.REFRESH_TOKEN_CACHE_KEY,
@@ -40,8 +38,6 @@ function executeRequestWithErrorHandling(req, res, next, requestType, requestPat
                 res.setCookie(authHelper.ACCESS_TOKEN_CACHE_KEY, accessToken);
                 if (accessToken !== null) {
                   //Step 3. Got a new access token.  Attempt the request again.
-                        console.log('Step 3');
-
                   executeHttpsRequest(
                     requestType,
                     requestPath,
@@ -52,7 +48,6 @@ function executeRequestWithErrorHandling(req, res, next, requestType, requestPat
                         //Success.  Return data.
                         callback(data);
                       } else {
-                        console.log('Step 3 failed');
                         authHelper.clearCookies(res);
                         renderError(res, secondRequestError);  //Step 3 failed.
                       }
@@ -112,7 +107,6 @@ function executeHttpsRequest(requestType, requestPath, requestBody, accessToken,
         error.message = response.statusMessage;
         body = body.trim();
         error.innerError = JSON.parse(body).error;
-        console.log(error);
         callback(error, null);
       }
     });
