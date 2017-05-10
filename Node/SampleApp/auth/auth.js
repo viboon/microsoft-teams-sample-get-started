@@ -16,7 +16,9 @@ function start_listening() {
 					// Cache the access and refresh token in a cookie for simplicity.
 					// DON'T DO THIS IN A PRODUCTION APP.
 					res.setCookie(authHelper.ACCESS_TOKEN_CACHE_KEY, accessToken);
-					res.setCookie(authHelper.REFRESH_TOKEN_CACHE_KEY, refreshToken);
+					if (refreshToken) {
+						res.setCookie(authHelper.REFRESH_TOKEN_CACHE_KEY, refreshToken);
+					}
 					// Now we're signed in, go to the originally requested page, as configured in 'state' param.
 					res.redirect(req.params.state, next);
 				} else {

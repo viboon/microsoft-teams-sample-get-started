@@ -32,7 +32,7 @@ function executeRequestWithErrorHandling(req, res, requestType, requestPath, req
                 requestType,
                 requestPath,
                 requestBody,
-                req.cookies.ACCESS_TOKEN_CACHE_KEY,
+                accessToken,
                 function (secondRequestError, secondTryUser) {
                   if (!secondRequestError) {
                     callback(secondTryUser);

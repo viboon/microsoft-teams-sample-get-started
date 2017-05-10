@@ -15,56 +15,49 @@ var authHelper = require('../auth/authHelper.js');
  * @param {callback} callback with data successfully retrieved.
  */
 function executeRequestWithErrorHandling(req, res, next, requestType, requestPath, callback) {
-		if (req.cookies.REFRESH_TOKEN_CACHE_KEY === undefined) {
-			res.redirect(`/login?${process.env.host}&${process.env.ClientSecret}&${process.env.APPSETTING_ClientSecret}&${process.env.WEBSITE_HOSTNAME}`, next);
-    }
-    else
-    {
-      //Step 1. Attempt the request
-      executeHttpsRequest(
-        requestType,
-        requestPath,
-        req.body,
-        req.cookies.ACCESS_TOKEN_CACHE_KEY,
-        function (firstRequestError, data) {
-          if (!firstRequestError) {
-            //Success.  Return data.
-            callback(data);   
-          } else if (authHelper.hasAccessTokenExpired(firstRequestError)) {
-            //Step 2. Request didn't work because access token expired.  Handle the refresh flow
-            authHelper.getTokenFromRefreshToken(
-              req.cookies.REFRESH_TOKEN_CACHE_KEY,
-              function (refreshError, accessToken) {
-                res.setCookie(authHelper.ACCESS_TOKEN_CACHE_KEY, accessToken);
-                if (accessToken !== null) {
-                  //Step 3. Got a new access token.  Attempt the request again.
-                  executeHttpsRequest(
-                    requestType,
-                    requestPath,
-                    req.body,
-                    accessToken,
-                    function (secondRequestError, data) {
-                      if (!secondRequestError) {
-                        //Success.  Return data.
-                        callback(data);
-                      } else {
-                        authHelper.clearCookies(res);
-                        renderError(res, secondRequestError);  //Step 3 failed.
-                      }
+    //Step 1. Attempt the request
+    executeHttpsRequest(
+      requestType,
+      requestPath,
+      req.body,
+      req.cookies.ACCESS_TOKEN_CACHE_KEY,
+      function (firstRequestError, data) {
+        if (!firstRequestError) {
+          //Success.  Return data.
+          callback(data);   
+        } else if (authHelper.hasAccessTokenExpired(firstRequestError) &&
+                    req.cookies.REFRESH_TOKEN_CACHE_KEY) {
+          //Step 2. Request didn't work because access token expired.  Handle the refresh flow
+          authHelper.getTokenFromRefreshToken(
+            req.cookies.REFRESH_TOKEN_CACHE_KEY,
+            function (refreshError, accessToken) {
+              res.setCookie(authHelper.ACCESS_TOKEN_CACHE_KEY, accessToken);
+              if (accessToken !== null) {
+                //Step 3. Got a new access token.  Attempt the request again.
+                executeHttpsRequest(
+                  requestType,
+                  requestPath,
+                  req.body,
+                  accessToken,
+                  function (secondRequestError, data) {
+                    if (!secondRequestError) {
+                      //Success.  Return data.
+                      callback(data);
+                    } else {
+                      authHelper.clearCookies(res);
+                      renderError(res, secondRequestError);  //Step 3 failed.
                     }
-                  );
-                } else {
-                  renderError(res, refreshError);  //Step 2 failed.
-                }
-              });
-          } else {
-            renderError(res, firstRequestError);  //Step 1 failed.
-          }
+                  }
+                );
+              } else {
+                renderError(res, refreshError);  //Step 2 failed.
+              }
+            });
+        } else {
+          renderError(res, firstRequestError);  //Step 1 failed.
         }
-      );
-        
-    }
-
+      }
+    );
 }
 
 /**
