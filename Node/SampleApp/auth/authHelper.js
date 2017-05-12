@@ -22,7 +22,7 @@ var credentials = {
   client_id: process.env.AUTH_CLIENT_ID,
   client_secret: process.env.AUTH_CLIENT_SECRET,
   redirect_uri: `https://${process.env.HOST}/login`,
-  scope: 'User.ReadWrite.All Group.ReadWrite.All'
+  scope: 'User.ReadWrite.All Group.ReadWrite.All offline_access'
 };
 
 /**

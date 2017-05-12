@@ -75,12 +75,10 @@
 	});
 
 	//Find out if we're runnning Microsoft Teams.
-	var isRunningInTeams = true;
-	if (getURLParam('web')) {
-		var isRunninginTeams = false;
-	}
+	var isRunningInTeams = !getURLParam('web');
 
-	//Get the originally requested page that we should go to after login.  Default it if not set.
+	//Get the originally requested page that we should go to after login.
+	//Default it if not set and always assume this means we're standalone, not in Teams.
 	var redirectUrl = getURLParam('redirectUrl');
 	if (!redirectUrl) {
 		isRunningInTeams = false;

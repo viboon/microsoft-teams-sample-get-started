@@ -13,9 +13,7 @@ function sendFile(path, res){
 module.exports.sendFile = sendFile;
 
 module.exports.sendFileOrLogin = function sendFileOrLogin(path, req, res, next){
-	if (req.params.auth &&
-			((req.cookies.ACCESS_TOKEN_CACHE_KEY == undefined) ||
-			 (req.cookies.ACCESS_TOKEN_CACHE_KEY == null))) {
+	if (req.params.auth && (req.cookies.REFRESH_TOKEN_CACHE_KEY === undefined)) {
 		var redirectUrl = '/login?';
 		if (req.params.web) {
 			redirectUrl += 'web=' + req.params.web +'&';
