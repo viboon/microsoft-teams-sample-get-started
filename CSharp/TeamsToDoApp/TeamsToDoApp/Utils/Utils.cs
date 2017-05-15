@@ -3,9 +3,9 @@ using Microsoft.Bot.Connector;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TeamsToDoApp.DataModel;
+using TeamsSampleTaskApp.DataModel;
 
-namespace TeamsToDoApp.Utils
+namespace TeamsSampleTaskApp.Utils
 {
     public static class Utils
     {
@@ -25,14 +25,15 @@ namespace TeamsToDoApp.Utils
             return text;
         }
 
-        public static TodoItem CreateTodoItem()
+        public static TaskItem CreateTaskItem()
         {
             var faker = new Faker();
-            return new TodoItem()
+            return new TaskItem()
             {
                 Title = faker.Commerce.ProductName(),
                 Description = faker.Lorem.Sentence(),
-                Assigned = $"{faker.Name.FirstName()} {faker.Name.LastName()}"
+                Assigned = $"{faker.Name.FirstName()} {faker.Name.LastName()}",
+                Guid = Guid.NewGuid().ToString()
             };
         }
 

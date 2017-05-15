@@ -2,13 +2,16 @@
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
-using TeamsToDoApp.Utils;
+using TeamsSampleTaskApp.Utils;
 using System.Linq;
 using Microsoft.Bot.Connector.Teams.Models;
 using System.Web;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using Bogus;
+using Microsoft.Rest;
 
-namespace TeamsToDoApp.Dialogs
+namespace TeamsSampleTaskApp.Dialogs
 {
     /// <summary>
     /// Basic dialog implemention showing how to create an interactive chat bot.
@@ -23,29 +26,48 @@ namespace TeamsToDoApp.Dialogs
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// This is where you can process the incoming user message and decide what to do.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
         private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<object> result)
         {
             var activity = await result as Activity;
 
-            var text = activity.GetTextWithoutMentions();
+            var text = activity.GetTextWithoutMentions().ToLower();
 
             var split = text.Split(' ');
 
             if (split.Length < 2)
             {
-                await SendHelpMessage(context, "I'm sorry, I did not understand you :(");
+                if (text.Contains("help"))
+                {
+                    await SendHelpMessage(context, "Sure, I can provide help info about me.");
+                }
+                else
+                {
+                    await SendHelpMessage(context, "I'm sorry, I did not understand you :(");
+                }
             }
             else
             {
                 var q = split.Skip(1);
+                var cmd = split[0];
 
                 // Parse the command and go do the right thing
-                if (split[0].Contains("create") || split[0].Contains("find"))
+                if (cmd.Contains("create") || cmd.Contains("find"))
                 {
                     // Send Task Message
-                    await SendTodoMessage(context, string.Join(" ", q));
+                    await SendTaskMessage(context, string.Join(" ", q));
                 }
-                else if (split[0].Contains("link"))
+                else if (cmd.Contains("assign"))
+                {
+                    string guid = split[1];
+                    await UpdateMessage(context, guid);
+                }
+                else if (cmd.Contains("link"))
                 {
                     // Create deep link
                     await SendDeeplink(context, activity, string.Join(" ", q));
@@ -59,28 +81,103 @@ namespace TeamsToDoApp.Dialogs
             context.Wait(MessageReceivedAsync);
         }
 
-        private async Task SendTodoMessage(IDialogContext context, string todoItemTitle)
+        /// <summary>
+        /// Helper method to create a simple task card and send it back as a message.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="taskItemTitle"></param>
+        /// <returns></returns>
+        private async Task SendTaskMessage(IDialogContext context, string taskItemTitle)
         {
-            var todoItem = Utils.Utils.CreateTodoItem();
-            todoItem.Title = todoItemTitle;
+            var taskItem = Utils.Utils.CreateTaskItem();
+            taskItem.Title = taskItemTitle;
 
-            string text = "Here's your task: \n\n"
-                + "---\n\n"
-                + $"**Task Title: ** {todoItem.Title}\n\n"
-                + "**Task ID: ** 10\n\n"
-                + $"**Task Description: ** {todoItem.Description}\n\n"
-                + $"**Assigned To: ** {todoItem.Assigned}\n\n";
+            IMessageActivity reply = context.MakeMessage();
+            reply.Attachments = new List<Attachment>();
 
-            await context.PostAsync(text);
+            var faker = new Faker();
+            var random = new Random();
+
+            ThumbnailCard card = new ThumbnailCard()
+            {
+                Title = $"Task created: {taskItem.Title}",
+                Subtitle = $"Assigned to: {taskItem.Assigned}",
+                Text = taskItem.Description,
+                Images = new List<CardImage>()
+                {
+                    new CardImage()
+                    {
+                        Url = $"https://teamsnodesample.azurewebsites.net/static/img/image{random.Next(1, 9)}.png",
+                    }
+                }
+            };
+
+            card.Buttons = new List<CardAction>()
+            {
+                new CardAction("openUrl", "View task", null, "https://www.microsoft.com"),
+                new CardAction("imBack", "Assign to me", null, $"assign {taskItem.Guid}")
+            };
+            
+            reply.Attachments.Add(card.ToAttachment());
+
+            ConnectorClient client = new ConnectorClient(new Uri(context.Activity.ServiceUrl));
+            ResourceResponse resp = await client.Conversations.ReplyToActivityAsync((Activity)reply);
+
+            // Cache the response activity ID and previous task card.
+            string activityId = resp.Id.ToString();
+            context.ConversationData.SetValue("task " + taskItem.Guid, new Tuple<string, ThumbnailCard>(activityId, card));
         }
 
+        /// <summary>
+        /// Helper method to update an existing message for the given task item GUID.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="taskItemGuid"></param>
+        /// <returns></returns>
+        private async Task UpdateMessage(IDialogContext context, string taskItemGuid)
+        {
+            Tuple<string, ThumbnailCard> cachedMessage;
+
+            if (context.ConversationData.TryGetValue("task " + taskItemGuid, out cachedMessage))
+            {
+                IMessageActivity reply = context.MakeMessage();
+                reply.Attachments = new List<Attachment>();
+
+                string activityId = cachedMessage.Item1;
+                ThumbnailCard card = cachedMessage.Item2;
+
+                card.Subtitle = $"Assigned to: {context.Activity.From.Name}";
+
+                card.Buttons = new List<CardAction>()
+                {
+                    new CardAction("openUrl", "View task", null, "https://www.microsoft.com"),
+                    new CardAction("openUrl", "Update details", null, "https://www.microsoft.com")
+                };
+
+                reply.Attachments.Add(card.ToAttachment());
+
+                ConnectorClient client = new ConnectorClient(new Uri(context.Activity.ServiceUrl));
+                ResourceResponse resp = await client.Conversations.UpdateActivityAsync(context.Activity.Conversation.Id, activityId, (Activity)reply);
+            } else
+            {
+                System.Diagnostics.Debug.WriteLine($"Could not update task {taskItemGuid}");
+            }
+        }
+
+        /// <summary>
+        /// Helper method to create a deep link to a given tab name.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="activity"></param>
+        /// <param name="tabName"></param>
+        /// <returns></returns>
         private async Task SendDeeplink(IDialogContext context, Activity activity, string tabName)
         {
             var teamsChannelData = activity.GetChannelData<TeamsChannelData>();
             var teamId = teamsChannelData.Team.Id;
             var channelId = teamsChannelData.Channel.Id;
 
-            var appId = "88a39b1b-476a-4998-8c51-22dff12741a3s"; // This is the app ID you set up in your manifest.json file.
+            var appId = "9a1d84aa-225b-4856-83f8-ebaeca22b965"; // This is the app ID you set up in your manifest.json file.
             var entity = $"todotab-{tabName}-{teamId}-{channelId}"; // Match the entity ID we setup when configuring the tab
             var tabContext = new TabContext()
             {
@@ -90,28 +187,24 @@ namespace TeamsToDoApp.Dialogs
 
             var url = $"https://teams.microsoft.com/l/entity/{HttpUtility.UrlEncode(appId)}/{HttpUtility.UrlEncode(entity)}?label={HttpUtility.UrlEncode(tabName)}&context={HttpUtility.UrlEncode(JsonConvert.SerializeObject(tabContext))}";
 
-            var text = $"Here's your [deeplink]({url}): \n";
-            text += HttpUtility.UrlDecode(url);
-
+            var text = $"I've created a deep link to {tabName}! Click [here]({url}) to navigate to the tab.";
             await context.PostAsync(text);
         }
 
+        /// <summary>
+        /// Helper method to send a simple help message.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="firstLine"></param>
+        /// <returns></returns>
         private async Task SendHelpMessage(IDialogContext context, string firstLine)
         {
-            var helpMessage = CreateHelpMessage(firstLine);
+            var helpMessage = $"{firstLine} \n\n Here's what I can help you do \n\n"
+                + "* To create a new task, you can type **create** followed by the task name\n"
+                + "* To find an existing task, you can type **find** followed by the task name\n"
+                + "* To create a deep link, you can type **link** followed by the tab name";
 
             await context.PostAsync(helpMessage);
-        }
-
-        private string CreateHelpMessage(string firstLine)
-        {
-            var text = $"{firstLine} \n\n Here's what I can help you do \n\n"
-                + "---\n\n"
-                + "* To create a new task, you can type **create** followed by the task name\n\n"
-	            + "* To find an existing task, you can type **find** followed by the task name\n\n"
-	            + "* To create a deep link, you can type **link** followed by the tab name";
-
-            return text;
         }
     }
 }
