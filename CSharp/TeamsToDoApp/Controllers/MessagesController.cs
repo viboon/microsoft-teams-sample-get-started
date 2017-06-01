@@ -14,7 +14,7 @@ using Microsoft.Bot.Connector.Teams.Models;
 
 namespace TeamsSampleTaskApp
 {
-    //[BotAuthentication]
+    [BotAuthentication]
     public class MessagesController : ApiController
     {
 
@@ -24,8 +24,7 @@ namespace TeamsSampleTaskApp
         /// </summary>
         public async Task<HttpResponseMessage> Post([FromBody]Activity activity)
         {
-            MicrosoftAppCredentials.TrustServiceUrl(activity.ServiceUrl);
-            
+          
             if (activity.Type == ActivityTypes.Message) // If we just received a message, then let Dialogs process it.
             {
                 await Conversation.SendAsync(activity, () => new Dialogs.RootDialog());
