@@ -36,10 +36,13 @@ namespace TeamsSampleTaskApp.Dialogs
         {
             var activity = await result as Activity;
 
+            //Strip out all mentions.  As all channel messages to a bot must @mention the bot itself, you must strip out the bot name at minimum.
             var text = activity.GetTextWithoutMentions().ToLower();
 
-            var split = text.Split(' ');
+            var split = text.ToLower().Split(' ');
 
+            //Supports 5 commands:  Help, Create, Find, Assign, and Link.  
+            //  This simple text parsing assumes the command is the first string, and an optional parameter is the second.
             if (split.Length < 2)
             {
                 if (text.Contains("help"))
@@ -59,7 +62,6 @@ namespace TeamsSampleTaskApp.Dialogs
                 // Parse the command and go do the right thing
                 if (cmd.Contains("create") || cmd.Contains("find"))
                 {
-                    // Send Task Message
                     await SendTaskMessage(context, string.Join(" ", q));
                 }
                 else if (cmd.Contains("assign"))
@@ -69,7 +71,6 @@ namespace TeamsSampleTaskApp.Dialogs
                 }
                 else if (cmd.Contains("link"))
                 {
-                    // Create deep link
                     await SendDeeplink(context, activity, string.Join(" ", q));
                 }
                 else
@@ -95,7 +96,6 @@ namespace TeamsSampleTaskApp.Dialogs
             IMessageActivity reply = context.MakeMessage();
             reply.Attachments = new List<Attachment>();
 
-            var faker = new Faker();
             var random = new Random();
 
             ThumbnailCard card = new ThumbnailCard()
@@ -138,6 +138,7 @@ namespace TeamsSampleTaskApp.Dialogs
         {
             Tuple<string, ThumbnailCard> cachedMessage;
 
+            //Retrieve passed task guid from the ConversationData cache
             if (context.ConversationData.TryGetValue("task " + taskItemGuid, out cachedMessage))
             {
                 IMessageActivity reply = context.MakeMessage();
@@ -178,6 +179,7 @@ namespace TeamsSampleTaskApp.Dialogs
             var channelId = teamsChannelData.Channel.Id;
 
             var appId = "9a1d84aa-225b-4856-83f8-ebaeca22b965"; // This is the app ID you set up in your manifest.json file.
+            //var appId = System.Configuration.ConfigurationManager.AppSettings["TeamsAppId"];
             var entity = $"todotab-{tabName}-{teamId}-{channelId}"; // Match the entity ID we setup when configuring the tab
             var tabContext = new TabContext()
             {

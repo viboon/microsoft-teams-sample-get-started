@@ -31,6 +31,7 @@ namespace TeamsSampleTaskApp
             }
             else if (activity.Type == ActivityTypes.Invoke) // Received an invoke
             {
+                //Compose extensions come in as Invokes.  Leverage the Teams SDK helper functions
                 if (activity.IsComposeExtensionQuery())
                 {
                     // Determine the response object to reply with
@@ -40,7 +41,7 @@ namespace TeamsSampleTaskApp
                     return Request.CreateResponse<ComposeExtensionResponse>(HttpStatusCode.OK, invokeResponse);
                 } else
                 {
-                    // Handle other types of Invoke activities here.
+                    // Handle other types of Invoke activities here, e.g. CardActions
                 }
             }
             else
