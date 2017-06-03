@@ -25,11 +25,12 @@ namespace TeamsSampleTaskApp
         public async Task<HttpResponseMessage> Post([FromBody]Activity activity)
         {
           
-            if (activity.Type == ActivityTypes.Message) // If we just received a message, then let Dialogs process it.
+            if (activity.Type == ActivityTypes.Message) 
             {
+                //Handle basic message types, e.g. user initiated
                 await Conversation.SendAsync(activity, () => new Dialogs.RootDialog());
             }
-            else if (activity.Type == ActivityTypes.Invoke) // Received an invoke
+            else if (activity.Type == ActivityTypes.Invoke) 
             {
                 //Compose extensions come in as Invokes.  Leverage the Teams SDK helper functions
                 if (activity.IsComposeExtensionQuery())
@@ -63,6 +64,7 @@ namespace TeamsSampleTaskApp
             {
                 // Handle conversation state changes, like members being added and removed
                 // Use Activity.MembersAdded and Activity.MembersRemoved and Activity.Action for info
+                // Note that the bot receives this message when it is added to the channel as well
                 // Not available in all channels
             }
             else if (message.Type == ActivityTypes.ContactRelationUpdate)
@@ -72,7 +74,7 @@ namespace TeamsSampleTaskApp
             }
             else if (message.Type == ActivityTypes.Typing)
             {
-                // Handle knowing tha the user is typing
+                // Handle knowing that the user is typing
             }
             else if (message.Type == ActivityTypes.Ping)
             {

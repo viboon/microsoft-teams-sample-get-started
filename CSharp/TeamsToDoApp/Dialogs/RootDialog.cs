@@ -2,9 +2,10 @@
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
+using Microsoft.Bot.Connector.Teams; //Teams bot extension SDK
+using Microsoft.Bot.Connector.Teams.Models;
 using TeamsSampleTaskApp.Utils;
 using System.Linq;
-using Microsoft.Bot.Connector.Teams.Models;
 using System.Web;
 using Newtonsoft.Json;
 using System.Collections.Generic;
@@ -37,6 +38,7 @@ namespace TeamsSampleTaskApp.Dialogs
             var activity = await result as Activity;
 
             //Strip out all mentions.  As all channel messages to a bot must @mention the bot itself, you must strip out the bot name at minimum.
+            // This uses the extension SDK function GetTextWithoutMentions()
             var text = activity.GetTextWithoutMentions().ToLower();
 
             var split = text.ToLower().Split(' ');
@@ -166,7 +168,10 @@ namespace TeamsSampleTaskApp.Dialogs
         }
 
         /// <summary>
-        /// Helper method to create a deep link to a given tab name.
+        /// Helper method to create a deep link to a given tab name.  
+        /// 
+        /// For more information, see: https://msdn.microsoft.com/en-us/microsoft-teams/deeplinks#generating-a-deep-link-to-your-tab-for-use-in-a-bot-or-connector-message
+        /// 
         /// </summary>
         /// <param name="context"></param>
         /// <param name="activity"></param>
@@ -178,8 +183,8 @@ namespace TeamsSampleTaskApp.Dialogs
             var teamId = teamsChannelData.Team.Id;
             var channelId = teamsChannelData.Channel.Id;
 
-            var appId = "9a1d84aa-225b-4856-83f8-ebaeca22b965"; // This is the app ID you set up in your manifest.json file.
-            //var appId = System.Configuration.ConfigurationManager.AppSettings["TeamsAppId"];
+            // The app ID, stored in the web.config file, should be the appID from your manifest.json file.
+            var appId = System.Configuration.ConfigurationManager.AppSettings["TeamsAppId"];
             var entity = $"todotab-{tabName}-{teamId}-{channelId}"; // Match the entity ID we setup when configuring the tab
             var tabContext = new TabContext()
             {

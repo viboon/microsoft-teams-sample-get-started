@@ -29,6 +29,8 @@ namespace TeamsSampleTaskApp
 
         /// <summary>
         /// Help method to generate a compose extension
+        /// 
+        /// Note that for this sample, we are returning random tasks, for illustration purposes only.
         /// </summary>
         /// <returns></returns>
         public ComposeExtensionResponse CreateComposeExtensionResponse()
@@ -36,7 +38,9 @@ namespace TeamsSampleTaskApp
             ComposeExtensionResponse response = null;
             const int numResults = 10;
 
-                var query = activity.GetComposeExtensionQueryData();
+            var query = activity.GetComposeExtensionQueryData();
+
+            //Check to make sure a query was actually made:
             if (query.CommandId == null || query.Parameters == null)
             {
                 return null;

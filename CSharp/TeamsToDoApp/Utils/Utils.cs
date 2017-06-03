@@ -4,26 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TeamsSampleTaskApp.DataModel;
+using Microsoft.Bot.Connector.Teams;
 
 namespace TeamsSampleTaskApp.Utils
 {
     public static class Utils
     {
-        // TODO: move to SDK function
-        public static string GetTextWithoutMentions(this Activity activity)
-        {
-            var text = activity.Text;
-            if (activity.Entities != null)
-            {
-                var mentions = activity.Entities.Where(e => e.Type == "mention");
-                foreach (var m in mentions)
-                {
-                    text = text.Replace(m.Properties["text"].ToString(), String.Empty);
-                }
-                text = text.Trim();
-            }
-            return text;
-        }
 
         public static TaskItem CreateTaskItem()
         {
