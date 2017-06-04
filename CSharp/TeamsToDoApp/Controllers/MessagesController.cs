@@ -47,13 +47,13 @@ namespace TeamsSampleTaskApp
             }
             else
             {
-                HandleSystemMessage(activity);
+                await HandleSystemMessage(activity);
             }
             var response = Request.CreateResponse(HttpStatusCode.OK);
             return response;
         }
 
-        private Activity HandleSystemMessage(Activity message)
+        private async Task HandleSystemMessage(Activity message)
         {
             if (message.Type == ActivityTypes.DeleteUserData)
             {
@@ -64,8 +64,26 @@ namespace TeamsSampleTaskApp
             {
                 // Handle conversation state changes, like members being added and removed
                 // Use Activity.MembersAdded and Activity.MembersRemoved and Activity.Action for info
-                // Note that the bot receives this message when it is added to the channel as well
-                // Not available in all channels
+
+                // This event is called when the Bot is added too, so we can trigger a welcome message if the member added is the bot:
+                TeamEventBase eventData = message.GetConversationUpdateData();
+                if (eventData.EventType == TeamEventType.MembersAdded)
+                {
+                    for (int i = 0; i < message.MembersAdded.Count; i++)
+                    {
+                        if (message.MembersAdded[i].Id == message.Recipient.Id)
+                        {
+                            // We'll use normal message parsing to display the welcome message.
+                            message.Text = "welcome";
+                            await Conversation.SendAsync(message, () => new Dialogs.RootDialog());
+
+                            break;
+                        }
+                    }
+
+                }
+
+
             }
             else if (message.Type == ActivityTypes.ContactRelationUpdate)
             {
@@ -80,7 +98,6 @@ namespace TeamsSampleTaskApp
             {
             }
 
-            return null;
         }
     }
 }

@@ -51,6 +51,10 @@ namespace TeamsSampleTaskApp.Dialogs
                 {
                     await SendHelpMessage(context, "Sure, I can provide help info about me.");
                 }
+                else if (text.Contains("welcome"))
+                {
+                    await SendHelpMessage(context, "## Hi, I'm the Teams Sample Task app bot, in C#.");
+                }
                 else
                 {
                     await SendHelpMessage(context, "I'm sorry, I did not understand you :(");
@@ -212,6 +216,7 @@ namespace TeamsSampleTaskApp.Dialogs
                 + "* To create a deep link, you can type **link** followed by the tab name";
 
             await context.PostAsync(helpMessage);
+
         }
     }
 }
