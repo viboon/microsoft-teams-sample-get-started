@@ -1,10 +1,6 @@
 ﻿using Bogus;
-using Microsoft.Bot.Connector;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using TeamsSampleTaskApp.DataModel;
-using Microsoft.Bot.Connector.Teams;
 
 namespace TeamsSampleTaskApp.Utils
 {
@@ -22,7 +18,6 @@ namespace TeamsSampleTaskApp.Utils
                 Guid = Guid.NewGuid().ToString()
             };
         }
-
     }
 
     public class TabContext

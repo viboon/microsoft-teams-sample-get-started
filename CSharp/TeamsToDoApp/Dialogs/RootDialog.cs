@@ -9,8 +9,6 @@ using System.Linq;
 using System.Web;
 using Newtonsoft.Json;
 using System.Collections.Generic;
-using Bogus;
-using Microsoft.Rest;
 
 namespace TeamsSampleTaskApp.Dialogs
 {
@@ -38,13 +36,12 @@ namespace TeamsSampleTaskApp.Dialogs
             var activity = await result as Activity;
 
             //Strip out all mentions.  As all channel messages to a bot must @mention the bot itself, you must strip out the bot name at minimum.
-            // This uses the extension SDK function GetTextWithoutMentions()
+            // This uses the extension SDK function GetTextWithoutMentions() to strip out ALL mentions
             var text = activity.GetTextWithoutMentions().ToLower();
 
-            var split = text.ToLower().Split(' ');
-
-            //Supports 5 commands:  Help, Create, Find, Assign, and Link.  
+            //Supports 5 commands:  Help, Welcome (sent from HandleSystemMessage when bot is added), Create, Find, Assign, and Link 
             //  This simple text parsing assumes the command is the first string, and an optional parameter is the second.
+            var split = text.ToLower().Split(' ');
             if (split.Length < 2)
             {
                 if (text.Contains("help"))
@@ -216,7 +213,6 @@ namespace TeamsSampleTaskApp.Dialogs
                 + "* To create a deep link, you can type **link** followed by the tab name";
 
             await context.PostAsync(helpMessage);
-
         }
     }
 }

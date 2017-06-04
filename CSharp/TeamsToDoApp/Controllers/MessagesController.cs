@@ -5,11 +5,6 @@ using System.Web.Http;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
 using Microsoft.Bot.Connector.Teams;
-using Newtonsoft.Json;
-using TeamsSampleTaskApp.Utils;
-using Bogus;
-using System.Collections.Generic;
-using System;
 using Microsoft.Bot.Connector.Teams.Models;
 
 namespace TeamsSampleTaskApp
@@ -53,14 +48,15 @@ namespace TeamsSampleTaskApp
             return response;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         private async Task HandleSystemMessage(Activity message)
         {
-            if (message.Type == ActivityTypes.DeleteUserData)
-            {
-                // Implement user deletion here
-                // If we handle user deletion, return a real message
-            }
-            else if (message.Type == ActivityTypes.ConversationUpdate)
+
+            if (message.Type == ActivityTypes.ConversationUpdate)
             {
                 // Handle conversation state changes, like members being added and removed
                 // Use Activity.MembersAdded and Activity.MembersRemoved and Activity.Action for info
@@ -71,6 +67,7 @@ namespace TeamsSampleTaskApp
                 {
                     for (int i = 0; i < message.MembersAdded.Count; i++)
                     {
+                        //Check to see if the member added was the bot itself.  We're leveraging the fact that the inbound payload's Recipient is the bot.
                         if (message.MembersAdded[i].Id == message.Recipient.Id)
                         {
                             // We'll use normal message parsing to display the welcome message.
@@ -80,15 +77,16 @@ namespace TeamsSampleTaskApp
                             break;
                         }
                     }
-
                 }
-
-
+            }
+            else if (message.Type == ActivityTypes.DeleteUserData)
+            {
+                // Implement user deletion here
+                // If we handle user deletion, return a real message
             }
             else if (message.Type == ActivityTypes.ContactRelationUpdate)
             {
                 // Handle add/remove from contact lists
-                // Activity.From + Activity.Action represent what happened
             }
             else if (message.Type == ActivityTypes.Typing)
             {
@@ -96,8 +94,8 @@ namespace TeamsSampleTaskApp
             }
             else if (message.Type == ActivityTypes.Ping)
             {
-            }
 
+            }
         }
     }
 }
