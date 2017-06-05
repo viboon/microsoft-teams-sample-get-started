@@ -2,14 +2,13 @@
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
+using Microsoft.Bot.Connector.Teams; //Teams bot extension SDK
+using Microsoft.Bot.Connector.Teams.Models;
 using TeamsSampleTaskApp.Utils;
 using System.Linq;
-using Microsoft.Bot.Connector.Teams.Models;
 using System.Web;
 using Newtonsoft.Json;
 using System.Collections.Generic;
-using Bogus;
-using Microsoft.Rest;
 
 namespace TeamsSampleTaskApp.Dialogs
 {
@@ -36,15 +35,22 @@ namespace TeamsSampleTaskApp.Dialogs
         {
             var activity = await result as Activity;
 
+            //Strip out all mentions.  As all channel messages to a bot must @mention the bot itself, you must strip out the bot name at minimum.
+            // This uses the extension SDK function GetTextWithoutMentions() to strip out ALL mentions
             var text = activity.GetTextWithoutMentions().ToLower();
 
-            var split = text.Split(' ');
-
+            //Supports 5 commands:  Help, Welcome (sent from HandleSystemMessage when bot is added), Create, Find, Assign, and Link 
+            //  This simple text parsing assumes the command is the first string, and an optional parameter is the second.
+            var split = text.ToLower().Split(' ');
             if (split.Length < 2)
             {
                 if (text.Contains("help"))
                 {
                     await SendHelpMessage(context, "Sure, I can provide help info about me.");
+                }
+                else if (text.Contains("welcome"))
+                {
+                    await SendHelpMessage(context, "## Hi, I'm the Teams Sample Task app bot, in C#.");
                 }
                 else
                 {
@@ -59,7 +65,6 @@ namespace TeamsSampleTaskApp.Dialogs
                 // Parse the command and go do the right thing
                 if (cmd.Contains("create") || cmd.Contains("find"))
                 {
-                    // Send Task Message
                     await SendTaskMessage(context, string.Join(" ", q));
                 }
                 else if (cmd.Contains("assign"))
@@ -69,7 +74,6 @@ namespace TeamsSampleTaskApp.Dialogs
                 }
                 else if (cmd.Contains("link"))
                 {
-                    // Create deep link
                     await SendDeeplink(context, activity, string.Join(" ", q));
                 }
                 else
@@ -95,7 +99,6 @@ namespace TeamsSampleTaskApp.Dialogs
             IMessageActivity reply = context.MakeMessage();
             reply.Attachments = new List<Attachment>();
 
-            var faker = new Faker();
             var random = new Random();
 
             ThumbnailCard card = new ThumbnailCard()
@@ -138,6 +141,7 @@ namespace TeamsSampleTaskApp.Dialogs
         {
             Tuple<string, ThumbnailCard> cachedMessage;
 
+            //Retrieve passed task guid from the ConversationData cache
             if (context.ConversationData.TryGetValue("task " + taskItemGuid, out cachedMessage))
             {
                 IMessageActivity reply = context.MakeMessage();
@@ -165,7 +169,10 @@ namespace TeamsSampleTaskApp.Dialogs
         }
 
         /// <summary>
-        /// Helper method to create a deep link to a given tab name.
+        /// Helper method to create a deep link to a given tab name.  
+        /// 
+        /// For more information, see: https://msdn.microsoft.com/en-us/microsoft-teams/deeplinks#generating-a-deep-link-to-your-tab-for-use-in-a-bot-or-connector-message
+        /// 
         /// </summary>
         /// <param name="context"></param>
         /// <param name="activity"></param>
@@ -177,7 +184,8 @@ namespace TeamsSampleTaskApp.Dialogs
             var teamId = teamsChannelData.Team.Id;
             var channelId = teamsChannelData.Channel.Id;
 
-            var appId = "9a1d84aa-225b-4856-83f8-ebaeca22b965"; // This is the app ID you set up in your manifest.json file.
+            // The app ID, stored in the web.config file, should be the appID from your manifest.json file.
+            var appId = System.Configuration.ConfigurationManager.AppSettings["TeamsAppId"];
             var entity = $"todotab-{tabName}-{teamId}-{channelId}"; // Match the entity ID we setup when configuring the tab
             var tabContext = new TabContext()
             {
