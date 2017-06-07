@@ -30,9 +30,6 @@ function start_listening() {
 		var cmd = split[0];
 		var params = split.slice(1).join(' ');
 
-		var aI = this.bot;
-		var msg = session.message;
-
 		//Single word commands:
 		if (split.length < 2 ) {
 			if (cmd.includes('help')) {
