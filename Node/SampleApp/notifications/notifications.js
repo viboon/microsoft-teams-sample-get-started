@@ -12,8 +12,8 @@ var access_token = {}; //Bearer token return by the auth call to the REST API
 var rest_endpoint = null; //Endpoint to make REST requests, this is given to us when we start listening to a bot
 var tenant_id = {}; //Our current tenant ID, his is given to us when we start listening to a bot
 
-var appID = process.env.NOTIFY_APP_ID; // Our current bot app ID.
-var appPassword = process.env.NOTIFY_SECRET; // Our bot app secret
+var appID = process.env.NOTIFYBOT_APP_ID; // Our current bot app ID.
+var appPassword = process.env.NOTIFYBOT_SECRET; // Our bot app secret
 var host = process.env.HOST // Our host endpoint
 
 //This is the connector

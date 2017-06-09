@@ -4,10 +4,10 @@ const builder = require('botbuilder');
 const CookieParser = require('restify-cookies');
 
 process.env.TEAMS_APP_ID = (process.env.TEAMS_APP_ID) ? process.env.TEAMS_APP_ID : ''; //This is the Teams App ID from your Manifest
-process.env.BOT_APP_ID = (process.env.BOT_APP_ID) ? process.env.BOT_APP_ID : ''; //Bot ID from Bot Framework
-process.env.BOT_SECRET = (process.env.BOT_SECRET) ? process.env.BOT_SECRET : ''; //Bot password from Bot Framework
-process.env.NOTIFY_APP_ID = (process.env.NOTIFY_APP_ID) ? process.env.NOTIFY_APP_ID : ''; //Bot ID from Bot Framework
-process.env.NOTIFY_SECRET = (process.env.NOTIFY_SECRET) ? process.env.NOTIFY_SECRET : ''; //Bot Password from Bot Framework
+process.env.MICROSOFT_APP_ID = (process.env.MICROSOFT_APP_ID) ? process.env.MICROSOFT_APP_ID : ''; //Bot ID from Bot Framework
+process.env.MICROSOFT_APP_PASSWORD = (process.env.MICROSOFT_APP_PASSWORD) ? process.env.MICROSOFT_APP_PASSWORD : ''; //Bot password from Bot Framework
+process.env.NOTIFYBOT_APP_ID = (process.env.NOTIFYBOT_APP_ID) ? process.env.NOTIFYBOT_APP_ID : ''; //Bot ID from Bot Framework
+process.env.NOTIFYBOT_SECRET = (process.env.NOTIFYBOT_SECRET) ? process.env.NOTIFYBOT_SECRET : ''; //Bot Password from Bot Framework
 process.env.AUTH_CLIENT_ID = (process.env.AUTH_CLIENT_ID) ? process.env.AUTH_CLIENT_ID : '[auth client ID]';
 process.env.AUTH_CLIENT_SECRET = (process.env.AUTH_CLIENT_SECRET) ? process.env.AUTH_CLIENT_SECRET : '[auth client secret]';
 process.env.HOST = (process.env.HOST) ? process.env.HOST : '[the host name for your application]';
@@ -28,8 +28,8 @@ server.get(/\/static\/?.*/, restify.serveStatic({
 
 // Create connector
 var chatConnector = new builder.ChatConnector({ 
-	appId: process.env.BOT_APP_ID, 
-	appPassword: process.env.BOT_SECRET
+	appId: process.env.MICROSOFT_APP_ID, 
+	appPassword: process.env.MICROSOFT_APP_PASSWORD
 });
 
 //Setup bot
