@@ -60,7 +60,7 @@ function generateThumbnail(){
 			text: faker.fake('{{lorem.sentence}}'),
 			images: [
 				{
-					url: `${process.env.HOST}/static/img/image${Math.floor(Math.random() * 9) + 1}.png`
+					url: `${process.env.BASE_URI}/static/img/image${Math.floor(Math.random() * 9) + 1}.png`
 				}
 			]
 		}

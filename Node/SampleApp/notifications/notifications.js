@@ -14,7 +14,7 @@ var tenant_id = {}; //Our current tenant ID, his is given to us when we start li
 
 var appID = process.env.NOTIFYBOT_APP_ID; // Our current bot app ID.
 var appPassword = process.env.NOTIFYBOT_SECRET; // Our bot app secret
-var host = process.env.HOST // Our host endpoint
+var host = process.env.BASE_URI // Our host endpoint
 
 //This is the connector
 var c = new builder.ChatConnector({

@@ -68,7 +68,7 @@ function start_listening() {
 		for (var i = 0; i < members.length; i++) {
 			
 			// See if the member added was our bot
-			if (members[i].id.includes(process.env.BOT_APP_ID) || members[i].id.includes(NOTIFY_APP_ID)) {
+			if (members[i].id.includes(process.env.MICROSOFT_APP_ID) || members[i].id.includes(process.env.NOTIFYBOT_APP_ID)) {
 				sendHelpMessage(msg, this.bot, `Hi, I'm a sample bot in Node.js!`);
 			}
 		}
@@ -109,7 +109,7 @@ function sendTaskMessage(message, bot, taskTitle) {
 	var text = `Here's your task: \n\n`;
 	text += `---\n\n`;
 	text += `**Task Title:** ${task.title}\n\n`;
-	text += `**![${task.title}](${`${process.env.HOST}/static/img/image${Math.floor(Math.random() * 9) + 1}.png`})\n\n`;
+	text += `**![${task.title}](${`${process.env.BASE_URI}/static/img/image${Math.floor(Math.random() * 9) + 1}.png`})\n\n`;
 	text += `**Task ID:** ${10}\n\n`;
 	text += `**Task Description:** ${task.description}\n\n`;
 	text += `**Assigned To:** ${task.assigned}\n\n`;
@@ -155,7 +155,7 @@ function sendCardMessage(session, bot, taskTitle) {
 		.subtitle('UNASSIGNED')
 		.text(task.description)
 		.images([
-			builder.CardImage.create(null, `${process.env.HOST}/static/img/image${Math.floor(Math.random() * 9) + 1}.png`)
+			builder.CardImage.create(null, `${process.env.BASE_URI}/static/img/image${Math.floor(Math.random() * 9) + 1}.png`)
 		])
 		.buttons([
 			builder.CardAction.openUrl(null, 'http://www.microsoft.com', 'View task'),

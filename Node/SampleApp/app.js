@@ -10,7 +10,7 @@ process.env.NOTIFYBOT_APP_ID = (process.env.NOTIFYBOT_APP_ID) ? process.env.NOTI
 process.env.NOTIFYBOT_SECRET = (process.env.NOTIFYBOT_SECRET) ? process.env.NOTIFYBOT_SECRET : ''; //Bot Password from Bot Framework
 process.env.AUTH_CLIENT_ID = (process.env.AUTH_CLIENT_ID) ? process.env.AUTH_CLIENT_ID : '[auth client ID]';
 process.env.AUTH_CLIENT_SECRET = (process.env.AUTH_CLIENT_SECRET) ? process.env.AUTH_CLIENT_SECRET : '[auth client secret]';
-process.env.HOST = (process.env.HOST) ? process.env.HOST : '[the host name for your application]';
+process.env.BASE_URI = (process.env.BASE_URI) ? process.env.BASE_URI : '';  //the host name for your tab
 
 // Setup Restify Server
 var server = restify.createServer();

@@ -7,7 +7,7 @@ const files = require('../utils/files.js');
 //	Local Variables
 ///////////////////////////////////////////////////////
 var server; //Restify server
-var host = process.env.HOST;
+var host = process.env.BASE_URI;
 var connectors = {}; //Array of connectors that have been hooked up
 
 ///////////////////////////////////////////////////////
