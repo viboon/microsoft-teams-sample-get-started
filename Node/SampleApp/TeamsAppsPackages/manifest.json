@@ -2,7 +2,7 @@
     "$schema": "https://statics.teams.microsoft.com/sdk/v1.0/manifest/MicrosoftTeams.schema.json",
     "manifestVersion": "1.0",
     "version": "1.0",
-    "id": "9a1d84aa-225b-4856-83f8-ebaeca22b965",
+    "id": "9a1d84aa-225b-4856-83f8-ebaeca22b964",
     "packageName": "com.microsoft.teams.samples.sampleapp",
     "developer": {
         "name": "Microsoft",
@@ -11,8 +11,8 @@
         "termsOfUseUrl": "https://www.microsoft.com/termsofuse"
     },
     "name": {
-        "short": "Sample App in .NET/C#",
-        "full": "Sample App in .NET/C# - long name"
+        "short": "Sample App in Node.js",
+        "full": "Sample App in Node.js - full name"
     },
     "description": {
         "short": "This is a small sample app we made for you, in Node.js!",
@@ -54,7 +54,7 @@
     ],
     "bots": [
         {
-            "botId": "1ce4a0e8-d676-4d0a-b3c1-b9d1b1bdc76e",
+            "botId": "d812b620-006e-406a-99e4-93d670f91748",
             "isNotificationOnly": false,
             "scopes": [
                 "team",
@@ -90,7 +90,7 @@
     ],
     "connectors": [
         {
-            "connectorId": "ea3d0819-ddca-4066-8c85-a5c9ba397fad",
+            "connectorId": "e9343a03-0a5e-4c1f-95a8-263a565505a5",
             "scopes": [
                 "team"
             ]
@@ -98,7 +98,7 @@
     ],
     "composeExtensions": [
         {
-            "botId": "1ce4a0e8-d676-4d0a-b3c1-b9d1b1bdc76e",
+            "botId": "d812b620-006e-406a-99e4-93d670f91748",
             "scopes": [
                 "personal",
                 "team"
@@ -107,7 +107,6 @@
                 {
                     "id": "searchCmd",
                     "title": "Search tasks",
-                    "initialRun": true,
                     "description": "Search tasks",
                     "parameters": [
                         {
