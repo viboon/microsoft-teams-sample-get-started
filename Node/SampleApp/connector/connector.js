@@ -20,12 +20,15 @@ function start_listening() {
 	});
 
     this.server.get('api/messages/connector/register', (req, res) => {
-        
+        // This illustrative Connector register code shows how your server would cache inbound requests from teams in Teams to attach their channel as a webhook.
+        //  As this is not intended to show production-grade support, we've added some basic clean-up code below.
+
         // Parse register message from connector, find the group name and webhook url
         var query = req.query;
         var webhook_url = query.webhook_url;
         var group_name = query.group_name;
 
+        // Simple cleanup so we are only tracking max of 100 registered connections
         if (connectors.length > 100) connectors = {}; //Clean up to not blow up memory on my server :)
 
         // save the webhook url using groupname as the key
@@ -100,3 +103,4 @@ module.exports.init = function (server) {
 }
 
 module.exports.start_listening = start_listening;
+
