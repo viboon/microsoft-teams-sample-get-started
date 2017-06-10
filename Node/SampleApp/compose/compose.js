@@ -1,39 +1,33 @@
 const builder = require("botbuilder");
+var teams = require("botbuilder-teams");
 const faker = require('faker');
 const utils = require('../utils/utils.js');
 
 ///////////////////////////////////////////////////////
 //	Local Variables
 ///////////////////////////////////////////////////////
-var c; //This is the connector
+var connector; // Connector from botbuilder sdk
 var bot; //Bot from botbuilder sdk
 var server; //Dictionary that maps task IDs to messages that have already been sent.
 
-///////////////////////////////////////////////////////
-//	Bot and listening
-///////////////////////////////////////////////////////
-// Starts the bot functionality of this app
-function start_listening() {
 
-	this.server.post('api/bot', this.c.listen());
+// example for compose extension
+var searchHandler = function (event, query, callback) {
+    // parameters should be identical to manifest
+    if (query.parameters[0].name != "search") {
+        return callback(new Error("Parameter mismatch in manifest"), null, 500);
+    }
 
-	// Make sure to listen to the on invoke call. This is what triggers the compose extension
-	this.c.onInvoke((msg, callback) => {
+    try {
+		var results = generateResults();
+		callback(null, results, 200 );
+    }
+    catch (e) {
+        callback(e, null, 500);
+    }
+};
 
-		var v = msg.value;
 
-		if (!v.commandId || !v.parameters) return;
-
-		var results;
-
-		if (v.commandId === "searchCmd") {
-			results = generateResults();
-		};
-
-		callback(null, results, 200);
-
-	});
-}
 
 ///////////////////////////////////////////////////////
 //	Helpers and other methods
@@ -85,9 +79,13 @@ function generateResultAttachment(){
 ///////////////////////////////////////////////////////
 module.exports.init = function(server, connector, bot) {
 	this.server = server;
-	this.c = connector;
-	this.b = bot;
+	this.connector = connector;
+	this.bot = bot;
+	this.connector.onQuery('searchCmd', searchHandler);
 	return this;
 }
 
-module.exports.start_listening = start_listening;
+
+
+
+

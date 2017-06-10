@@ -1,6 +1,6 @@
 const restify = require('restify');
 const builder = require('botbuilder');
-
+const teamsBuilder = require('botbuilder-teams');
 const CookieParser = require('restify-cookies');
 
 process.env.TEAMS_APP_ID = (process.env.TEAMS_APP_ID) ? process.env.TEAMS_APP_ID : ''; //This is the Teams App ID from your Manifest
@@ -27,7 +27,7 @@ server.get(/\/static\/?.*/, restify.serveStatic({
 }));
 
 // Create connector
-var chatConnector = new builder.ChatConnector({ 
+var chatConnector = new teamsBuilder.TeamsChatConnector({ 
 	appId: process.env.MICROSOFT_APP_ID, 
 	appPassword: process.env.MICROSOFT_APP_PASSWORD
 });
@@ -43,7 +43,7 @@ botHandler.start_listening();
 //Initialize ComposeExtension 
 var composeHandler = require('./compose/compose.js');
 composeHandler.init(server, chatConnector, bot);
-composeHandler.start_listening();
+
 
 //Initialize Notification Handler 
 var notificationsHandler = require('./notifications/notifications.js');
