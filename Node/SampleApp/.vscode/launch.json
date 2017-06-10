@@ -28,7 +28,7 @@
             "program": "${workspaceRoot}\\app.js",
             "env": {
                 "NODE_ENV": "development",
-                "TEAMS_APP_ID": "", //This is the Teams App ID from your Manifest
+                "TEAMS_APP_ID": "[Your Teams App GUID Here]", //This is the Teams App ID from your Manifest
                 "MICROSOFT_APP_ID": "[Your Bot ID Here]", //Bot ID from Bot Framework
                 "MICROSOFT_APP_PASSWORD": "[Your Bot Password Here]", //Bot password from Bot Framework
                 "NOTIFYBOT_APP_ID": "[Your Bot ID Here]", //Notification Bot ID from Bot Framework
