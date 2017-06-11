@@ -1,7 +1,9 @@
 const builder = require("botbuilder");
+const teams = require("botbuilder-teams");
 const utils = require('../utils/utils.js');
 const Client = require("node-rest-client").Client;
 const uuid = require('node-uuid');
+
 
 ///////////////////////////////////////////////////////
 //	Local Variables
@@ -23,7 +25,7 @@ function start_listening() {
 	this.bot.dialog('/', (session) => {
 
 		// Make sure you strip mentions out before you parse the message
-		var text = utils.getTextWithoutMentions(session.message).toLowerCase(); 
+		var text = teams.TeamsMessage.getTextWithoutMentions(session.message).toLowerCase();
 		console.log('dialog started ' + text);
 
 		var split = text.split(' ');

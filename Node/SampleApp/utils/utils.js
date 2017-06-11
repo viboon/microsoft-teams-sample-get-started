@@ -134,20 +134,6 @@ module.exports.createTask = function (title) {
 	}
 }
 
-// Convenience method to strip out @ mentions from bot text
-module.exports.getTextWithoutMentions = function (message) {
-	var text = message.text;
-	if (message.entities) {
-		message.entities
-			.filter(entity => entity.type === "mention")
-			.forEach(entity => {
-				text = text.replace(entity.text, "");
-			});
-		text = text.trim();
-	}
-	return text;
-}
-
 // Generates random names
 const names = ['Evangelina Gallagher', 'Jess Lamontagne', 'Darlene Solis', 'Linda Riley', 'Simone Suarez', 'Alfonso Troy', 'Gabriel Hendon'];
 function getName() { return names[Math.floor(Math.random() * names.length)]}
