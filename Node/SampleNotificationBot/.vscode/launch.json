@@ -11,14 +11,21 @@
             "program": "${workspaceRoot}\\app.js",            
             "env": {
                 "NODE_ENV": "development",
-                "TEAMS_APP_ID": "", //This is the Teams App ID from your Manifest
                 "MICROSOFT_APP_ID": "", //Bot ID from Bot Framework
                 "MICROSOFT_APP_PASSWORD": "", //Bot password from Bot Framework
-                "NOTIFYBOT_APP_ID": "", //Notification Bot ID from Bot Framework
-                "NOTIFYBOT_SECRET" : "",  //Notification Bot Password from Bot Framework
-                "AUTH_CLIENT_ID" : "", //auth client ID
-                "AUTH_CLIENT_SECRET" : "", //auth client secret
                 "BASE_URI": "" //Host name for your tab/application
+            }
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Teams Debug",
+            "program": "${workspaceRoot}\\app.js",
+            "env": {
+                "NODE_ENV": "development",
+                "MICROSOFT_APP_ID": "[YOUR_BOT_ID_HERE]", //Bot ID from Bot Framework
+                "MICROSOFT_APP_PASSWORD": "[YOUR_BOT_PASSWORD_HERE]", //Bot password from Bot Framework
+                "BASE_URI": "[YOUR_HOST_URI_HERE]" //base name for your tab/application
             }
         }
     ]
