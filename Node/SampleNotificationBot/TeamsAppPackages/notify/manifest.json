@@ -1,0 +1,105 @@
+{
+    "manifestVersion": "1.0",
+    "version": "1.0",
+    "id": "6c5a1f6a-b8da-4c75-93ca-e5e5cddd0999",
+    "packageName": "com.skype.teams.samples.sampleappnotify",
+    "developer": {
+        "name": "Microsoft",
+        "websiteUrl": "https://www.microsoft.com",
+        "privacyUrl": "https://www.microsoft.com/privacy",
+        "termsOfUseUrl": "https://www.microsoft.com/termsofuse"
+    },
+    "name": {
+        "short": "Sample Notif App",
+        "long": "Sample App long name"
+    },
+    "description": {
+        "short": "This is a small sample Notif app we made for you!",
+        "full": "This is a small sample app we made for you! This app has samples of all capabilities MS Teams supports"
+    },
+    "icons": {
+        "outline": "https://lucarras.azurewebsites.net/static/img/outline_icon.png",
+        "color": "https://lucarras.azurewebsites.net/static/img/color_icon.png"
+    },
+    "accentColor": "#3F487F",
+    "staticTabs": [
+        {
+            "entityId": "mytasks",
+            "name": "My Tasks",
+            "contentUrl": "https://teamsnodesample.azurewebsites.net/tabs/index",
+            "websiteUrl": "https://teamsnodesample.azurewebsites.net/tabs/index",
+            "scopes": [
+                "personal"
+            ]
+        },
+        {
+            "entityId": "info",
+            "name": "Info",
+            "contentUrl": "https://teamsnodesample.azurewebsites.net/tabs/about",
+            "websiteUrl": "https://teamsnodesample.azurewebsites.net/tabs/about",
+            "scopes": [
+                "personal"
+            ]
+        }
+    ],
+    "configurableTabs": [
+        {
+            "configurationUrl": "https://teamsnodesample.azurewebsites.net/tabs/configure",
+            "canUpdateConfiguration": true,
+            "scopes": [
+                "team"
+            ]
+        }
+    ],
+    "bots": [
+        {
+            "botId": "b462cfb5-9354-44e3-9419-0220e1420ca4",
+            "isNotificationOnly": true,
+            "scopes": [
+                "team",
+                "personal"
+            ]
+        }
+    ],
+    "connectors": [
+        {
+            "connectorId": "e9343a03-0a5e-4c1f-95a8-263a565505a5",
+            "scopes": [
+                "team"
+            ]
+        }
+    ],
+    "composeExtensions": [
+        {
+            "botId": "d812b620-006e-406a-99e4-93d670f91748",
+            "description": "Search tasks",
+            "scopes": [
+                "personal",
+                "team"
+            ],
+            "commands": [
+                {
+                    "id": "searchCmd",
+                    "title": "Search tasks",
+                    "description": "Search tasks",
+                    "parameters": [
+                        {
+                            "name": "search",
+                            "title": "search",
+                            "description": "search tasks",
+                            "value": ""
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "permissions": [
+        "identity",
+        "messageTeamMembers"
+    ],
+    "validDomains": [
+        "teamsnodesample.azurewebsites.net",
+        "*.teamsnodesample.azurewebsites.net"
+    ]
+}
