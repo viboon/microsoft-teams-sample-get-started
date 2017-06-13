@@ -106,15 +106,10 @@ bot.on('conversationUpdate', (msg) => {
             bot.send(botmessage, function (err) { });
 
             console.log('Sample app was added to the team');
-            var guid = uuid.v4();
-            tenant_id[guid] = msg.sourceEvent.tenant.id; // Extracting tenant ID as we will need it to create new conversations
-
-            // Find all members currently in the team so we can send them a welcome message
-            getMembers(msg, guid).then((ret) => {
-
-                var msg = ret.msg;
-                var members = ret.members;
-
+            var tenId = msg.sourceEvent.tenant.id;
+            
+            getAllMembers(msg).then((ret) => {
+                var members = ret;
                 console.log('got members');
 
                 // Prepare a message to the channel about the addition of this app. Write convenience URLs so 
@@ -123,10 +118,10 @@ bot.on('conversationUpdate', (msg) => {
                 text += `[Text](${host}/api/messages/send/team?id=${encodeURIComponent(guid)}), [Important](${host}/api/messages/send/team?id=${encodeURIComponent(guid)}&isImportant=true)`;
                 text += ` | [Hero Card](${host}/api/messages/send/team?type=hero&id=${encodeURIComponent(guid)}), [Important](${host}/api/messages/send/team?type=hero&id=${encodeURIComponent(guid)}&isImportant=true)`;
                 text += ` | [Thumbnail Card](${host}/api/messages/send/team?type=thumb&id=${encodeURIComponent(guid)}), [Important](${host}/api/messages/send/team?type=thumb&id=${encodeURIComponent(guid)}&isImportant=true)`;
-                addresses[guid] = msg.address;
+                //addresses[guid] = msg.address;
 
                 function getEndpoint(type, guid, user, isImportant) {
-                    return `${host}/api/messages/send/user?type=${encodeURIComponent(type)}&id=${encodeURIComponent(guid)}&user=${encodeURIComponent(user)}&isImportant=${encodeURIComponent(isImportant)}`;
+                    return `${host}/api/messages/send/user?type=${encodeURIComponent(type)}&id=${encodeURIComponent(guid)}&user=${encodeURIComponent(user)}&tenant=${encodeURIComponent(tenId)}&isImportant=${encodeURIComponent(isImportant)}`;
                 }
 
                 // Loop through and prepare convenience URLs for each user
@@ -134,7 +129,7 @@ bot.on('conversationUpdate', (msg) => {
                 for (var i = 0; i < members.length; i++) {
                     var user = members[i].id;
                     var name = members[i].givenName || null;
-                    guid = uuid.v4();
+                    var guid = uuid.v4();
 
                     var nameString = (name) ? name : `user number ${i + 1}`;
                     text += `Send message to ${nameString}: `
@@ -270,6 +265,30 @@ server.get('api/messages/send/user', (req, res) => {
 //	Helpers and other methods
 ///////////////////////////////////////////////////////
 
+
+function getAllMembers(message)
+{
+    return new Promise((resolve, reject) => {
+        var conversationId = message.address.conversation.id;
+        var tenId = teamsBuilder.TeamsMessage.getTenantId(message);
+        chatConnector.fetchMemberList(
+            message.address.serviceUrl,
+            conversationId,
+            tenId,
+            (err, result) => {
+                if (err) {
+                    console.log('There is some error');
+                    reject("Error");
+                }
+                else 
+                {
+
+                    resolve(result);
+                }
+            }
+        );
+    });
+}
 /*
 	Convenience method for connecting to the bot framework REST API.
 	Note that this endpoint requires data in the multipart/form format
@@ -335,8 +354,8 @@ function getMembers(msg, guid) {
 					'X-MsTeamsTenantId': tenant_id[guid]
 				}
 			}).on('complete', (data) => {
-				console.log('Got members:');
-				console.log(JSON.stringify(data, null, 1));
+				console.log('Got members RESTfully:');
+				//console.log(JSON.stringify(data, null, 1));
 				resolve({
 					msg: msg,
 					members: data
