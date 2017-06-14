@@ -1,4 +1,4 @@
-# Teams sample notification bot, node.js
+# Teams Sample Notification bot for Node.js
 
 This sample shows a notification, or one-way bot.  This alternative to O365 Connectors utilizes the Bot Framework and all the rich functionality it provides to create a bot service that only pushes information into Microsoft Teams.  While it's easy to add basic conversational support, for some experiences a simple push system is all that is needed, and this will allow your notification service to full leverage the Bot APIs to target users and/or channels, and provide a rich experience utilizing Bot Framework cards.
 
@@ -31,7 +31,7 @@ The minimum prerequisites to run this sample are:
 * **[Recommended]** Visual Studio Code for IntelliSense and debugging, download it from [here](https://code.visualstudio.com/) for free.
 * **[Optional]** The Bot Framework Emulator. To install the Bot Framework Emulator, download it from [here](https://emulator.botframework.com/). Please refer to [this documentation article](https://github.com/microsoft/botframework-emulator/wiki/Getting-Started) to know more about the Bot Framework Emulator.
 
-For more information on running this application, see [Microsoft Teams Samples](https://msdn.microsoft.com/en-us/microsoft-teams/samples).
+For more information about how to configure and test our samples, see [Sample applications for the Microsoft Teams Developer Platform](https://msdn.microsoft.com/en-us/microsoft-teams/samples).
 
 ## Code Highlights
 
