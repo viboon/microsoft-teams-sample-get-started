@@ -1,0 +1,130 @@
+{
+    "$schema": "https://statics.teams.microsoft.com/sdk/v1.0/manifest/MicrosoftTeams.schema.json",
+    "manifestVersion": "1.0",
+    "version": "1.0",
+    "id": "9a1d84aa-225b-4856-83f8-ebaeca22b964",
+    "packageName": "com.microsoft.teams.samples.sampleapp",
+    "developer": {
+        "name": "Microsoft",
+        "websiteUrl": "https://www.microsoft.com",
+        "privacyUrl": "https://www.microsoft.com/privacy",
+        "termsOfUseUrl": "https://www.microsoft.com/termsofuse"
+    },
+    "name": {
+        "short": "Sample App in Node.js",
+        "full": "Sample App in Node.js - full name"
+    },
+    "description": {
+        "short": "This is a small sample app we made for you, in Node.js!",
+        "full": "This is a small sample app we made for you, in Node.js! This app has samples of all capabilities Microsoft Teams supports"
+    },
+    "icons": {
+        "outline": "outline_icon.png",
+        "color": "color_icon.png"
+    },
+    "accentColor": "#3F487F",
+    "staticTabs": [
+        {
+            "entityId": "mytasks",
+            "name": "My Tasks",
+            "contentUrl": "https://teamsnodesample.azurewebsites.net/tabs/index",
+            "websiteUrl": "https://teamsnodesample.azurewebsites.net/tabs/index",
+            "scopes": [
+                "personal"
+            ]
+        },
+        {
+            "entityId": "info",
+            "name": "Info",
+            "contentUrl": "https://teamsnodesample.azurewebsites.net/tabs/about",
+            "websiteUrl": "https://teamsnodesample.azurewebsites.net/tabs/about",
+            "scopes": [
+                "personal"
+            ]
+        }
+    ],
+    "configurableTabs": [
+        {
+            "configurationUrl": "https://teamsnodesample.azurewebsites.net/tabs/configure",
+            "canUpdateConfiguration": true,
+            "scopes": [
+                "team"
+            ]
+        }
+    ],
+    "bots": [
+        {
+            "botId": "d812b620-006e-406a-99e4-93d670f91748",
+            "isNotificationOnly": false,
+            "scopes": [
+                "team",
+                "personal"
+            ],
+            "commandLists": [
+                {
+                    "scopes": [
+                        "team",
+                        "personal"
+                    ],
+                    "commands": [
+                        {
+                            "title": "help",
+                            "description": "Find out what I can do"
+                        },
+                        {
+                            "title": "create",
+                            "description": "Create a brand new task, just give me a title"
+                        },
+                        {
+                            "title": "find",
+                            "description": "I can help you find a task, just give me a title"
+                        },
+                        {
+                            "title": "link",
+                            "description": "Create a link to a tab, just give me the tab name"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "connectors": [
+        {
+            "connectorId": "e9343a03-0a5e-4c1f-95a8-263a565505a5",
+            "scopes": [
+                "team"
+            ]
+        }
+    ],
+    "composeExtensions": [
+        {
+            "botId": "d812b620-006e-406a-99e4-93d670f91748",
+            "scopes": [
+                "personal",
+                "team"
+            ],
+            "commands": [
+                {
+                    "id": "searchCmd",
+                    "title": "Search tasks",
+                    "description": "Search tasks",
+                    "parameters": [
+                        {
+                            "name": "search",
+                            "title": "Search",
+                            "description": "Search tasks"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "permissions": [
+        "identity",
+        "messageTeamMembers"
+    ],
+    "validDomains": [
+        "teamsnodesample.azurewebsites.net",
+        "*.teamsnodesample.azurewebsites.net"
+    ]
+}
