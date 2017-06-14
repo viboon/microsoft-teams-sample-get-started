@@ -6,8 +6,6 @@ const CookieParser = require('restify-cookies');
 process.env.TEAMS_APP_ID = (process.env.TEAMS_APP_ID) ? process.env.TEAMS_APP_ID : ''; //This is the Teams App ID from your Manifest
 process.env.MICROSOFT_APP_ID = (process.env.MICROSOFT_APP_ID) ? process.env.MICROSOFT_APP_ID : ''; //Bot ID from Bot Framework
 process.env.MICROSOFT_APP_PASSWORD = (process.env.MICROSOFT_APP_PASSWORD) ? process.env.MICROSOFT_APP_PASSWORD : ''; //Bot password from Bot Framework
-process.env.NOTIFYBOT_APP_ID = (process.env.NOTIFYBOT_APP_ID) ? process.env.NOTIFYBOT_APP_ID : ''; //Bot ID from Bot Framework
-process.env.NOTIFYBOT_SECRET = (process.env.NOTIFYBOT_SECRET) ? process.env.NOTIFYBOT_SECRET : ''; //Bot Password from Bot Framework
 process.env.AUTH_CLIENT_ID = (process.env.AUTH_CLIENT_ID) ? process.env.AUTH_CLIENT_ID : '[auth client ID]';
 process.env.AUTH_CLIENT_SECRET = (process.env.AUTH_CLIENT_SECRET) ? process.env.AUTH_CLIENT_SECRET : '[auth client secret]';
 process.env.BASE_URI = (process.env.BASE_URI) ? process.env.BASE_URI : '';  //the host name for your tab
@@ -43,12 +41,6 @@ botHandler.start_listening();
 //Initialize ComposeExtension 
 var composeHandler = require('./compose/compose.js');
 composeHandler.init(server, chatConnector, bot);
-
-
-//Initialize Notification Handler 
-var notificationsHandler = require('./notifications/notifications.js');
-notificationsHandler.init(server);
-notificationsHandler.start_listening();
 
 //Initialize O365 Connector handler 
 var connectorHandler = require('./connector/connector.js');
