@@ -27,8 +27,14 @@ The same bot implementation shows an example of a simple compose extension, whic
 ### Connectors
 You can setup the O365 Connector through the add a connector dialog, or you can set up a webhook and use the URL below to trigger messages
 
-To trigger a message just paste this url in any browser:
-https://teamsnodesample.azurewebsites.net/api/messages/connector/send?webhook_url=[webhook url]
+To test the Connector Card functionality :
+1) Select a channel in Teams you'd like to receive the messages
+2) On the channel options, select Connectors, and add Incoming Webhook
+3) Name it anything you wish, and get the resulting URL.
+4) In your browser, enter: `https://[BASE_URI]/api/message/connector/send?webhook_url=[CHANNEL_WEBHOOK_URI]`
+        * `BASE_URI` is the full URI for your running sample
+        * `CHANNEL_WEBHOOK_URI` is the URI from step #3.
+
 
 The triggered message gives you buttons to send yourself more messages.
 
