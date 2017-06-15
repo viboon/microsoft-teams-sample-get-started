@@ -16,7 +16,7 @@ For more information about how to configure and test our samples, see [Sample ap
 ## Code Highlights
 
 ### Tabs
-The Sample app demonstrates simple Configurable Tabs in channels and Static Tabs in personal view.  Add "auth=1" as a query parameter tab URLs to turn on the authentication flow, which signs you in to Azure AD and gets your display name from Microsoft Graph.
+The Sample app demonstrates simple Configurable Tabs in channels and Static Tabs in personal view.  Add "auth=1" as a query parameter to tab URLs to turn on the authentication flow, which signs you in to Azure AD and gets your display name from Microsoft Graph.  Note that we have provided an alternate manifest.json with this auth flag set.
 
 ### Bots
 The simple bot implementation demonstrates a bot in both teams and personal scope.  It will respond to three commands: "create", "find", and "link", and will generate a Welcome message when added to a team.
@@ -25,19 +25,26 @@ The simple bot implementation demonstrates a bot in both teams and personal scop
 The same bot implementation shows an example of a simple compose extension, which will allow you to generate random sample tasks in the conversation pane.  Note that "search" is not really enabled since tasks are not persisted.
 
 ### Connectors
-You can setup the O365 Connector through the add a connector dialog, or you can set up a webhook and use the URL below to trigger messages
+The sample shows a simple implementation of a Connector registration implementation, and a sample of sending a Connector Card to the registered Connector.
 
-To test the Connector Card functionality :
+To register a new Connector:
+1) You'll need to register a new connector in the Connector Developer Portal, Follow the steps here: [Registering your connector](https://msdn.microsoft.com/en-us/microsoft-teams/connectors#registering-your-connector)
+2) For the Redirect URL during registration, you'll use our sample code's registration endpoint:  `https://[BASE_URI]/api/message/connector/register`
+
+* `BASE_URI` is the full URI for your running sample
+3) In the manifest.json file, update: `connectors.connectorId` to use your new Connector ID.
+
+To simply illustrate the Connector functionality, you can instead utlize the built-in Incoming Webhook connector:
 1) Select a channel in Teams you'd like to receive the messages
-2) On the channel options, select Connectors, and add Incoming Webhook
-3) Name it anything you wish, and get the resulting URL.
-4) In your browser, enter: `https://[BASE_URI]/api/message/connector/send?webhook_url=[CHANNEL_WEBHOOK_URI]`
-        * `BASE_URI` is the full URI for your running sample
-        * `CHANNEL_WEBHOOK_URI` is the URI from step #3.
+2) On the channel options, select Connectors, and add the Incoming Webhook Connector
+3) Name it anything you wish, and get the resulting URI.
 
-
-The triggered message gives you buttons to send yourself more messages.
-
+To test the Connector Card functionality:
+1) For a registered Connector:  in your browser, enter: `https://[BASE_URI]/api/message/connector/send`
+* `BASE_URI` is the full URI for your running sample
+2) For a Incoming Webhook connector:  in your browser, enter: `https://[BASE_URI]/api/message/connector/send?webhook_url=[CHANNEL_WEBHOOK_URI]`
+* `BASE_URI` is the full URI for your running sample
+* `CHANNEL_WEBHOOK_URI` is the URI from step #3.
 
 ## More Information
 

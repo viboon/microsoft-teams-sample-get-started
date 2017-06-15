@@ -7,7 +7,6 @@ const files = require('../utils/files.js');
 //	Local Variables
 ///////////////////////////////////////////////////////
 var server; //Restify server
-var host = process.env.BASE_URI;
 var connectors = {}; //Array of connectors that have been hooked up
 
 ///////////////////////////////////////////////////////
@@ -15,13 +14,15 @@ var connectors = {}; //Array of connectors that have been hooked up
 ///////////////////////////////////////////////////////
 function start_listening() {
 
+    //The Setup page is used as the Landing page in the Connectors Developer Dashboard registration flow
     this.server.get('connector/setup', (req, res, next) => {
 		files.sendFile('./connector/setup.html', res);
 	});
 
+    // This illustrative Connector registeration code shows how your server would cache inbound requests to attach a channel as a webhook.
+    //  As this is not intended to show production-grade support, we've added some basic clean-up code below.
     this.server.get('api/messages/connector/register', (req, res) => {
-        // This illustrative Connector register code shows how your server would cache inbound requests from teams in Teams to attach their channel as a webhook.
-        //  As this is not intended to show production-grade support, we've added some basic clean-up code below.
+
 
         // Parse register message from connector, find the group name and webhook url
         var query = req.query;
@@ -29,14 +30,14 @@ function start_listening() {
         var group_name = query.group_name;
 
         // Simple cleanup so we are only tracking max of 100 registered connections
-        if (connectors.length > 100) connectors = {}; //Clean up to not blow up memory on my server :)
-
+        if (connectors.length > 100) connectors = {}; 
+        
         // save the webhook url using groupname as the key
         connectors[group_name] = webhook_url;
 
         res.send(webhook_url);
 
-        // Generate connector message
+        // Generate a sample connector message as a "welcome"
         var message = utils.generateConnectorCard();
         res.send(`${webhook_url}`);
 
@@ -48,18 +49,18 @@ function start_listening() {
 
     // This endpoint allows for sending connector messages. It checks if a webhook URL has been passed in first (set up as an incoming webhook)
     // if not it checks if a connector has been registered with us.
-    // This endpoint also allows to send yourself messages through a webhook as long as you pass in a webhook url
+    // This endpoint also allows to send yourself messages through a webhook as long as you pass in a webhook url.
     this.server.get('api/messages/connector/send', (req, res) => {
 
         // Handshake and figure out if we already know about this connector config
         var group_name = (typeof req.params.group_name === 'string') ? req.params.group_name : '';
         var type = (typeof req.params.type === 'string') ? req.params.type : 'static';
 
-        // If we don't know about hte connector config, then check if the URL passes a webhook URL
+        // If we don't know about the connector config, then check if the URL passes a webhook URL
         var webhook_url = (typeof req.params.webhook_url === 'string') ? req.params.webhook_url : null;
         webhook_url = (webhook_url == null) ? ((connectors[group_name]) ? connectors[group_name] : null) : webhook_url;
 
-        // If we don' know about the connector and we don't have a webhook url then fail
+        // If we don't know about the connector and we don't have a webhook url then fail
         if (!webhook_url) {
             res.send(`A connector for ${group_name} has not been setup`);
             res.end();
