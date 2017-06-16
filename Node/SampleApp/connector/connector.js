@@ -109,7 +109,19 @@ function start_listening() {
         {
             // Generate connector message
             var message = generateConnectorCard();
-            res.send(`${webhook_url}`);
+
+
+            var htmlBody = "<html><body><H3>Sent Connector card to:</H3>"
+            if (group_name != '')   htmlBody += '<p>group_name: <b>' + group_name + '</b></p>';
+            htmlBody += '<p>webhook: <b>' + webhook_url + '</b></p>';
+            htmlBody += '</body></html>';
+
+            res.writeHead(200, {
+                'Content-Length': Buffer.byteLength(htmlBody),
+                'Content-Type': 'text/html'
+            });
+            res.write(htmlBody);
+
 
             // Post to connectors endpoint so they can route the message properly
             rest.postJson(webhook_url, message).on('complete', function (data, response) {
