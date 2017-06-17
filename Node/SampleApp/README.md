@@ -29,10 +29,12 @@ The sample shows a simple implementation of a Connector registration implementat
 
 To register a new Connector:
 1) You'll need to register a new connector in the Connector Developer Portal, Follow the steps here: [Registering your connector](https://msdn.microsoft.com/en-us/microsoft-teams/connectors#registering-your-connector)
-2) For the Redirect URL during registration, you'll use our sample code's registration endpoint:  `https://[BASE_URI]/api/message/connector/register`
-
-* `BASE_URI` is the full URI for your running sample
-3) In the manifest.json file, update: `connectors.connectorId` to use your new Connector ID.
+2) Ensure you have both Teams and Groups checkboxes selected.
+3) For the Landing page for groups during registration, you'll use our sample code's setup endpoint: `https://[BASE_URI]/connector/setup`
+4) For the Redirect URL during registration, you'll use our sample code's registration endpoint:  `https://[BASE_URI]/api/message/connector/register`
+* In both steps 3 & 4, `[BASE_URI]` is the full URI for your running sample.
+5) In the manifest.json file, update: `connectors.connectorId` to use your new Connector ID, which you can retrieve via the Connector Developer Portal's Copy Code or Download Manifest buttons.
+6) In your launch.json / debug configuration, set the `CONNECTOR_APP_ID` environment variable to be your new Connector ID.
 
 To simply illustrate the Connector functionality, you can instead utlize the built-in Incoming Webhook connector:
 1) Select a channel in Teams you'd like to receive the messages
@@ -40,11 +42,10 @@ To simply illustrate the Connector functionality, you can instead utlize the bui
 3) Name it anything you wish, and get the resulting URI.
 
 To test the Connector Card functionality:
-1) For a registered Connector:  in your browser, enter: `https://[BASE_URI]/api/message/connector/send`
-* `BASE_URI` is the full URI for your running sample
-2) For a Incoming Webhook connector:  in your browser, enter: `https://[BASE_URI]/api/message/connector/send?webhook_url=[CHANNEL_WEBHOOK_URI]`
-* `BASE_URI` is the full URI for your running sample
-* `CHANNEL_WEBHOOK_URI` is the URI from step #3.
+1) For a registered Connector:  the registration results page creates a link you can click on or copy and paste in your browser
+2) For a Incoming Webhook connector:  in your browser, enter: `https://[BASE_URI]/api/message/connector/send?webhook_url=[channel_webhook_uri]`
+* `[BASE_URI]` is the full URI for your running sample
+* `[channel_webhook_uri]` is the URI from Incoming Webhook setup step #3 above.
 
 ## More Information
 

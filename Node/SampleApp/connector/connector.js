@@ -25,7 +25,7 @@ function start_listening() {
         htmlBody += '<p>Click the button to call the "register" endpoint in the sample app, which will register the connector for the selected channel and send a sample "Welcome" connector card.</p>';
 
 		//This generates the Office365 connector button, which we assume is running on our BASE_URI:
-        htmlBody += '<a href="https://outlook.office.com/connectors/Connect?state=myAppsState&app_id=0f2fd47a-3bd6-436a-932a-1ab50b3e2a34&callback_url=' + process.env.BASE_URI + '/api/messages/connector/register">';
+        htmlBody += '<a href="https://outlook.office.com/connectors/Connect?state=myAppsState&app_id=' + process.env.CONNECTOR_APP_ID + '&callback_url=' + process.env.BASE_URI + '/api/messages/connector/register">';
         htmlBody += '<img src="https://o365connectors.blob.core.windows.net/images/ConnectToO365Button.png" alt="Connect to Office 365"></img></a>';
 
         htmlBody += '</body></html>';

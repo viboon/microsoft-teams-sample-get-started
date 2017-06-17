@@ -14,6 +14,7 @@
                 "TEAMS_APP_ID": "", //This is the Teams App ID from your Manifest
                 "MICROSOFT_APP_ID": "", //Bot ID from Bot Framework
                 "MICROSOFT_APP_PASSWORD": "", //Bot password from Bot Framework
+                "CONNECTOR_APP_ID": "", //Registered Connector ID 
                 "AUTH_CLIENT_ID" : "", //auth client ID
                 "AUTH_CLIENT_SECRET" : "", //auth client secret
                 "BASE_URI": "" //Host name for your tab/application
@@ -29,9 +30,10 @@
                 "TEAMS_APP_ID": "[Your Teams App GUID Here]", //This is the Teams App ID from your Manifest
                 "MICROSOFT_APP_ID": "[Your Bot ID Here]", //Bot ID from Bot Framework
                 "MICROSOFT_APP_PASSWORD": "[Your Bot Password Here]", //Bot password from Bot Framework
+                "CONNECTOR_APP_ID": "[Your Connector ID]", //Registered Connector ID from the Connector Developer Portal
                 "AUTH_CLIENT_ID" : "", //auth client ID
                 "AUTH_CLIENT_SECRET" : "", //auth client secret
-                "BASE_URI": "[YOUR HOST URL]" //base name for your tab/application
+                "BASE_URI": "[YOUR HOST URL]" //base name for your tab/application, where you are hosting this code
             }
         }
     ]
