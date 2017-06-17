@@ -17,15 +17,17 @@ function start_listening() {
     ///////////////////////////////////////////////////////
     //	Simple Connector setup process flow
     //
-    //The Setup page is used as the Landing page in the Connectors Developer Dashboard registration flow
+    // This generated page is used as the Landing page in the Connectors Developer Dashboard registration flow
     this.server.get('connector/setup', (req, res, next) => {
 
         var htmlBody = "<html><title>Set up connector</title><body>";
         htmlBody += "<H2>Adding your Connector Portal-registered connector</H2>";
         htmlBody += '<p>Click the button to call the "register" endpoint in the sample app, which will register the connector for the selected channel and send a sample "Welcome" connector card.</p>';
 
+		//This generates the Office365 connector button, which we assume is running on our BASE_URI:
         htmlBody += '<a href="https://outlook.office.com/connectors/Connect?state=myAppsState&app_id=0f2fd47a-3bd6-436a-932a-1ab50b3e2a34&callback_url=' + process.env.BASE_URI + '/api/messages/connector/register">';
         htmlBody += '<img src="https://o365connectors.blob.core.windows.net/images/ConnectToO365Button.png" alt="Connect to Office 365"></img></a>';
+
         htmlBody += '</body></html>';
 
         res.writeHead(200, {
@@ -57,6 +59,8 @@ function start_listening() {
         // save the webhook url using groupname as the key
         connectors[group_name] = webhook_url;
 
+		// Generate HTML response
+		var sendUrl = process.env.BASE_URI + "/api/messages/connector/send?group_name=" + group_name;
         var htmlBody = "<html><body><H2>Registered Connector added</H2>"
         htmlBody += "<li><b>App Type:</b> " + appType + "</li>";
         htmlBody += "<li><b>Group Name:</b> " + group_name + "</li>";       
@@ -65,8 +69,7 @@ function start_listening() {
         htmlBody += "</body></html>"
 
         htmlBody += "<br><br>To generate a message to this endpoint, use this link:";
-        htmlBody += "<a href='" + process.env.BASE_URI + "/api/messages/connector/send?group_name=" + group_name + "' target='_blank'>";
-        htmlBody += process.env.BASE_URI + "/api/messages/connector/send?group_name=" + group_name + "</a>";
+        htmlBody += "<a href='" + sendUrl + "' target='_blank'>" + sendUrl + "</a>";
         htmlBody += '</body></html>';
 
         res.writeHead(200, {
@@ -76,9 +79,9 @@ function start_listening() {
         res.write(htmlBody);
 
         // Generate a sample connector message as a "welcome"
-        var message = generateConnectorCard("Welcome", "This is a sample connector card sent to group: <b>" + group_name + "</b> via webhook: <b>" + webhook_url + "</b>");
+        var message = generateConnectorCard("Welcome", "This is a sample connector card sent to group: <b>" + group_name + "</b> via webhook: <b>" + webhook_url + "</b> using link: <b>" + sendUrl + "</b>");
 
-        // Post to connectors endpoint so they can route the message properly
+        // Post to connector endpoint
         rest.postJson(webhook_url, message).on('complete', function (data, response) {
             res.end();
         });
@@ -87,17 +90,18 @@ function start_listening() {
     ///////////////////////////////////////////////////////
     //	Simple Connector send test
     //
-    // This endpoint allows for sending connector messages. It checks if a webhook URL has been passed in first (set up as an incoming webhook)
-    // if not it checks if a connector has been registered with us.
-    // This endpoint also allows to send yourself messages through a webhook as long as you pass in a webhook url.
+    // This endpoint allows for sending connector messages. 
+	// For registered connectors, you pass in the Group Name that it was registered to.
+	// For incoming webhooks, you pass in the webhook URL that was created via the incoming webhook registration.
     this.server.get('api/messages/connector/send', (req, res) => {
 
-        // Handshake and figure out if we already know about this connector config
+        // For registered connectors, we must pass in the group_name
         var group_name = (typeof req.params.group_name === 'string') ? req.params.group_name : '';
-        var type = (typeof req.params.type === 'string') ? req.params.type : 'static';
 
-        // If we don't know about the connector config, then check if the URL passes a webhook URL
+		// For incoming webhooks, we must pass in the webhook
         var webhook_url = (typeof req.params.webhook_url === 'string') ? req.params.webhook_url : null;
+
+		// If no incoming webhook, lookup the registered connector name
         webhook_url = (webhook_url == null) ? ((connectors[group_name]) ? connectors[group_name] : null) : webhook_url;
 
         // If we don't know about the connector and we don't have a webhook url then fail
@@ -107,10 +111,10 @@ function start_listening() {
         }
         else
         {
-            // Generate connector message
+            // Generate a sample random connector message
             var message = generateConnectorCard();
 
-
+			// Generate HTML response
             var htmlBody = "<html><body><H3>Sent Connector card to:</H3>"
             if (group_name != '')   htmlBody += '<p>group_name: <b>' + group_name + '</b></p>';
             htmlBody += '<p>webhook: <b>' + webhook_url + '</b></p>';
@@ -122,8 +126,7 @@ function start_listening() {
             });
             res.write(htmlBody);
 
-
-            // Post to connectors endpoint so they can route the message properly
+            // Post to connector endpoint
             rest.postJson(webhook_url, message).on('complete', function (data, response) {
                 res.end();
             });
@@ -138,7 +141,8 @@ function start_listening() {
 function generateConnectorCard (summary, text) {
 
 	if (typeof summary != 'string') summary = utils.getName() + ' created a new task';
-    if (typeof text != 'string') text = faker.fake('{{lorem.paragraphs}}')
+    if (typeof text != 'string') text = faker.fake('{{lorem.paragraphs}}');
+
 	var ret = {
 		'@type': 'MessageCard',
 		'@context': 'http://schema.org/extensions',
