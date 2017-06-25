@@ -16,7 +16,7 @@ var authHelper = require('../auth/authHelper.js');
  */
 function executeRequestWithErrorHandling(req, res, next, requestType, requestPath, callback) {
 		if (req.cookies.REFRESH_TOKEN_CACHE_KEY === undefined) {
-			res.redirect(`/login?${process.env.host}&${process.env.ClientSecret}&${process.env.APPSETTING_ClientSecret}&${process.env.WEBSITE_HOSTNAME}`, next);
+			res.redirect(`/login?${process.env.BASE_URI}&${process.env.ClientSecret}&${process.env.APPSETTING_ClientSecret}&${process.env.WEBSITE_HOSTNAME}`, next);
     }
     else
     {

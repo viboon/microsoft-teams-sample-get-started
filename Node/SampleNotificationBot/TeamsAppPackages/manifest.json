@@ -1,9 +1,9 @@
 {
     "$schema": "https://statics.teams.microsoft.com/sdk/v1.0/manifest/MicrosoftTeams.schema.json",
     "manifestVersion": "1.0",
-    "version": "1.0",
-    "id": "9a1d84aa-225b-4856-83f8-ebaeca22b964",
-    "packageName": "com.microsoft.teams.samples.sampleapp",
+    "version": "1.0.0",
+    "id": "6c5a1f6a-b8da-4c75-93ca-e5e5cddd0999",
+    "packageName": "com.teams.samples.sampleappnotify",
     "developer": {
         "name": "Microsoft",
         "websiteUrl": "https://www.microsoft.com",
@@ -11,12 +11,12 @@
         "termsOfUseUrl": "https://www.microsoft.com/termsofuse"
     },
     "name": {
-        "short": "Sample Bot in Node.js",
-        "full": "Sample Notification only bot in Node.js - full name"
+        "short": "Sample Notification Bot",
+        "full": "Sample Notification Bot in Node.js"
     },
     "description": {
-        "short": "This is a sample notification only bot, in Node.js!",
-        "full": "This is a sample notification only bot we made for you, in Node.js! This shows a notification-only bot: 'isNotificationOnly` set to True in the manifest."
+        "short": "This is a sample Notification bot we made for you, in Node.js!",
+        "full": "This is a sample Notification bot we made for you, in Node.js! This app shows a notification only bot."
     },
     "icons": {
         "outline": "outline_icon.png",
@@ -25,7 +25,7 @@
     "accentColor": "#3F487F",
     "bots": [
         {
-            "botId": "8aefbb70-ff9e-409f-acea-986b61e51cd3",
+            "botId": "b462cfb5-9354-44e3-9419-0220e1420ca4",
             "isNotificationOnly": true,
             "scopes": [
                 "team",

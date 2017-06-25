@@ -1,7 +1,7 @@
 {
     "$schema": "https://statics.teams.microsoft.com/sdk/v1.0/manifest/MicrosoftTeams.schema.json",
     "manifestVersion": "1.0",
-    "version": "1.0",
+    "version": "1.0.0",
     "id": "9a1d84aa-225b-4856-83f8-ebaeca22b964",
     "packageName": "com.microsoft.teams.samples.sampleapp",
     "developer": {
@@ -16,7 +16,7 @@
     },
     "description": {
         "short": "This is a small sample app we made for you, in Node.js!",
-        "full": "This is a small sample app we made for you, in Node.js! This app has samples of all capabilities Microsoft Teams supports"
+        "full": "This is a small sample app we made for you, in Node.js! This app has samples of many of the capabilities Microsoft Teams supports"
     },
     "icons": {
         "outline": "outline_icon.png",
