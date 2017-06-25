@@ -1,31 +1,15 @@
 
-# Microsoft Teams Get Started Sample in C#
+# Microsoft Teams Get Started Sample in .NET/C#
 
-This app simulates connection to a project management system and allows users and teams to create, manage and search tasks. The content is randomly generated to simulate what you can do with Teams.  
+This app simulates connection to a project management system and allows users and teams to create, manage and search tasks. The content is randomly generated to simulate what you can do with Teams.
+
+This .NET/C# sample only shows the Bot and Compose Extension portion of the sample.  As the Tab and Connector work is web code unrelated to the bot service, we provide a hosted version of that code for this sample, built from the project's Node.js codebase.  For more information on the Tab and Connector support in this sample, please review the [Node repository](../Node/readme.md)
 
 **For more information on developing apps for Microsoft Teams, please review the Microsoft Teams [developer documentation](https://msdn.microsoft.com/en-us/microsoft-teams/index).**
 
 ## Prerequisites
 * An [Office 365 account](https://msdn.microsoft.com/en-us/microsoft-teams/setup)  with access to Microsoft Teams
 * To view the code, you'll need the latest update of Visual Studio. You can download the community version for free from [visualstudio.com](http://www.visualstudio.com/).
-
-## Code Walkthough
-This app simulates connection to a project management system and allows users and teams to create, manage and search tasks. The content is randomly generated to simulate what you can do with Teams. 
-
-### Configuration
-* [manifest.json](CSharp/TeamsAppPackages/manifest.json) configures the following components: 
-	* bot commands and configurable tab with personal and team scopes
-	* static tabs with personal scope
-	* connector with team scope
-	* compose extension and commands with personal and team scopes
-* [web.config](CSharp/TeamsToDoApp/) appSettings connect to the bot if registered
-
-### Components:
-* 1:1 conversation bot in a configurable tab with channel-specific simulated content
-	* [MessagesController.cs](CSharp/TeamsToDoApp/Controllers/MessagesController.cs) authentication and message activity
-	* [RootDialog.cs](CSharp/TeamsToDoApp/Dialogs/RootDialog.cs) interactive chat functionality
-* A compose extension to search channel-specific and user-specific simulated content
-	* [ComposeExtension.cs](CSharp/TeamsToDoApp/Compose/ComposeExtension.cs) processes an activity and responds with a set of compose extension results
 
 ## Testing
 For more information about how to configure and test samples, see [Sample applications for the Microsoft Teams Developer Platform](https://msdn.microsoft.com/en-us/microsoft-teams/samples) on MSDN.

@@ -110,7 +110,7 @@ namespace TeamsSampleTaskApp.Dialogs
                 {
                     new CardImage()
                     {
-                        Url = $"https://teamsnodesample.azurewebsites.net/static/img/image{random.Next(1, 9)}.png",
+                        Url = $"../images/image{random.Next(1, 9)}.png",
                     }
                 }
             };

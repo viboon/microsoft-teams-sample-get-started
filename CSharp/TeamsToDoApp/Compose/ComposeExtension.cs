@@ -82,7 +82,6 @@ namespace TeamsSampleTaskApp
         private ThumbnailCard GenerateResultCard()
         {
             var faker = new Faker();
-            var host = System.Configuration.ConfigurationManager.AppSettings["BaseUri"];
 
             ThumbnailCard card = new ThumbnailCard()
             {
@@ -93,7 +92,7 @@ namespace TeamsSampleTaskApp
                 {
                     new CardImage()
                     {
-                        Url = $"{host}/static/img/image{random.Next(1, 9)}.png",
+                        Url = $"../images/image{random.Next(1, 9)}.png",
                     }
                 }
             };
