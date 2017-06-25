@@ -3,7 +3,7 @@
     "manifestVersion": "1.0",
     "version": "1.0.0",
     "id": "6c5a1f6a-b8da-4c75-93ca-e5e5cddd0999",
-    "packageName": "com.skype.teams.samples.sampleappnotify",
+    "packageName": "com.teams.samples.sampleappnotify",
     "developer": {
         "name": "Microsoft",
         "websiteUrl": "https://www.microsoft.com",

@@ -1,6 +1,6 @@
 # Teams Sample Notification bot for Node.js
 
-This sample shows a notification, or one-way bot.  This alternative to O365 Connectors utilizes the Bot Framework and all the rich functionality it provides to create a bot service that only pushes information into Microsoft Teams.  While it's easy to add basic conversational support, for some experiences a simple push system is all that is needed, and this will allow your notification service to full leverage the Bot APIs to target users and/or channels, and provide a rich experience utilizing Bot Framework cards.
+This sample shows a notification, or one-way bot.  This alternative to O365 Connectors utilizes the Bot Framework and all the rich functionality it provides to create a bot service that only pushes information into Microsoft Teams.  While it's easy to add basic conversational support, for some experiences a simple push system is all that is needed, and this will allow your notification service to fully leverage the Bot APIs to target users and/or channels, and provide a rich experience utilizing Bot Framework cards.
 
 ### About Notification Only bots
 
@@ -23,6 +23,8 @@ A Notification Only bot is created like a normal bot, but in the manifest.json, 
 
 This signals to Microsoft Teams that this is not a bot designed for bi-directional communication; rather, it is a bot designed to only send messages back to a team (`scope:teams`) or an individual user (`scope:personal`).  Notification Only bots should not be addressable in channels, and the personal context will only show "Activities", not "Conversations."
 
+>**Note** - Sideloading test apps currently bypasses the normal installation flow which enforces scope and the Notificaiton Only flag.  Therefore in your tests, you will still be able to address your bot.
+
 
 ## Prerequisites
 
@@ -35,9 +37,9 @@ For more information about how to configure and test our samples, see [Sample ap
 
 ## Code Highlights
 
-This code simulates service-level notifications by create deep links to web endpoints used to send channel and direct user messages.  The deep links themselves contain  these endpoints (/send/user and /send/team) along with identifying logic like a GUID for lookup, and user and tenant IDs.
+This code simulates service-level notifications by creating links used to trigger the bot to send channel and direct user messages.  These links contain endpoints (/send/user and /send/team) handled by the same server running the bot service, and contain identifying logic like a GUID for lookup, and user and tenant IDs.
 
-The core logic is triggered by adding the bot to a channel, which sends the `conversationUpdate` event.  This event, when triggered by the bot addition itself, will create a Welcome message containing the deep links to the team channel and to individual team users.  Clicking on the links will launch the browser to those endpoints, and the Node server will process the event and send the appropriate message.
+The core logic is triggered by adding the bot to a channel, which sends the `conversationUpdate` event.  This event, when triggered by the bot addition itself, will create a Welcome message containing the links to the team channel and to individual team users.  Clicking on the links will launch the browser to those endpoints, and the Node server will process the event and send the appropriate message.
 
 >**Please Note**:  This sample also demonstrates triggering of activity feed notification, which is currently not supported.
 

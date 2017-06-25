@@ -177,7 +177,7 @@ bot.on('conversationUpdate', (msg) => {
     }
 });
 
-// Endpoint to send one way messages to the team
+// Endpoint to trigger the bot to send one way messages to the team
 server.get('api/messages/send/team', (req, res) => {
 
     //Look up the address (id) passed in the Get.
@@ -221,7 +221,7 @@ server.get('api/messages/send/team', (req, res) => {
     } catch (e) { }
 });
 
-// Endpoint to send one way messages to individual users
+// Endpoint to trigger the bot to send one way messages to individual users
 server.get('api/messages/send/user', (req, res) => {
 
     //Look up the address (id) passed in the Get.

@@ -7,23 +7,23 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
+            "name": "Launch - Emulator", //Use this profile to launch an instance suitable for running in the Bot Emulator (bot only)
             "program": "${workspaceRoot}\\app.js",            
             "env": {
                 "NODE_ENV": "development",
-                "TEAMS_APP_ID": "", //This is the Teams App ID from your Manifest
-                "MICROSOFT_APP_ID": "", //Bot ID from Bot Framework
-                "MICROSOFT_APP_PASSWORD": "", //Bot password from Bot Framework
-                "CONNECTOR_APP_ID": "", //Registered Connector ID 
-                "AUTH_CLIENT_ID" : "", //auth client ID
-                "AUTH_CLIENT_SECRET" : "", //auth client secret
-                "BASE_URI": "" //Host name for your tab/application
+                "TEAMS_APP_ID": "", //N/A for emulator
+                "MICROSOFT_APP_ID": "", //Keep blank to run in emulator
+                "MICROSOFT_APP_PASSWORD": "", //Keep blank to run in emulator
+                "CONNECTOR_APP_ID": "", //N/A for emulator 
+                "AUTH_CLIENT_ID" : "", //N/A for emulator
+                "AUTH_CLIENT_SECRET" : "", //N/A for emulator
+                "BASE_URI": "" //N/A for emulator
             }
         },
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Teams Debug",
+            "name": "Launch - Teams Debug", //Use this profile to launch a debug instance pointing to, for example, your Ngrok instance
             "program": "${workspaceRoot}\\app.js",
             "env": {
                 "NODE_ENV": "development",
@@ -31,9 +31,9 @@
                 "MICROSOFT_APP_ID": "[Your Bot ID Here]", //Bot ID from Bot Framework
                 "MICROSOFT_APP_PASSWORD": "[Your Bot Password Here]", //Bot password from Bot Framework
                 "CONNECTOR_APP_ID": "[Your Connector ID]", //Registered Connector ID from the Connector Developer Portal
-                "AUTH_CLIENT_ID" : "", //auth client ID
-                "AUTH_CLIENT_SECRET" : "", //auth client secret
-                "BASE_URI": "[YOUR HOST URL]" //base name for your tab/application, where you are hosting this code
+                "AUTH_CLIENT_ID" : "", //Auth client ID
+                "AUTH_CLIENT_SECRET" : "", //Auth client secret
+                "BASE_URI": "[Your Host URL]" //Base name for your tab/application, where you are hosting this code, e.g. https://xxxxxxx.ngrok.io
             }
         }
     ]

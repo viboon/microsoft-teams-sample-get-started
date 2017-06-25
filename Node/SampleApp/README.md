@@ -25,27 +25,30 @@ The simple bot implementation demonstrates a bot in both teams and personal scop
 The same bot implementation shows an example of a simple compose extension, which will allow you to generate random sample tasks in the conversation pane.  Note that "search" is not really enabled since tasks are not persisted.
 
 ### Connectors
-The sample shows a simple implementation of a Connector registration implementation, and a sample of sending a Connector Card to the registered Connector.
+The sample shows a simple implementation of a Connector registration implementation, and a sample of sending a Connector Card to the registered Connector via a process triggered "externally."
 
-To register a new Connector:
+To simply illustrate the Connector functionality, you can utilize the built-in Incoming Webhook connector:
+1) Select a channel in Teams you'd like to receive the messages
+2) On the channel options, select Connectors, and add the Incoming Webhook Connector
+3) Name it anything you wish, and get the resulting URI, the channel webhook URI used in the testing flow per below.
+>Note that this process does not leverage the setup or registration flow in the connector.js code.
+
+Alternately, you can go through the full process to register a new Connector, which will trigger the setup and registration flows in the connector.js file:
 1) You'll need to register a new connector in the Connector Developer Portal, Follow the steps here: [Registering your connector](https://msdn.microsoft.com/en-us/microsoft-teams/connectors#registering-your-connector)
 2) Ensure you have both Teams and Groups checkboxes selected.
 3) For the Landing page for groups during registration, you'll use our sample code's setup endpoint: `https://[BASE_URI]/connector/setup`
 4) For the Redirect URL during registration, you'll use our sample code's registration endpoint:  `https://[BASE_URI]/api/message/connector/register`
-* In both steps 3 & 4, `[BASE_URI]` is the full URI for your running sample.
+* In both steps 3 & 4, `[BASE_URI]` is the full URI for your running sample which will be the same Ngrok endpoint used for the rest of your sample, if running locally.
 5) In the manifest.json file, update: `connectors.connectorId` to use your new Connector ID, which you can retrieve via the Connector Developer Portal's Copy Code or Download Manifest buttons.
 6) In your launch.json / debug configuration, set the `CONNECTOR_APP_ID` environment variable to be your new Connector ID.
 
-To simply illustrate the Connector functionality, you can instead utlize the built-in Incoming Webhook connector:
-1) Select a channel in Teams you'd like to receive the messages
-2) On the channel options, select Connectors, and add the Incoming Webhook Connector
-3) Name it anything you wish, and get the resulting URI.
+
 
 To test the Connector Card functionality:
 1) For a registered Connector:  the registration results page creates a link you can click on or copy and paste in your browser
 2) For a Incoming Webhook connector:  in your browser, enter: `https://[BASE_URI]/api/message/connector/send?webhook_url=[channel_webhook_uri]`
 * `[BASE_URI]` is the full URI for your running sample
-* `[channel_webhook_uri]` is the URI from Incoming Webhook setup step #3 above.
+* `[channel_webhook_uri]` is the URI from Incoming Webhook setup from step #3 above.
 
 ## More Information
 
