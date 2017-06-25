@@ -1,8 +1,8 @@
 {
     "$schema": "https://statics.teams.microsoft.com/sdk/v1.0/manifest/MicrosoftTeams.schema.json",
     "manifestVersion": "1.0",
-    "version": "1.0",
-    "id": "9a1d84aa-225b-4856-83f8-ebaeca22b964",
+    "version": "1.0.0",
+    "id": "[Your Teams App GUID Here]",
     "packageName": "com.microsoft.teams.samples.sampleapp",
     "developer": {
         "name": "Microsoft",
@@ -16,7 +16,7 @@
     },
     "description": {
         "short": "This is a small sample app we made for you, in Node.js!",
-        "full": "This is a small sample app we made for you, in Node.js! This app has samples of all capabilities Microsoft Teams supports"
+        "full": "This is a small sample app we made for you, in Node.js! This app has samples of many of the capabilities Microsoft Teams supports"
     },
     "icons": {
         "outline": "outline_icon.png",
@@ -27,8 +27,8 @@
         {
             "entityId": "mytasks",
             "name": "My Tasks",
-            "contentUrl": "https://teamsnodesample.azurewebsites.net/tabs/index?auth=1",
-            "websiteUrl": "https://teamsnodesample.azurewebsites.net/tabs/index?auth=1&web=1",
+            "contentUrl": "[https://YourHostURL.ext]/tabs/index?auth=1",
+            "websiteUrl": "[https://YourHostURL.ext]/tabs/index?auth=1&web=1",
             "scopes": [
                 "personal"
             ]
@@ -36,8 +36,8 @@
         {
             "entityId": "info",
             "name": "Info",
-            "contentUrl": "https://teamsnodesample.azurewebsites.net/tabs/about",
-            "websiteUrl": "https://teamsnodesample.azurewebsites.net/tabs/about",
+            "contentUrl": "[https://YourHostURL.ext]/tabs/about",
+            "websiteUrl": "[https://YourHostURL.ext]/tabs/about?web=1",
             "scopes": [
                 "personal"
             ]
@@ -45,7 +45,7 @@
     ],
     "configurableTabs": [
         {
-            "configurationUrl": "https://teamsnodesample.azurewebsites.net/tabs/configure?auth=1",
+            "configurationUrl": "[https://YourHostURL.ext]/tabs/configure?auth=1",
             "canUpdateConfiguration": true,
             "scopes": [
                 "team"
@@ -54,7 +54,7 @@
     ],
     "bots": [
         {
-            "botId": "d812b620-006e-406a-99e4-93d670f91748",
+            "botId": "[Your Bot ID Here]",
             "isNotificationOnly": false,
             "scopes": [
                 "team",
@@ -90,7 +90,7 @@
     ],
     "connectors": [
         {
-            "connectorId": "e9343a03-0a5e-4c1f-95a8-263a565505a5",
+            "connectorId": "[Your Connector ID]",
             "scopes": [
                 "team"
             ]
@@ -98,7 +98,7 @@
     ],
     "composeExtensions": [
         {
-            "botId": "d812b620-006e-406a-99e4-93d670f91748",
+            "botId": "[Your Bot ID Here]",
             "scopes": [
                 "personal",
                 "team"
@@ -124,8 +124,6 @@
         "messageTeamMembers"
     ],
     "validDomains": [
-        "teamsnodesample.azurewebsites.net",
-        "*.teamsnodesample.azurewebsites.net",
-        "login.microsoftonline.com"
+        "[YourHostURL.ext]"
     ]
 }

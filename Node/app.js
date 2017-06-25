@@ -17,7 +17,7 @@ server.use(CookieParser.parse);
 server.use(restify.bodyParser());
 
 server.listen(process.env.port || process.env.PORT || 3978, () => {
-	console.log(`Started Sample App`);
+   console.log('%s listening to %s', server.name, server.url); 
 });
 
 server.get(/\/static\/?.*/, restify.serveStatic({
