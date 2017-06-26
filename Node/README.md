@@ -5,9 +5,11 @@ This app simulates a web-based task management SaaS, and will simulate allowing 
 **For more information on developing apps for Microsoft Teams, please review the Microsoft Teams [developer documentation](https://msdn.microsoft.com/en-us/microsoft-teams/index).**
 
 ## Prerequisites
-* [Microsoft Teams with app sideloading enabled](https://msdn.microsoft.com/en-us/microsoft-teams/setup)
-* **[Recommended]** [Visual Studio Code](https://code.visualstudio.com/) or [Visual Studio IDE](https://www.visualstudio.com/vs/) for IntelliSense and debugging.
-* **[Optional]** The Bot Framework Emulator. To install the Bot Framework Emulator, download it from [here](https://emulator.botframework.com/). Please refer to [this documentation article](https://github.com/microsoft/botframework-emulator/wiki/Getting-Started) to know more about the Bot Framework Emulator.
+The minimum prerequisites to run this sample are:
+* Latest Node.js with NPM. Download it from [here](https://nodejs.org/en/download/).
+* An Office 365 account with access to Microsoft Teams, with [sideloading enabled](https://msdn.microsoft.com/en-us/microsoft-teams/setup).
+* [Optional] The Bot Framework Emulator. To install the Bot Framework Emulator, download it from [here](https://emulator.botframework.com/). Please refer to [this documentation article](https://github.com/microsoft/botframework-emulator/wiki/Getting-Started) to know more about the Bot Framework Emulator.
+* **[Recommended]** Visual Studio Code for IntelliSense and debugging.  Download it from [here](https://code.visualstudio.com/) for free.
 
 >**Note**: some features in the sample require that you [enable Public Developer Preview mode](https://msdn.microsoft.com/en-us/microsoft-teams/publicpreview) in Microsoft Teams.
 

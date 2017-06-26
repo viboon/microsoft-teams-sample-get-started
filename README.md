@@ -1,6 +1,12 @@
 # Microsoft Teams Get Started Sample
 Thank you for your interest in Microsoft Teams developer samples! These samples offer some limited functionality against mock data. Each sample exercises a combination of Microsoft Teams platform capabilities, including bots, tabs, connectors, and compose extensions. Additionally, full manifest.json examples are included to show you how to package and side load them into Microsoft Teams. 
 
+To use this sample, clone our GitHub repository using Git.
+
+```
+git clone https://github.com/OfficeDev/microsoft-teams-sample-get-started
+cd microsoft-teams-sample-get-started
+```
 **For more information on developing apps for Microsoft Teams, please review the Microsoft Teams [developer documentation](https://msdn.microsoft.com/en-us/microsoft-teams/index).**
 
 ## Sample Highlights
@@ -22,9 +28,6 @@ For more information see the [Code of Conduct FAQ](https://opensource.microsoft.
 
 ## Contributing
 Please read [Contributing](contributing.md) for details on the process for submitting pull requests to us.
-
-## Versioning
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/officedev/microsoft-teams-sample-get-started/tags).
 
 ## License
 This project is licensed under the MIT License - see the [License](LICENSE) file for details.

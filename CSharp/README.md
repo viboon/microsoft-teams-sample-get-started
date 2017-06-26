@@ -8,11 +8,13 @@ This .NET/C# sample only shows the Bot and Compose Extension portion of the samp
 **For more information on developing apps for Microsoft Teams, please review the Microsoft Teams [developer documentation](https://msdn.microsoft.com/en-us/microsoft-teams/index).**
 
 ## Prerequisites
-* An [Office 365 account](https://msdn.microsoft.com/en-us/microsoft-teams/setup)  with access to Microsoft Teams
-* To view the code, you'll need the latest update of Visual Studio. You can download the community version for free from [visualstudio.com](http://www.visualstudio.com/).
+The minimum prerequisites to run this sample are:
+* The latest update of Visual Studio. You can download the community version [here](http://www.visualstudio.com) for free.
+* An Office 365 account with access to Microsoft Teams, with [sideloading enabled](https://msdn.microsoft.com/en-us/microsoft-teams/setup).
+* [Optional] The Bot Framework Emulator. To install the Bot Framework Emulator, download it from [here](https://emulator.botframework.com/). Please refer to [this documentation article](https://github.com/microsoft/botframework-emulator/wiki/Getting-Started) to know more about the Bot Framework Emulator.
 
-## Testing
-For more information about how to configure and test samples, see [Sample applications for the Microsoft Teams Developer Platform](https://msdn.microsoft.com/en-us/microsoft-teams/samples) on MSDN.
+For more information about how to configure and test our samples, see [Sample applications for the Microsoft Teams Developer Platform](https://msdn.microsoft.com/en-us/microsoft-teams/samples).
+
 
 ## More Information
 For more information about getting started with Teams, please review the following resources:
@@ -20,9 +22,3 @@ For more information about getting started with Teams, please review the followi
 - Review [Getting Started with Bot Framework](https://docs.microsoft.com/en-us/bot-framework/bot-builder-overview-getstarted)
 - Review [Testing your bot with Teams](https://msdn.microsoft.com/en-us/microsoft-teams/botsadd)
 
-## License
-
-This project is licensed under the MIT License - see the [License](LICENSE) file for details.
-
-## Copyright
-Copyright (c) 2017 Microsoft Corporation. All rights reserved.
