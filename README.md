@@ -5,14 +5,13 @@ Thank you for your interest in Microsoft Teams developer samples! These samples 
 
 ## Sample Highlights
 
-There are several different samples focusing on different combinations of capabilities:
-* Sample App ([C#/.NET](CSharp/TeamsToDoApp) or [Node.js](Node/SampleApp)) shows a simulated task management SaaS, and leverages the following capapabilities:
-    * Bots
-    * Tabs (Configurable and Static)
-    * Compose Extension
-    * O365 Connectors
-* Sample Notification Bot ([Node.js](Node/SampleNotificationBot)) shows a Notification only bot that illustrates how you can leverage the Bot Framework to create a Microsoft Teams-aware push notification system.
-* Sample Compose Extension ([Node.js](Node/SampleCompseExtensionApp)) shows how to create a queriable service for Compose Extensions.
+This sample shows a simulated task management Saas, and leverages the following capabilities, in [C#/.NET](CSharp/TeamsToDoApp) and [Node.js](Node):
+
+* Bots
+* Compose Extension
+* Tabs (Configurable and Static) (Node.js only)
+* O365 Connectors (Node.js only)
+
     
 ## Feedback
 We welcome your feedback! [Here's how to send us yours](https://msdn.microsoft.com/en-us/microsoft-teams/feedback).
