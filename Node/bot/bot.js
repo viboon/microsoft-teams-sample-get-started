@@ -124,7 +124,7 @@ function sendCardUpdate(session, bot, taskId) {
 	var sentMsg = sentMessages[taskId];
 
 	var origAttachment = sentMsg.msg.data.attachments[0];
-	origAttachment.content.subtitle = 'Assigned to ' + sentMsg.address.user.name;
+	origAttachment.content.subtitle = 'Assigned to: ' + sentMsg.address.user.name;
 
 	var updatedMsg = new builder.Message()
 		.address(sentMsg.address)
