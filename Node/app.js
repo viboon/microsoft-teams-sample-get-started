@@ -4,8 +4,8 @@ const teamsBuilder = require('botbuilder-teams');
 const CookieParser = require('restify-cookies');
 
 process.env.TEAMS_APP_ID = (process.env.TEAMS_APP_ID) ? process.env.TEAMS_APP_ID : ''; //This is the Teams App ID from your Manifest
-process.env.MICROSOFT_APP_ID = (process.env.MICROSOFT_APP_ID) ? process.env.MICROSOFT_APP_ID : ''; //Bot ID from Bot Framework
-process.env.MICROSOFT_APP_PASSWORD = (process.env.MICROSOFT_APP_PASSWORD) ? process.env.MICROSOFT_APP_PASSWORD : ''; //Bot password from Bot Framework
+process.env.MICROSOFT_APP_ID = (process.env.ee3401ab-ff8e-4f00-973c-62b5707bf4c5) ? process.env.ee3401ab-ff8e-4f00-973c-62b5707bf4c5 : ''; //Bot ID from Bot Framework
+process.env.MICROSOFT_APP_PASSWORD = (process.env.kH6WABUjfwFaW0SdZhGKMqF) ? process.env.kH6WABUjfwFaW0SdZhGKMqF : ''; //Bot password from Bot Framework
 process.env.AUTH_CLIENT_ID = (process.env.AUTH_CLIENT_ID) ? process.env.AUTH_CLIENT_ID : '[auth client ID]';
 process.env.AUTH_CLIENT_SECRET = (process.env.AUTH_CLIENT_SECRET) ? process.env.AUTH_CLIENT_SECRET : '[auth client secret]';
 process.env.BASE_URI = (process.env.BASE_URI) ? process.env.BASE_URI : '';  //the host name for your tab
